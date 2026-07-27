@@ -1,0 +1,62 @@
+<%
+/**
+ * Горизонтальна стрічка етапів процесу (Figma: "Frame 120").
+ * Використовується тричі на сторінці послуг — етапи ремонту, етапи сервісного
+ * обслуговування, етапи постачання, — тому винесена в окремий партіал.
+ *
+ * Локалі:
+ *   steps        — масив { icon, height, text }:
+ *                    icon   — файл у /images/icons (експорт з Figma, 1:1)
+ *                    height — клас висоти іконки; у дизайні більшість 40px (h-10),
+ *                             дві іконки вищі — 48px (h-12)
+ *                    text   — підпис під іконкою
+ *   fullWidth    — (опц.) розтягнути ряд на всю ширину контейнера. Розтягуються
+ *                  самі ПУНКТИ (flex-1, рівномірно ділять усю ширину), а стрілки
+ *                  лишаються такими ж фіксованими, як в усіх інших блоках —
+ *                  діаграма займає повну ширину, не спотворюючи стрілки. Для блоку
+ *                  "Етапи проведення сервісного обслуговування", де пунктів мало
+ *                  й вони губились посередині.
+ *   captionLines — (опц.) зарезервувати сталу висоту підпису під N рядків тексту,
+ *                  щоб усі підписи в ряду вирівнялись у однакову кількість рядків
+ *                  (напр. 3). Без цього короткі підписи "стрибають" по висоті.
+ *
+ * Стрілки-конектори — це не іконки з дизайн-системи, а звичайні лінії
+ * (Figma: "Vector 13..19"), тож малюються як лінія (flex-1 / фікс. ширина) плюс
+ * CSS-трикутник, і ховаються там, де ряд перестає бути горизонтальним (нижче lg).
+ */
+var fullWidth = (typeof fullWidth !== 'undefined') && fullWidth;
+var captionLines = (typeof captionLines !== 'undefined') ? captionLines : 0;
+// line-height тексту text-base у Tailwind = 1.5rem, тож N рядків = N × 1.5rem.
+var captionStyle = captionLines ? ('min-height:' + (captionLines * 1.5) + 'rem;') : '';
+// Стрілки-конектори ЗАВЖДИ фіксованої ширини (50px) — однакові в усіх блоках.
+var connectorCls = 'lg:w-[3.125rem]';
+// У fullWidth ростуть самі пункти (flex-1) і рівномірно заповнюють усю ширину;
+// інакше — пункт фіксованої ширини, а ряд центрується.
+var itemCls = fullWidth ? 'lg:flex-1' : 'lg:w-[12.5rem]';
+var rowAlign = 'lg:justify-center';
+%>
+<ol class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:flex lg:items-start lg:gap-0 <%= rowAlign %>">
+  <% steps.forEach(function (step, i) { %>
+    <% if (i) { %>
+      <li class="hidden shrink-0 items-center pt-5 lg:flex <%= connectorCls %>" aria-hidden="true">
+        <span class="h-0.5 flex-1 bg-navy"></span>
+        <span class="h-0 w-0 border-y-[5px] border-l-[9px] border-y-transparent border-l-navy"></span>
+      </li>
+    <% } %>
+    <li class="flex flex-col items-center text-center lg:shrink lg:px-2 <%= itemCls %>">
+      <span class="flex items-center justify-center gap-3">
+        <%/* Номер етапу показуємо ЛИШЕ в сітковому режимі (нижче lg), де стрілки-
+             конектори приховані. На десктопі послідовність передають стрілки, тож
+             номер ховаємо (lg:hidden) — інверсія до видимості конекторів вище.
+             Розмір числа фіксований 24px (text-2xl), а не text-h3: h3 на цих
+             ширинах клампиться до 18px — майже як 16px абзацу, тож номер не
+             виділявся. Тут потрібне саме помітно більше за основний текст число. */%>
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-steel font-display text-2xl leading-none text-white lg:hidden"><%= i + 1 %></span>
+        <span class="flex <%= step.height %> items-end justify-center">
+          <img class="h-full w-auto object-contain" src="/images/icons/<%= step.icon %>" alt="">
+        </span>
+      </span>
+      <p class="mt-3 text-base text-navy" style="<%= captionStyle %>"><%= step.text %></p>
+    </li>
+  <% }); %>
+</ol>
