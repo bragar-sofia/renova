@@ -1,23 +1,11 @@
 <%- include('../partials/theme') %>
 
 <style>
-  /* Верстат "до" — статичний нижній шар. Верстат "після" проявляється поверх нього
-     не звичайним зрізом, а "лазерним відновленням": кадром проходить світляна
-     вертикальна смуга-сканер (.scan-beam), і рівно за нею іржавий верстат
-     перетворюється на відновлений. Край появи (clip-path) і смуга рухаються з
-     тими самими ключовими кадрами (10%→45%) та однаковим easing, тож ідуть разом.
-     Далі — пауза на відновленому, і плавне повернення до "до". */
-  /* Прохід починається не з лівого краю, а там, де стоїть сам верстат (ліворуч від
-     цієї межі — порожнє світле тло під текстом, тож зрушення старту нічого візуально
-     не міняє). На ноутбуках (md–xl) фото притиснуте праворуч і верстат починається
-     ~34% ширини кадру — саме туди ставимо старт. inset(0 66% 0 0) = межа вже на 34%. */
   @keyframes scan-reveal {
-    0%, 12%  { clip-path: inset(0 66% 0 0); }   /* видно "до" (верстат праворуч) */
-    55%, 85% { clip-path: inset(0 0 0 0); }      /* повністю проявлений + пауза */
-    100%     { clip-path: inset(0 66% 0 0); }    /* плавно назад до "до" */
+    0%, 12%  { clip-path: inset(0 66% 0 0); }
+    55%, 85% { clip-path: inset(0 0 0 0); }
+    100%     { clip-path: inset(0 66% 0 0); }
   }
-  /* Смуга-сканер: left їде 34%→100% синхронно з краєм появи; translateX(-50%)
-     ставить її центром рівно на межу. Спалахує на старті проходу, гасне в кінці. */
   @keyframes scan-beam {
     0%, 12%  { left: 34%;  opacity: 0; }
     18%      { opacity: 1; }
@@ -25,27 +13,20 @@
     55%      { left: 100%; opacity: 0; }
     100%     { left: 100%; opacity: 0; }
   }
-  /* Широкий десктоп (≥1536): фото на всю ширину блоку, і текст заходить правіше —
-     аж під лівий край верстата. Щоб промінь стартував ПІСЛЯ тексту, зсуваємо старт
-     на ~49% (верстат тут починається ~41%, тонкий лівий край лишається під текстом). */
   @media (min-width: 1536px) {
     @keyframes scan-reveal {
-      0%, 12%  { clip-path: inset(0 51% 0 0); }
+      0%, 12%  { clip-path: inset(0 88% 0 0); }
       55%, 85% { clip-path: inset(0 0 0 0); }
-      100%     { clip-path: inset(0 51% 0 0); }
+      100%     { clip-path: inset(0 88% 0 0); }
     }
     @keyframes scan-beam {
-      0%, 12%  { left: 49%;  opacity: 0; }
+      0%, 12%  { left: 12%;  opacity: 0; }
       18%      { opacity: 1; }
       50%      { opacity: 1; }
       55%      { left: 100%; opacity: 0; }
       100%     { left: 100%; opacity: 0; }
     }
   }
-  /* Мобільний (<md): фото віддзеркалене (-scale-x-100), тож поява читається у
-     зворотній бік. Дзеркалимо й промінь: він з'являється з ПРАВОГО краю і йде
-     ВЛІВО. Той самий inset(0 R 0 0) під дзеркалом дає межу, що росте справа наліво,
-     тож верстат заповнюється з правого краю — синхронно з променем (left 100%→0%). */
   @media (max-width: 767px) {
     @keyframes scan-reveal {
       0%, 12%  { clip-path: inset(0 100% 0 0); }
@@ -74,7 +55,6 @@
     box-shadow: 0 0 26px 8px rgba(130,200,255,.55);
     animation: scan-beam 10s cubic-bezier(.65,0,.35,1) infinite;
   }
-  /* Тонке яскраве ядро променя всередині м'якого сяйва. */
   .scan-beam::after {
     content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px;
     transform: translateX(-50%); background: rgba(255,255,255,.9);
@@ -88,21 +68,11 @@
 </style>
 
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
-  <%- include('../partials/site-header', { base: '', showHome: false }) %>
+  <%- include('../partials/site-header', { base: '', active: 'home' }) %>
 
   <main id="home">
-    <%/* Хіро-накладання: фото — фоновий шар, текст — шар ПОВЕРХ нього (z-10). На md+
-         фото абсолютом заповнює весь блок (object-contain object-right → верстат
-         праворуч, порожня світла частина кадру ліворуч), а текст лежить над цією
-         світлою лівою частиною. На мобільному фото стає під текстом (стек). */%>
-    <%/* Висота хіро масштабується з ШИРИНОЮ екрана (md:min-h-[30vw]) — приблизно
-         дорівнює висоті фото, тож порожнеча зверху/знизу мінімальна і сама
-         зменшується на менших екранах, а не лишається сталою.
-         Лише на широких (≥1536) вмикаємо режим "хіро + смуга = рівно один екран":
-         обгортка тягнеться на всю висоту viewport, хіро — flex-1 заповнює простір
-         над смугою (фото на всю висоту — як подобалось), смуга видима без гортання. */%>
-    <div class="2xl:flex 2xl:min-h-[calc(100vh-5.125rem)] 2xl:flex-col">
-    <section class="relative mx-auto flex w-full max-w-shell flex-col overflow-hidden px-6 pt-2 pb-6 sm:py-6 md:min-h-[30vw] md:flex-row md:items-center lg:py-8 lg:px-8 xl:px-16 2xl:min-h-0 2xl:flex-1 2xl:py-8 2xl:px-24">
+    <div>
+    <section class="relative mx-auto flex w-full max-w-shell flex-col overflow-hidden px-6 pt-0 pb-6 md:py-6 md:min-h-[30vw] md:flex-row md:items-center lg:py-8 lg:px-8 xl:px-16 2xl:min-h-[40rem] 2xl:px-24">
       <div class="relative z-10 md:max-w-[58%] 2xl:max-w-[52%]">
         <h1 class="max-w-[17em] font-display text-h1 font-normal">
           Ремонт та обслуговування<br>будь-якого металоріжучого<br>та пресового обладнання
@@ -116,18 +86,9 @@
         </div>
       </div>
 
-      <%/* Мобільний: збільшений кадр, зсунутий праворуч (object-cover object-[38%]),
-           тож видно ~пів верстата, а решта виходить за край. md–xl (ноутбуки): фото
-           притиснуте праворуч і вужче (w-56/60%), тож верстат не наповзає на текст.
-           2xl+ (широкий десктоп): фото заповнює весь блок (left-0+right-0), верстат
-           великий. Обидва фото мають однаковий object-* → збігаються, wipe працює. */%>
-      <%/* Малий екран (<lg): фото НАД текстом (order-first, у потоці), заголовок на
-           всю ширину. Телефон (<md): збільшений віддзеркалений кадр, пів верстата.
-           md (планшет): повний верстат (contain, 2:1). lg+: бокове накладання —
-           фото абсолютом праворуч, текст шаром поверх нього. */%>
-      <div class="pointer-events-none relative order-first mb-6 aspect-[4/3] overflow-hidden md:order-none md:absolute md:inset-y-0 md:right-0 md:mb-0 md:aspect-auto md:w-[58%] xl:w-[62%] 2xl:left-0 2xl:w-auto" aria-label="Пошкоджений верстат відновлюється до справного стану">
-        <img class="absolute inset-0 h-full w-full -scale-x-100 object-cover object-[32%_center] md:scale-x-100 md:object-contain md:object-right" src="/images/lathe-broken.png" alt="Верстат до ремонту">
-        <img class="machine-restored absolute inset-0 h-full w-full -scale-x-100 object-cover object-[32%_center] md:scale-x-100 md:object-contain md:object-right" src="/images/lathe-restored.png" alt="Верстат після ремонту">
+      <div class="pointer-events-none relative order-first mb-6 aspect-[4/3] overflow-hidden md:order-none md:absolute md:inset-y-0 md:right-0 md:mb-0 md:aspect-auto md:w-[58%] xl:w-[62%] 2xl:w-[44%]" aria-label="Пошкоджений верстат відновлюється до справного стану">
+        <img class="absolute inset-0 h-full w-full -scale-x-100 object-cover object-[32%_center] md:scale-x-100 md:object-contain md:object-right 2xl:object-cover 2xl:object-right" src="/images/lathe-broken.png" alt="Верстат до ремонту">
+        <img class="machine-restored absolute inset-0 h-full w-full -scale-x-100 object-cover object-[32%_center] md:scale-x-100 md:object-contain md:object-right 2xl:object-cover 2xl:object-right" src="/images/lathe-restored.png" alt="Верстат після ремонту">
         <span class="scan-beam" aria-hidden="true"></span>
       </div>
     </section>
@@ -145,22 +106,17 @@
         <div class="flex shrink-0 items-center gap-1 whitespace-nowrap sm:gap-2 lg:gap-3"><img class="h-8 w-auto shrink-0 object-contain md:h-9 lg:h-10" src="/images/icons/icon-individual.svg" alt=""><span>Індивідуальний підхід</span></div>
       </div>
     </section>
-    </div><%/* /хіро + смуга = один екран */%>
+    </div>
 
     <section id="services" class="mx-auto max-w-shell px-6 py-20 lg:px-8 xl:px-16 2xl:px-24">
-      <%/* Уся картка клікабельна (stretched-link через after:inset-0 на посиланні)
-           і веде на відповідну секцію сторінки послуг. */%>
       <div class="group relative rounded-card border-2 border-transparent bg-white p-10 transition hover:-translate-y-1 hover:border-steel hover:shadow-2xl md:grid md:grid-cols-[320px_1fr] md:items-center md:gap-8">
         <img class="mx-auto block h-28 w-auto object-contain md:h-auto md:w-80" src="/images/icons/illustration-restoration.svg" alt="">
         <div>
-          <%/* Нумерація картки: кружечок кольору тексту (navy) із цифрою перед
-               заголовком, вирівняний по центру із ним (items-center). На всіх ширинах. */%>
           <h2 class="flex items-center gap-3 font-display text-h1 font-normal text-navy">
             <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">1</span>
             <span>Відновлення обладнання</span>
           </h2>
           <p class="mt-3 text-left font-display text-h3 text-navy">Ми спеціалізуємось на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання будь-якого типу, виробника та року випуску.</p>
-          <%/* Пункти-чіпи — розміром p (text-base) на всіх ширинах; переносяться. */%>
           <div class="mt-4 flex flex-wrap gap-2 text-base text-navy">
             <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-4 py-2"><img class="h-10 w-auto object-contain" src="/images/icons/icon-diagnostics.svg" alt="">Діагностика</span>
             <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-4 py-2"><img class="h-10 w-auto object-contain" src="/images/icons/icon-capital-repair.svg" alt="">Капітальний ремонт</span>
@@ -235,7 +191,7 @@
         <img class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100" src="/images/tools.png" alt="">
         <div class="relative">
           <h2 class="font-display text-h1 font-normal">Потрібна допомога?</h2>
-          <p class="mt-2 font-display text-h2 font-normal">Заповніть форму і&nbsp;ми зв'яжемося з вами</p>
+          <p class="mt-4 font-display text-h3 font-normal">Зв'яжіться за номером, поштою або заповніть форму</p>
           <div class="mt-7 space-y-3 font-display text-h3">
             <p class="flex items-center gap-3"><img class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">+38 (099) 638 05 25</p>
             <p class="flex items-center gap-3"><img class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt="">support@renova</p>
@@ -244,7 +200,7 @@
         <form class="relative mt-7 space-y-3 lg:mt-0" action="#" method="post">
           <label class="block text-base">Ім'я<input class="mt-1 block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none" type="text" name="name"></label>
           <label class="block text-base">Електронна пошта<input class="mt-1 block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none" type="email" name="email"></label>
-          <label class="block text-base">Ваше запитання?<textarea class="mt-1 block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none" name="message"></textarea></label>
+          <label class="block text-base">Опишіть ваш запит<textarea class="mt-1 block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none" name="message"></textarea></label>
           <button class="w-full rounded-pill bg-navy py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]" type="button">Надіслати форму</button>
         </form>
       </div>

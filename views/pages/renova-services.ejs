@@ -1,6 +1,15 @@
 <%- include('../partials/theme') %>
+<style>
+  .fade-left {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 62%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 62%);
+  }
+  .fade-right {
+    -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 62%);
+            mask-image: linear-gradient(to left, transparent 0%, #000 62%);
+  }
+</style>
 <%
-// Типи ремонту — 8 карток з заголовком і описом
 var repairTypes = [
   { title: 'Діагностика обладнання', text: 'Комплексна перевірка обладнання, визначення причин несправності та оцінка поточного стану' },
   { title: 'Поточний та аварійний ремонт', text: 'Оперативне усунення несправностей, заміна вузлів що вийшли з ладу і повернення обладнання до роботи.' },
@@ -12,7 +21,6 @@ var repairTypes = [
   { title: 'Модернізація обладнання', text: 'Модернізація обладнання шляхом заміни систем ЧПК, приводів, електроніки та інших застарілих компонентів на сучасні рішення.' }
 ];
 
-// Що може включати капітальний ремонт — список у білій картці
 var overhaulScope = [
   'комплексну діагностику, розбирання та дефектацію верстату;',
   'підготовку технічного завдання;',
@@ -28,7 +36,6 @@ var overhaulScope = [
   'гарантійне та післягарантійне обслуговування.'
 ];
 
-// Етапи ремонту
 var repairSteps = [
   { icon: 'icon-stage-request.svg', height: 'h-10', text: 'Прийом заявки та первинна консультація' },
   { icon: 'icon-stage-site-visit.svg', height: 'h-10', text: 'Виїзд на підприємство і діагностика обладнання' },
@@ -39,7 +46,6 @@ var repairSteps = [
   { icon: 'icon-stage-handover.svg', height: 'h-10', text: 'Передача обладнання замовнику' }
 ];
 
-// Етапи сервісного обслуговування 
 var serviceSteps = [
   { icon: 'icon-svc-inspection.svg', height: 'h-10', text: 'Первинне технічне обстеження та діагностика' },
   { icon: 'icon-svc-schedule.svg', height: 'h-10', text: 'Розробка графіка планово-попереджувальних робіт' },
@@ -47,7 +53,6 @@ var serviceSteps = [
   { icon: 'icon-svc-report.svg', height: 'h-10', text: 'Формування звіту та надання рекомендацій' }
 ];
 
-// Етапи постачання обладнання
 var supplySteps = [
   { icon: 'icon-supply-analysis.svg', height: 'h-10', text: 'Аналіз виробничих потреб' },
   { icon: 'icon-supply-selection.svg', height: 'h-10', text: 'Підбір оптимального обладнання' },
@@ -58,7 +63,6 @@ var supplySteps = [
   { icon: 'icon-supply-support.svg', height: 'h-10', text: 'Сервісне обслуговування та підтримка' }
 ];
 
-// Постачаємо широкий спектр обладнання
 var supplyCatalog = [
   'Токарні верстати (також з ЧПК)',
   'Фрезерні верстати (також з ЧПК)',
@@ -72,18 +76,16 @@ var supplyCatalog = [
 %>
 
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
-  <%- include('../partials/site-header', { base: '/renova', showHome: true }) %>
+  <%- include('../partials/site-header', { base: '/renova', active: 'services' }) %>
 
   <main id="services">
 
-    <%/* ===================== Відновлення ===================== */%>
+    <%/* ===================== Restoration ===================== */%>
     <section id="restoration" class="space-y-8 pb-12 pt-8 lg:space-y-12 lg:pb-20 lg:pt-10">
 
-    <%/* ---------- Відновлення обладнання ---------- */%>
+    <%/* ---------- Equipment restoration ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <%/* Нумерація блоку — той самий кружечок (navy) із цифрою, що й на картках
-             головної: перед заголовком, вирівняний по центру із ним. */%>
         <h1 class="flex items-center gap-3 font-display text-h1 font-normal text-navy">
           <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">1</span>
           <span>Відновлення обладнання</span>
@@ -97,11 +99,11 @@ var supplyCatalog = [
         <a href="/renova#contacts" class="mt-6 inline-block rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]">Замовити відновлення</a>
       </div>
       <div class="relative -mr-6 h-64 overflow-hidden md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
-        <img class="absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png" alt="Ремонт токарного верстата у майстерні RENOVA">
+        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png" alt="Ремонт токарного верстата у майстерні RENOVA">
       </div>
     </section>
 
-    <%/* ---------- Типи ремонту ---------- */%>
+    <%/* ---------- Repair types ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Типи ремонту</h3>
       <div data-stagger class="mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
@@ -114,7 +116,7 @@ var supplyCatalog = [
       </div>
     </section>
 
-    <%/* ---------- Етапи ремонту ---------- */%>
+    <%/* ---------- Repair stages ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Етапи ремонту</h3>
       <div class="mt-8">
@@ -122,7 +124,7 @@ var supplyCatalog = [
       </div>
     </section>
 
-    <%/* ---------- Капітальний ремонт ---------- */%>
+    <%/* ---------- Major overhaul ---------- */%>
     <section class="mx-auto grid max-w-shell items-start gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[0.4fr_0.6fr]">
       <div>
         <h3 class="font-display text-h2 font-normal text-navy">Капітальний ремонт</h3>
@@ -139,11 +141,11 @@ var supplyCatalog = [
         </div>
       </div>
       <div class="relative -mr-6 h-72 overflow-hidden md:h-96 lg:-mr-8 lg:h-full lg:min-h-[36.4375rem] xl:-mr-16 2xl:-mr-24">
-        <img class="absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png" alt="Розбирання коробки передач під час капітального ремонту">
+        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png" alt="Розбирання коробки передач під час капітального ремонту">
       </div>
     </section>
 
-    <%/* ---------- Вартість і терміни ---------- */%>
+    <%/* ---------- Cost and timeline ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[auto_1fr] lg:gap-14">
       <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[18.75rem]" src="/images/icons/illustration-cost-terms.svg" alt="">
       <div>
@@ -159,13 +161,13 @@ var supplyCatalog = [
 
     </section>
 
-    <%/* ===================== Сервіс ===================== */%>
+    <%/* ===================== Service ===================== */%>
     <section id="service" class="space-y-8 py-12 lg:space-y-12 lg:py-20">
 
-    <%/* ---------- Сервісне обслуговування ---------- */%>
+    <%/* ---------- Maintenance ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[0.8fr_1.2fr]">
       <div class="relative -ml-6 h-64 overflow-hidden md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
-        <img class="absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата">
+        <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата">
       </div>
       <div>
         <h2 class="flex items-center gap-3 font-display text-h2 font-normal text-navy">
@@ -182,7 +184,7 @@ var supplyCatalog = [
       </div>
     </section>
 
-    <%/* ---------- Попередити несправність ---------- */%>
+    <%/* ---------- Prevent failure ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
       <div>
         <h3 class="font-display text-h2 font-normal text-navy">Попередити несправність завжди краще ніж усувати її</h3>
@@ -196,7 +198,7 @@ var supplyCatalog = [
       <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[17.625rem]" src="/images/icons/illustration-prevention.svg" alt="">
     </section>
 
-    <%/* ---------- Етапи сервісного обслуговування ---------- */%>
+    <%/* ---------- Maintenance stages ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Етапи проведення сервісного обслуговування</h3>
       <div class="mt-8">
@@ -206,10 +208,10 @@ var supplyCatalog = [
 
     </section>
 
-    <%/* ===================== Постачання ===================== */%>
+    <%/* ===================== Supply ===================== */%>
     <section id="supply" class="space-y-8 py-12 lg:space-y-12 lg:py-20">
 
-    <%/* ---------- Постачання нового обладнання ---------- */%>
+    <%/* ---------- New equipment supply ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
         <h2 class="flex items-center gap-3 font-display text-h2 font-normal text-navy">
@@ -225,11 +227,11 @@ var supplyCatalog = [
         <a href="/renova#contacts" class="mt-6 inline-block rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]">Замовити нове обладнання</a>
       </div>
       <div class="relative -mr-6 h-64 overflow-hidden md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
-        <img class="absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png" alt="Складання нового обладнання перед відвантаженням">
+        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png" alt="Складання нового обладнання перед відвантаженням">
       </div>
     </section>
 
-    <%/* ---------- Постачаємо широкий спектр обладнання ---------- */%>
+    <%/* ---------- Equipment catalog ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
       <div data-stagger class="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
@@ -241,7 +243,7 @@ var supplyCatalog = [
       </div>
     </section>
 
-    <%/* ---------- Етапи постачання ---------- */%>
+    <%/* ---------- Supply stages ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Етапи постачання обладнання</h3>
       <div class="mt-8">
