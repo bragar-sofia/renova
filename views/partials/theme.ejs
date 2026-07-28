@@ -102,15 +102,7 @@
              одної й на певних ширинах h3 ставав більшим за h2. */
           h1: ['clamp(2rem, 0.5rem + 3.125vw, 4rem)', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
           h2: ['clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
-          h3: ['clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
-          /* Два додаткові щаблі тієї самої шкали (h1 * 0.75 і h1 * 0.3125),
-             яких вимагає сторінка послуг: 48px — заголовок блоку послуги
-             (на рівень нижче за hero головної), 20px — заголовок картки.
-             Мінімум h4 = 18px (НЕ 16px), щоб навіть найдрібніший заголовок
-             на планшеті/мобільному лишався більшим за основний текст p (16px),
-             а не зливався з ним; максимум 20px 1:1 з дизайном. */
-          h1s: ['clamp(1.5rem, 0.375rem + 2.34375vw, 3rem)', { lineHeight: '0.95', letterSpacing: '-0.03em' }],
-          h4: ['clamp(1.125rem, 1rem + 0.5vw, 1.25rem)', { lineHeight: '1.15', letterSpacing: '-0.03em' }]
+          h3: ['clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }]
         }
       }
     }
@@ -118,7 +110,157 @@
 </script>
 
 <style>
-  /* Компенсація для якорів навігації — шапка липка (sticky) і не повинна
-     перекривати заголовок секції при переході за посиланням. */
-  html { scroll-padding-top: 5rem; }
+  /* Плавний скрол для переходів за якорями (кнопки навігації). scroll-padding-top
+     компенсує липку шапку, щоб заголовок секції не ховався під нею. */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    --reveal-ease: cubic-bezier(.16, 1, .3, 1); /* спільний м'який easing появи */
+  }
+
+  /* Плавний перехід МІЖ сторінками (крос-документні View Transitions). Браузери
+     з підтримкою (Chromium 126+) роблять м'який кросфейд між навігаціями головна↔
+     послуги; інші — звичайний перехід. Під prefers-reduced-motion API вимикається сам. */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: .35s; }
+
+  /* ── Поява блоків при скролі ─────────────────────────────────────────────
+     Кожен "листовий" блок (секція без вкладених секцій — працює на обох
+     сторінках) спершу приховано й зсунуто вниз, а IntersectionObserver додає
+     .is-visible, коли блок входить у в'юпорт, і він плавно з'являється.
+     Ховаємо ЛИШЕ коли:
+       • JS увімкнено (клас .reveal-ready на <html> додає скрипт нижче) — інакше
+         без JS блоки просто лишаються видимими;
+       • користувач не просив зменшену анімацію (prefers-reduced-motion). */
+  @media (prefers-reduced-motion: no-preference) {
+    /* УСІ "листові" блоки з'являються однаково — поява "з центру": підйом + м'який
+       зум + легке розмиття, що плавно сходить. Стосується й перших блоків над
+       згином (вони анімуються при завантаженні, зокрема під час переходу сторінок). */
+    html.reveal-ready main section:not(:has(section)) {
+      opacity: 0;
+      transform: translateY(44px) scale(.94);
+      filter: blur(6px);
+    }
+    html.reveal-ready main section:not(:has(section)).is-visible {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition: opacity .85s var(--reveal-ease),
+                  transform .85s var(--reveal-ease),
+                  filter .85s var(--reveal-ease);
+    }
+
+    /* Картки та схеми з іконками ([data-stagger]) — елементи ДОДАТКОВО з'являються
+       по черзі, зі зростаючою затримкою, коли їхній блок відкривається. */
+    html.reveal-ready [data-stagger] > * {
+      opacity: 0;
+      transform: translateY(26px) scale(.97);
+    }
+    html.reveal-ready main section.is-visible [data-stagger] > * {
+      opacity: 1;
+      transform: none;
+      transition: opacity .55s var(--reveal-ease),
+                  transform .55s var(--reveal-ease);
+    }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(1)  { transition-delay: 0s;   }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(2)  { transition-delay: .06s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(3)  { transition-delay: .12s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(4)  { transition-delay: .18s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(5)  { transition-delay: .24s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(6)  { transition-delay: .30s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(7)  { transition-delay: .36s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(8)  { transition-delay: .42s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(9)  { transition-delay: .48s; }
+    html.reveal-ready main section.is-visible [data-stagger] > *:nth-child(n+10) { transition-delay: .54s; }
+
+    /* Аварійний показ (IntersectionObserver не спрацював, напр. середовище без
+       композитингу) — миттєво, без анімації, щоб контент не лишився прихованим. */
+    html.reveal-ready main section:not(:has(section)).revealed-instant,
+    html.reveal-ready main section.revealed-instant [data-stagger] > * {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
 </style>
+
+<script>
+  // Додаємо клас якнайраніше (скрипт стоїть ПЕРЕД контентом сторінки), щоб
+  // блоки були приховані вже з першого кадру — без "мигання".
+  document.documentElement.classList.add('reveal-ready');
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Поважаємо системну "зменшену анімацію" (у цьому режимі CSS блоки й не ховає).
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // "Листові" блоки — секції без вкладених секцій (на головній це прямі секції
+    // <main>, на сторінці послуг — підсекції всередині макроблоків).
+    var blocks = Array.prototype.filter.call(
+      document.querySelectorAll('main section'),
+      function (s) { return !s.querySelector('section'); }
+    );
+    var vh = function () { return window.innerHeight || document.documentElement.clientHeight; };
+    // Блок вважаємо "у в'юпорті", коли його верх зайшов приблизно на третину екрана
+    // (top < 65% висоти) — тоді поява починається, коли блок уже помітно в кадрі, а
+    // не біля самого нижнього краю, де рух майже не видно.
+    var inView = function (el) { return el.getBoundingClientRect().top < vh() * 0.65; };
+
+    var pending = blocks.slice();
+    var anyRevealed = false;
+    var drop = function (el) { var i = pending.indexOf(el); if (i > -1) pending.splice(i, 1); };
+    var showAnim = function (el) { // показати З АНІМАЦІЄЮ (над згином — на завантаженні, решта — на скролі)
+      if (el.classList.contains('revealed-instant') || el.classList.contains('is-visible')) return;
+      el.classList.add('is-visible'); drop(el); anyRevealed = true;
+    };
+    var showInstant = function (el) { // аварійний показ без анімації (лише як підстраховка)
+      if (el.classList.contains('revealed-instant') || el.classList.contains('is-visible')) return;
+      el.classList.add('revealed-instant'); drop(el); anyRevealed = true;
+    };
+
+    // Основний механізм — IntersectionObserver: анімує кожен блок, коли той входить
+    // у в'юпорт. Блоки над згином теж анімуються — обсервер показує їх на старті,
+    // тож перший блок «в'їжджає», а не з'являється миттєво (важливо при переходах).
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          showAnim(e.target);
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -35% 0px' });
+      pending.slice().forEach(function (b) { io.observe(b); });
+    }
+
+    // Резерв на scroll: показує блок (з анімацією) ЛИШЕ коли він реально входить у
+    // в'юпорт — нічого передчасно. Страхує, якщо IntersectionObserver не спрацьовує.
+    var onScroll = function () {
+      for (var i = pending.length - 1; i >= 0; i--) {
+        if (inView(pending[i])) showAnim(pending[i]);
+      }
+      if (!pending.length) window.removeEventListener('scroll', onScroll);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // На завантаженні одразу (з анімацією) показуємо блоки ПЕРШОГО ЕКРАНА — навіть
+    // ті, що в нижній частині в'юпорта (напр. смуга фактів під хіро), щоб вони
+    // з'являлись БЕЗ ГОРТАННЯ, а не чекали, доки їх доскролять.
+    var revealFirstScreen = function () {
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      for (var i = pending.length - 1; i >= 0; i--) {
+        if (pending[i].getBoundingClientRect().top < h - 24) showAnim(pending[i]);
+      }
+    };
+    window.addEventListener('load', function () {
+      revealFirstScreen();
+      // Підстраховка для середовищ без композитингу кадрів: якщо переходи не рухаються
+      // (перший блок лишається прихованим) — знімаємо приховування зовсім, щоб контент
+      // у жодному разі не лишився невидимим.
+      setTimeout(function () {
+        if (blocks[0] && getComputedStyle(blocks[0]).opacity === '0') {
+          document.documentElement.classList.remove('reveal-ready');
+        }
+      }, 1200);
+    });
+  });
+</script>

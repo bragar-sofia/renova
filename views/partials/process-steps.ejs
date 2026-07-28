@@ -35,7 +35,7 @@ var connectorCls = 'lg:w-[3.125rem]';
 var itemCls = fullWidth ? 'lg:flex-1' : 'lg:w-[12.5rem]';
 var rowAlign = 'lg:justify-center';
 %>
-<ol class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:flex lg:items-start lg:gap-0 <%= rowAlign %>">
+<ol data-stagger class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:flex lg:items-start lg:gap-0 <%= rowAlign %>">
   <% steps.forEach(function (step, i) { %>
     <% if (i) { %>
       <li class="hidden shrink-0 items-center pt-5 lg:flex <%= connectorCls %>" aria-hidden="true">

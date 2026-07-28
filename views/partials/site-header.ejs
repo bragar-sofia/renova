@@ -14,12 +14,14 @@
     <a href="<%= base %>#home" aria-label="RENOVA — головна">
       <img class="h-20 w-auto object-contain" src="/images/renova-brand.png" alt="RENOVA">
     </a>
+    <%/* "Послуги" веде на окрему сторінку послуг; решта пунктів — якорі головної
+         (на підсторінці base='/renova', тож вони повертають на головну). */%>
     <nav class="hidden items-center gap-12 text-base font-display font-normal lg:flex" aria-label="Основна навігація">
-      <% if (showHome) { %><a class="text-navy hover:text-steel" href="<%= base %>#home">Головна</a><% } %>
-      <a class="text-navy hover:text-steel" href="<%= base %>#services">Послуги</a>
-      <a class="text-navy hover:text-steel" href="<%= base %>#about">Про нас</a>
-      <a class="text-navy hover:text-steel" href="<%= base %>#faq">Часті запитання</a>
-      <a class="text-navy hover:text-steel" href="<%= base %>#contacts">Контакти</a>
+      <% if (showHome) { %><a class="text-navy transition-colors hover:text-steel" href="<%= base %>#home">Головна</a><% } %>
+      <a class="text-navy transition-colors hover:text-steel" href="/renova/services">Послуги</a>
+      <a class="text-navy transition-colors hover:text-steel" href="<%= base %>#about">Про нас</a>
+      <a class="text-navy transition-colors hover:text-steel" href="<%= base %>#faq">Часті запитання</a>
+      <a class="text-navy transition-colors hover:text-steel" href="<%= base %>#contacts">Контакти</a>
     </nav>
     <a href="<%= base %>#contacts" class="rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]">Замовити діагностику</a>
   </div>

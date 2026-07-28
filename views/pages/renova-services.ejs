@@ -82,7 +82,12 @@ var supplyCatalog = [
     <%/* ---------- Відновлення обладнання ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <h1 class="font-display text-h1 font-normal text-navy">Відновлення обладнання</h1>
+        <%/* Нумерація блоку — той самий кружечок (navy) із цифрою, що й на картках
+             головної: перед заголовком, вирівняний по центру із ним. */%>
+        <h1 class="flex items-center gap-3 font-display text-h1 font-normal text-navy">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">1</span>
+          <span>Відновлення обладнання</span>
+        </h1>
         <p class="mt-6 text-justify text-base text-navy">
           RENOVA спеціалізується на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання незалежно від його типу, виробника та року випуску. Ми виконуємо роботи різного рівня складності — від усунення окремих несправностей і&nbsp;відновлення вузлів до капітального ремонту та модернізації верстата.
         </p>
@@ -99,10 +104,10 @@ var supplyCatalog = [
     <%/* ---------- Типи ремонту ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Типи ремонту</h3>
-      <div class="mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
+      <div data-stagger class="mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
         <% repairTypes.forEach(function (card) { %>
-          <article class="flex h-full flex-col rounded-card bg-white p-4">
-            <h4 class="font-display text-h4 font-normal text-navy"><%= card.title %></h4>
+          <article class="flex h-full flex-col rounded-card bg-white p-6">
+            <h4 class="font-display text-h3 font-normal text-navy"><%= card.title %></h4>
             <p class="mt-2 flex-grow text-left text-base text-navy"><%= card.text %></p>
           </article>
         <% }); %>
@@ -125,7 +130,7 @@ var supplyCatalog = [
           Капітальний ремонт проводиться у&nbsp;разі значного зношення вузлів обладнання, втрати точності, системних несправностей або необхідності комплексного оновлення верстата.
         </p>
         <div class="mt-8 rounded-card bg-white p-8">
-          <h4 class="font-display text-h4 font-normal text-navy">Що може включати капітальний ремонт</h4>
+          <h4 class="font-display text-h3 font-normal text-navy">Що може включати капітальний ремонт</h4>
           <ul class="mt-4 list-disc space-y-1 pl-5 text-base text-navy">
             <% overhaulScope.forEach(function (item) { %>
               <li><%= item %></li>
@@ -163,7 +168,10 @@ var supplyCatalog = [
         <img class="absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата">
       </div>
       <div>
-        <h2 class="font-display text-h1s font-normal text-navy">Сервісне обслуговування</h2>
+        <h2 class="flex items-center gap-3 font-display text-h2 font-normal text-navy">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">2</span>
+          <span>Сервісне обслуговування</span>
+        </h2>
         <p class="mt-6 text-justify text-base text-navy">
           Найкращий ремонт – це той, якого вдалося уникнути. Тому RENOVA допомагає підтримувати металорізальне та пресове обладнання у&nbsp;стабільному робочому стані протягом усього періоду експлуатації. Ми проводимо планове технічне обслуговування, діагностику та профілактичні роботи, щоб своєчасно виявляти зношення, усувати несправності на ранніх етапах і&nbsp;знижувати ризик аварійних зупинок.
         </p>
@@ -204,7 +212,10 @@ var supplyCatalog = [
     <%/* ---------- Постачання нового обладнання ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <h2 class="font-display text-h1s font-normal text-navy">Постачання нового обладнання</h2>
+        <h2 class="flex items-center gap-3 font-display text-h2 font-normal text-navy">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">3</span>
+          <span>Постачання нового обладнання</span>
+        </h2>
         <p class="mt-6 text-justify text-base text-navy">
           Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове рішення відповідно до завдань вашого виробництва.
         </p>
@@ -221,10 +232,10 @@ var supplyCatalog = [
     <%/* ---------- Постачаємо широкий спектр обладнання ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
-      <div class="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
+      <div data-stagger class="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
         <% supplyCatalog.forEach(function (item) { %>
           <article class="flex min-h-[4.5rem] items-center rounded-card bg-white p-4">
-            <h4 class="font-display text-h4 font-normal text-navy"><%= item %></h4>
+            <h4 class="font-display text-h3 font-normal text-navy"><%= item %></h4>
           </article>
         <% }); %>
       </div>
