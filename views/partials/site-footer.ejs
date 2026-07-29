@@ -8,3 +8,23 @@
     </div>
   </div>
 </footer>
+
+<button type="button" data-to-top aria-label="Догори" class="to-top fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-lg transition hover:bg-[#0b527b] md:hidden">
+  <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+</button>
+<style>
+  .to-top { opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .3s ease, transform .3s ease, background-color .2s ease; }
+  .to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+</style>
+<script>
+  (function () {
+    var btn = document.querySelector('[data-to-top]');
+    if (!btn) return;
+    var toggle = function () {
+      btn.classList.toggle('is-visible', (window.scrollY || document.documentElement.scrollTop) > 400);
+    };
+    window.addEventListener('scroll', toggle, { passive: true });
+    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    toggle();
+  })();
+</script>

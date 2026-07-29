@@ -1,0 +1,369 @@
+<main>
+    <!-- HERO -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-6">
+        <nav class="text-sm text-white/60" data-aos="fade-up">
+            <a href="<%= localizedUrl('/') %>" class="hover:text-brand-orange">Головна</a>
+            <span class="mx-2">/</span>
+            <a href="<%= localizedUrl('/portfolio') %>" class="hover:text-brand-orange">Портфоліо</a>
+            <span class="mx-2">/</span>
+            <span class="text-white">Контроль геометрії інструменту</span>
+        </nav>
+
+        <h1 class="mt-3 text-[clamp(2rem,6vw,3rem)] font-semibold tracking-tight" data-aos="fade-up" data-aos-delay="80">
+        <span class="underline decoration-brand-orange decoration-4 underline-offset-8">
+          Контроль геометрії інструменту
+        </span>
+        </h1>
+        <p class="mt-3 text-white/70 max-w-3xl" data-aos="fade-up" data-aos-delay="120">
+            Впровадження вимірювального комплексу для інструментального виробництва з інтеграцією в LIMS та стандартизованою звітністю.
+        </p>
+    </section>
+
+    <!-- CONTENT GRID (як у продукті): LEFT = галерея, RIGHT = опис -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+
+            <!-- LEFT: sticky main image + thumbs gallery -->
+            <aside class="lg:col-span-6 xl:col-span-7 lg:sticky lg:top-20" data-aos="fade-left">
+                <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur shadow-soft overflow-hidden">
+                    <div class="h-1 bg-gradient-to-r from-brand-orange via-brand-orange/80 to-transparent"></div>
+                    <figure class="relative">
+                        <!-- головне зображення (без підпису під фото) -->
+                        <img id="mainImage"
+                             src="https://picsum.photos/1600/1000?random=44"
+                             alt="Встановлене обладнання — вимірювальний комплекс"
+                             class="w-full aspect-[16/10] object-cover transition-opacity duration-300"
+                             loading="lazy" />
+                    </figure>
+                </div>
+
+                <!-- Галерея превʼю під основним фото (лише кнопки гортання, без drag) -->
+                <div class="mt-6">
+                    <div class="flex items-center justify-between gap-4 mb-3">
+                        <h3 class="text-base font-semibold text-white/90">Галерея</h3>
+                        <div class="flex gap-2">
+                            <button class="h-10 w-10 rounded-xl border border-white/15 bg-white/10 hover:bg-white/15 active:scale-95 transition grid place-items-center"
+                                    type="button" aria-label="Попередні фото" data-strip-prev="#thumb-strip">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <button class="h-10 w-10 rounded-xl border border-white/15 bg-white/10 hover:bg-white/15 active:scale-95 transition grid place-items-center"
+                                    type="button" aria-label="Наступні фото" data-strip-next="#thumb-strip">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <!-- fade-краї -->
+                        <div class="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-graphite to-transparent rounded-l-2xl"></div>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-graphite to-transparent rounded-r-2xl"></div>
+
+                        <div id="thumb-strip"
+                             class="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth hscroll hscroll--hidebar
+                      justify-center sm:justify-start flex-wrap sm:flex-nowrap">
+                            <!-- item -->
+                            <button type="button"
+                                    class="thumb-btn group relative w-[160px] sm:w-[200px] md:w-[220px] flex-none snap-start
+                           rounded-2xl border border-white/10 bg-white/5 transition focus:outline-none"
+                                    data-src="https://picsum.photos/1600/1000?random=44"
+                                    data-alt="Встановлене обладнання — вимірювальний комплекс">
+                                <div class="rounded-2xl p-[3px] transition-colors">
+                                    <div class="thumb-wrap overflow-hidden rounded-xl">
+                                        <img src="https://picsum.photos/600/400?random=44" alt="Прев’ю 1" class="w-full aspect-[4/3] object-cover">
+                                    </div>
+                                </div>
+                                <!-- підсвітка активного -->
+                                <span class="thumb-hl pointer-events-none absolute inset-0 rounded-2xl border-2 border-brand-orange/60 opacity-0 transition-opacity"></span>
+                                <span class="thumb-glow pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity" style="box-shadow:0 0 0 3px rgba(255,140,0,.25)"></span>
+                            </button>
+
+                            <button type="button"
+                                    class="thumb-btn group relative w-[160px] sm:w-[200px] md:w-[220px] flex-none snap-start
+                           rounded-2xl border border-white/10 bg-white/5 transition focus:outline-none"
+                                    data-src="https://picsum.photos/1600/1000?random=45"
+                                    data-alt="Стенд калібрування">
+                                <div class="rounded-2xl p-[3px] transition-colors">
+                                    <div class="thumb-wrap overflow-hidden rounded-xl">
+                                        <img src="https://picsum.photos/600/400?random=45" alt="Прев’ю 2" class="w-full aspect-[4/3] object-cover">
+                                    </div>
+                                </div>
+                                <span class="thumb-hl pointer-events-none absolute inset-0 rounded-2xl border-2 border-brand-orange/60 opacity-0 transition-opacity"></span>
+                                <span class="thumb-glow pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity" style="box-shadow:0 0 0 3px rgba(255,140,0,.25)"></span>
+                            </button>
+
+                            <button type="button"
+                                    class="thumb-btn group relative w-[160px] sm:w-[200px] md:w-[220px] flex-none snap-start
+                           rounded-2xl border border-white/10 bg-white/5 transition focus:outline-none"
+                                    data-src="https://picsum.photos/1600/1000?random=46"
+                                    data-alt="Робоче місце оператора">
+                                <div class="rounded-2xl p-[3px] transition-colors">
+                                    <div class="thumb-wrap overflow-hidden rounded-xl">
+                                        <img src="https://picsum.photos/600/400?random=46" alt="Прев’ю 3" class="w-full aspect-[4/3] object-cover">
+                                    </div>
+                                </div>
+                                <span class="thumb-hl pointer-events-none absolute inset-0 rounded-2xl border-2 border-brand-orange/60 opacity-0 transition-opacity"></span>
+                                <span class="thumb-glow pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity" style="box-shadow:0 0 0 3px rgba(255,140,0,.25)"></span>
+                            </button>
+
+                            <button type="button"
+                                    class="thumb-btn group relative w-[160px] sm:w-[200px] md:w-[220px] flex-none snap-start
+                           rounded-2xl border border-white/10 bg-white/5 transition focus:outline-none"
+                                    data-src="https://picsum.photos/1600/1000?random=47"
+                                    data-alt="Приклад протоколу вимірювань">
+                                <div class="rounded-2xl p-[3px] transition-colors">
+                                    <div class="thumb-wrap overflow-hidden rounded-xl">
+                                        <img src="https://picsum.photos/600/400?random=47" alt="Прев’ю 4" class="w-full aspect-[4/3] object-cover">
+                                    </div>
+                                </div>
+                                <span class="thumb-hl pointer-events-none absolute inset-0 rounded-2xl border-2 border-brand-orange/60 opacity-0 transition-opacity"></span>
+                                <span class="thumb-glow pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity" style="box-shadow:0 0 0 3px rgba(255,140,0,.25)"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="mt-2 text-xs text-white/50">Гортайте стрілками.</p>
+                </div>
+            </aside>
+
+            <!-- RIGHT: опис/контент -->
+            <article class="lg:col-span-6 xl:col-span-5" data-aos="fade-right">
+                <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur grid-bg shadow-soft overflow-hidden">
+                    <div class="h-1 bg-gradient-to-r from-brand-orange via-brand-orange/80 to-transparent"></div>
+                    <div class="p-6 sm:p-8 space-y-8">
+                        <section>
+                            <h2 class="text-lg font-semibold tracking-tight">Що було поставлено</h2>
+                            <ul class="mt-2 space-y-2 text-white/80 list-disc pl-5">
+                                <li>Оптичний вимірювальний комплекс 2D/3D з ЧПК-столом</li>
+                                <li>Програмний модуль автоматизованих циклів вимірювань</li>
+                                <li>Комплект еталонів та пристосувань (V-блоки, патрони, калібри)</li>
+                                <li>LIMS-конектор для експорту результатів (CSV/JSON, API)</li>
+                            </ul>
+                        </section>
+
+                        <section>
+                            <h2 class="text-lg font-semibold tracking-tight">Під яку задачу</h2>
+                            <p class="mt-2 text-white/80">
+                                Контроль геометрії різального інструменту (діаметр, кут загострення, биття, радіуси фасок) у виробництві та вхідний контроль постачань.
+                            </p>
+                        </section>
+
+                        <section>
+                            <h2 class="text-lg font-semibold tracking-tight">Результат / виконані роботи</h2>
+                            <ul class="mt-2 space-y-2 text-white/80 list-disc pl-5">
+                                <li><span class="text-white">Проєктування та монтаж:</span> підготовка зони, віброізоляція, підведення живлення.</li>
+                                <li><span class="text-white">Пусконалагодження:</span> калібрування, верифікація методик на контрольних зразках.</li>
+                                <li><span class="text-white">Автоматизація:</span> сценарії пакетних вимірювань, шаблони звітів PDF/CSV.</li>
+                                <li><span class="text-white">Інтеграція з LIMS:</span> двосторонній обмін — завдання з LIMS, повернення результатів з trace-ID.</li>
+                                <li><span class="text-white">Навчання персоналу:</span> оператори, технологи та метрологи.</li>
+                                <li><span class="text-white">Експлуатаційні регламенти:</span> щоденний догляд, періодичні перевірки, чек-листи.</li>
+                            </ul>
+                        </section>
+
+                        <div class="pt-2">
+                            <a href="<%= localizedUrl('/portfolio') %>" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/15 text-white/90 hover:border-brand-orange/60 hover:bg-brand-orange/10 transition font-medium">
+                                ← Повернутися до портфоліо
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="relative w-full h-full grid place-items-center p-4">
+            <button id="lb-close" class="absolute top-4 right-4 h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center" aria-label="Закрити">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <button id="lb-prev" class="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center" aria-label="Попереднє">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button id="lb-next" class="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 grid place-items-center" aria-label="Наступне">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <img id="lb-image" src="" alt="" class="max-h-[90vh] max-w-[95vw] object-contain shadow-2xl rounded-2xl"/>
+        </div>
+    </div>
+
+    <!-- (опційно) Блок з пов’язаними кейсами -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <h2 class="text-xl sm:text-2xl font-semibold" data-aos="fade-up">
+            Схожі проєкти
+        </h2>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <a href="<%= localizedUrl('/portfolio/proekt-2') %>" class="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur grid-bg shadow-soft overflow-hidden hover:border-brand-orange/60 transition" data-aos="zoom-in-up">
+                <div class="h-1 bg-gradient-to-r from-brand-orange via-brand-orange/80 to-transparent"></div>
+                <img src="https://picsum.photos/960/600?random=52" class="w-full aspect-[16/10] object-cover transition duration-500 group-hover:scale-[1.03]" alt="">
+                <div class="p-5"><h3 class="font-semibold group-hover:text-brand-orange transition">Метрологія на ділянці шліфування</h3></div>
+            </a>
+            <a href="<%= localizedUrl('/portfolio/proekt-3') %>" class="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur grid-bg shadow-soft overflow-hidden hover:border-brand-orange/60 transition" data-aos="zoom-in-up" data-aos-delay="60">
+                <div class="h-1 bg-gradient-to-r from-brand-orange via-brand-orange/80 to-transparent"></div>
+                <img src="https://picsum.photos/960/600?random=53" class="w-full aspect-[16/10] object-cover transition duration-500 group-hover:scale-[1.03]" alt="">
+                <div class="p-5"><h3 class="font-semibold group-hover:text-brand-orange transition">Лабораторія НК у енергетиці</h3></div>
+            </a>
+            <a href="<%= localizedUrl('/portfolio/proekt-6') %>" class="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur grid-bg shadow-soft overflow-hidden hover:border-brand-orange/60 transition" data-aos="zoom-in-up" data-aos-delay="120">
+                <div class="h-1 bg-gradient-to-r from-brand-orange via-brand-orange/80 to-transparent"></div>
+                <img src="https://picsum.photos/960/600?random=54" class="w-full aspect-[16/10] object-cover transition duration-500 group-hover:scale-[1.03]" alt="">
+                <div class="p-5"><h3 class="font-semibold group-hover:text-brand-orange transition">Вхідний контроль постачань</h3></div>
+            </a>
+        </div>
+    </section>
+</main>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Стрілки прокрутки для #thumb-strip (без drag)
+    const strip = document.getElementById('thumb-strip');
+    const prevBtn = document.querySelector('[data-strip-prev="#thumb-strip"]');
+    const nextBtn = document.querySelector('[data-strip-next="#thumb-strip"]');
+    const step = () => Math.max(strip.clientWidth * 0.9, 240);
+
+    prevBtn && prevBtn.addEventListener('click', () => strip.scrollBy({ left: -step(), behavior: 'smooth' }));
+    nextBtn && nextBtn.addEventListener('click', () => strip.scrollBy({ left:  step(), behavior: 'smooth' }));
+
+    // Головне зображення та превʼюшки
+    const mainImg = document.getElementById('mainImage');
+    const thumbs  = document.querySelectorAll('.thumb-btn');
+
+    function setActive(btn) {
+      document.querySelectorAll('.thumb-btn').forEach(b => {
+        b.classList.remove('thumb-active');
+        b.querySelector('.thumb-hl')?.classList.add('opacity-0');
+        b.querySelector('.thumb-glow')?.classList.add('opacity-0');
+      });
+      btn.classList.add('thumb-active');
+      btn.querySelector('.thumb-hl')?.classList.remove('opacity-0');
+      btn.querySelector('.thumb-glow')?.classList.remove('opacity-0');
+    }
+
+    thumbs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.getAttribute('data-src');
+        const alt = btn.getAttribute('data-alt') || '';
+        mainImg.classList.add('opacity-0');
+        setTimeout(() => {
+          try {
+            mainImg.src = src; mainImg.alt = alt;
+          } finally {
+            const finish = () => mainImg.classList.remove('opacity-0');
+            if (mainImg.complete) finish();
+            else {
+              mainImg.addEventListener('load', finish, { once: true });
+              mainImg.addEventListener('error', finish, { once: true });
+            }
+          }
+        }, 50);
+        setActive(btn);
+      });
+    });
+
+    // Позначити активним поточне
+    const initial = Array.from(thumbs).find(t => t.getAttribute('data-src') === mainImg.getAttribute('src'));
+    if (initial) setActive(initial);
+
+    // Лайтбокс
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-image');
+    const btnClose = document.getElementById('lb-close');
+    const btnPrev = document.getElementById('lb-prev');
+    const btnNext = document.getElementById('lb-next');
+
+    const sources = Array.from(thumbs).map(t => t.getAttribute('data-src')).filter(Boolean);
+
+    function idx() {
+      const src = lbImg.getAttribute('src');
+      const i = sources.indexOf(src);
+      if (i !== -1) return i;
+      const m = mainImg.getAttribute('src');
+      return Math.max(0, sources.indexOf(m));
+    }
+    function openWith(src) {
+      lbImg.src = src || mainImg.src;
+      lightbox.classList.remove('hidden');
+      document.documentElement.classList.add('overflow-hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    function close() {
+      lightbox.classList.add('hidden');
+      document.documentElement.classList.remove('overflow-hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    function show(i) {
+      if (!sources.length) return;
+      const len = sources.length;
+      const n = ((i % len) + len) % len;
+      lbImg.classList.add('opacity-0');
+      setTimeout(() => { lbImg.src = sources[n]; lbImg.classList.remove('opacity-0'); }, 120);
+    }
+
+    mainImg.style.cursor = 'zoom-in';
+    mainImg.addEventListener('click', () => openWith(mainImg.src));
+    btnClose && btnClose.addEventListener('click', close);
+
+    // клік поза фото — закрити
+    lightbox.addEventListener('click', (e) => {
+      const clickedOnImg = e.target === lbImg || lbImg.contains(e.target);
+      const clickedNav = e.target === btnPrev || e.target === btnNext ||
+        (btnPrev && btnPrev.contains(e.target)) ||
+        (btnNext && btnNext.contains(e.target));
+      if (!clickedOnImg && !clickedNav) close();
+    });
+
+    btnPrev && btnPrev.addEventListener('click', (e) => { e.stopPropagation(); show(idx() - 1); });
+    btnNext && btnNext.addEventListener('click', (e) => { e.stopPropagation(); show(idx() + 1); });
+
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('hidden')) return;
+      if (e.key === 'Escape') return close();
+      if (e.key === 'ArrowLeft') return show(idx() - 1);
+      if (e.key === 'ArrowRight') return show(idx() + 1);
+    });
+  });
+
+  document.querySelectorAll('[data-hscroll]').forEach(strip => {
+    const by = Math.max(strip.clientWidth * 0.9, 240);
+    const prevBtn = document.querySelector(`[data-hscroll-prev="#${strip.id}"]`);
+    const nextBtn = document.querySelector(`[data-hscroll-next="#${strip.id}"]`);
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => strip.scrollBy({ left: -by, behavior: 'smooth' }));
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => strip.scrollBy({ left: by, behavior: 'smooth' }));
+    }
+  });
+
+  const mainImg = document.getElementById('mainImage');
+  const mainCaption = document.getElementById('mainCaption');
+  const thumbs = document.querySelectorAll('.thumb-btn');
+
+  function setActiveThumb(el) {
+    thumbs.forEach(t => t.classList.remove('ring-2', 'ring-brand-orange/60', 'border-brand-orange/60'));
+    el.classList.add('ring-2', 'ring-brand-orange/60', 'border-brand-orange/60');
+  }
+
+  thumbs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src = btn.getAttribute('data-src');
+      const caption = btn.getAttribute('data-caption') || '';
+      const alt = btn.getAttribute('data-alt') || caption || '';
+
+      mainImg.classList.add('opacity-0');
+      setTimeout(() => {
+        mainImg.src = src;
+        mainImg.alt = alt;
+        mainCaption.textContent = caption;
+        mainImg.classList.remove('opacity-0');
+      }, 150);
+
+      setActiveThumb(btn);
+    });
+  });
+
+  const initial = Array.from(thumbs).find(t => t.getAttribute('data-src') === mainImg.getAttribute('src'));
+  if (initial) setActiveThumb(initial);
+</script>

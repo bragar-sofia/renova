@@ -1,12 +1,12 @@
 <%- include('../partials/theme') %>
 <style>
   .fade-left {
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 62%);
-            mask-image: linear-gradient(to right, transparent 0%, #000 62%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 28%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 28%);
   }
   .fade-right {
-    -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 62%);
-            mask-image: linear-gradient(to left, transparent 0%, #000 62%);
+    -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+            mask-image: linear-gradient(to left, transparent 0%, #000 28%);
   }
 </style>
 <%
@@ -83,13 +83,16 @@ var supplyCatalog = [
     <%/* ===================== Restoration ===================== */%>
     <section id="restoration" class="space-y-8 pb-12 pt-8 lg:space-y-12 lg:pb-20 lg:pt-10">
 
+    <div class="sticky top-[5.125rem] z-30 flex items-center gap-3 border-b border-steel/40 bg-sky px-6 py-3 md:hidden">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-base font-bold leading-none text-white">1</span>
+      <span class="font-display text-h1 font-normal text-navy">Відновлення обладнання</span>
+    </div>
+
     <%/* ---------- Equipment restoration ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <h1 class="flex items-center gap-3 font-display text-h1 font-normal text-navy">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">1</span>
-          <span>Відновлення обладнання</span>
-        </h1>
+        <span class="mb-3 hidden h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-h2 font-bold leading-none text-white md:flex">1</span>
+        <h1 class="hidden font-display text-h1 font-normal text-navy md:block">Відновлення обладнання</h1>
         <p class="mt-6 text-justify text-base text-navy">
           RENOVA спеціалізується на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання незалежно від його типу, виробника та року випуску. Ми виконуємо роботи різного рівня складності — від усунення окремих несправностей і&nbsp;відновлення вузлів до капітального ремонту та модернізації верстата.
         </p>
@@ -147,7 +150,7 @@ var supplyCatalog = [
 
     <%/* ---------- Cost and timeline ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[auto_1fr] lg:gap-14">
-      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[18.75rem]" src="/images/icons/illustration-cost-terms.svg" alt="">
+      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-52" src="/images/icons/illustration-cost-terms.svg" alt="">
       <div>
         <h3 class="font-display text-h2 font-normal text-navy">Вартість і терміни</h3>
         <p class="mt-6 text-justify text-base text-navy">
@@ -164,16 +167,19 @@ var supplyCatalog = [
     <%/* ===================== Service ===================== */%>
     <section id="service" class="space-y-8 py-12 lg:space-y-12 lg:py-20">
 
+    <div class="sticky top-[5.125rem] z-30 flex items-center gap-3 border-b border-steel/40 bg-sky px-6 py-3 md:hidden">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-base font-bold leading-none text-white">2</span>
+      <span class="font-display text-h1 font-normal text-navy">Сервісне обслуговування</span>
+    </div>
+
     <%/* ---------- Maintenance ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[0.8fr_1.2fr]">
       <div class="relative -ml-6 h-64 overflow-hidden md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
         <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата">
       </div>
       <div>
-        <h2 class="flex items-center gap-3 font-display text-h2 font-normal text-navy">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">2</span>
-          <span>Сервісне обслуговування</span>
-        </h2>
+        <span class="mb-3 hidden h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-h2 font-bold leading-none text-white md:flex">2</span>
+        <h1 class="hidden font-display text-h1 font-normal text-navy md:block">Сервісне обслуговування</h1>
         <p class="mt-6 text-justify text-base text-navy">
           Найкращий ремонт – це той, якого вдалося уникнути. Тому RENOVA допомагає підтримувати металорізальне та пресове обладнання у&nbsp;стабільному робочому стані протягом усього періоду експлуатації. Ми проводимо планове технічне обслуговування, діагностику та профілактичні роботи, щоб своєчасно виявляти зношення, усувати несправності на ранніх етапах і&nbsp;знижувати ризик аварійних зупинок.
         </p>
@@ -211,13 +217,16 @@ var supplyCatalog = [
     <%/* ===================== Supply ===================== */%>
     <section id="supply" class="space-y-8 py-12 lg:space-y-12 lg:py-20">
 
+    <div class="sticky top-[5.125rem] z-30 flex items-center gap-3 border-b border-steel/40 bg-sky px-6 py-3 md:hidden">
+      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-base font-bold leading-none text-white">3</span>
+      <span class="font-display text-h1 font-normal text-navy">Постачання нового обладнання</span>
+    </div>
+
     <%/* ---------- New equipment supply ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <h2 class="flex items-center gap-3 font-display text-h2 font-normal text-navy">
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">3</span>
-          <span>Постачання нового обладнання</span>
-        </h2>
+        <span class="mb-3 hidden h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-h2 font-bold leading-none text-white md:flex">3</span>
+        <h1 class="hidden font-display text-h1 font-normal text-navy md:block">Постачання нового обладнання</h1>
         <p class="mt-6 text-justify text-base text-navy">
           Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове рішення відповідно до завдань вашого виробництва.
         </p>
@@ -232,15 +241,16 @@ var supplyCatalog = [
     </section>
 
     <%/* ---------- Equipment catalog ---------- */%>
-    <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
-      <h3 class="font-display text-h2 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
-      <div data-stagger class="mt-7 grid gap-3 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
-        <% supplyCatalog.forEach(function (item) { %>
-          <article class="flex min-h-[4.5rem] items-center rounded-card bg-white p-4">
-            <h4 class="font-display text-h3 font-normal text-navy"><%= item %></h4>
-          </article>
-        <% }); %>
+    <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
+      <div class="w-fit rounded-card bg-white p-8">
+        <h3 class="w-fit font-display text-h3 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
+        <ul class="w-fit mt-4 list-disc space-y-1 pl-5 text-base text-navy">
+          <% supplyCatalog.forEach(function (item) { %>
+            <li><%= item %></li>
+          <% }); %>
+        </ul>
       </div>
+      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[17.625rem]" src="/images/icons/icon-equipment-spectrum.svg" alt="Спектр постачання обладнання">
     </section>
 
     <%/* ---------- Supply stages ---------- */%>

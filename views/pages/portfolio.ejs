@@ -1,0 +1,40 @@
+<main>
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <h1 class="text-[clamp(2rem,6vw,3.25rem)] font-semibold tracking-tight text-center" data-aos="fade-up">
+            <span class="underline decoration-brand-orange decoration-4 underline-offset-8"><%= pageTitle %></span>
+        </h1>
+        <p class="mt-4 text-center text-white/70 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+            <%= __('portfolio.subtitle') %>
+        </p>
+
+        <div class="mt-12 grid gap-6 sm:gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <% projects.forEach(function(p, idx) { %>
+                <a href="<%= localizedUrl(`/portfolio/${p.slug}`) %>"
+                   class="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur grid-bg shadow-soft overflow-hidden hover:border-brand-orange/60 transition"
+                   data-aos="zoom-in-up" data-aos-delay="<%= idx * 60 %>">
+                    <div class="h-1 bg-gradient-to-r from-brand-orange via-brand-orange/80 to-transparent"></div>
+
+                    <div class="relative">
+                        <img src="<%= p.image %>" alt="<%= p.title %>"
+                             class="w-full aspect-[16/10] object-cover transition duration-500 group-hover:scale-[1.04]" loading="lazy" />
+                        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-graphite/80 to-transparent"></div>
+                    </div>
+
+                    <div class="p-5">
+                        <h3 class="text-lg md:text-xl font-semibold leading-tight group-hover:text-brand-orange transition">
+                            <%= p.title %>
+                        </h3>
+                        <p class="mt-1 text-sm text-white/60"><%= p.tags %></p>
+                    </div>
+                </a>
+            <% }); %>
+        </div>
+
+        <div class="mt-12 flex justify-center" data-aos="fade-up" data-aos-delay="120">
+            <a href="#"
+               class="px-6 py-3 rounded-xl border border-white/15 text-white/90 hover:border-brand-orange/60 hover:bg-brand-orange/10 transition font-medium">
+                <%= __('button.showMore') %>
+            </a>
+        </div>
+    </section>
+</main>
