@@ -127,11 +127,14 @@ module.exports = {
     /**
      * Коментар до поточного етапу.
      *
-     * Наприклад:
-     * "Проводиться перевірка шпиндельного вузла".
+     * Поле використовується для зручного редагування
+     * коментаря в адміністративній панелі.
      *
-     * Під час переходу на наступний етап цей коментар
-     * переноситься до відповідного запису в stages.
+     * Під час переходу на наступний етап поточний коментар
+     * записується до відповідного елемента в stages.
+     *
+     * Після переходу сюди записується початковий коментар
+     * нового етапу.
      */
     currentStageNote: {
       type: 'string',
@@ -140,38 +143,38 @@ module.exports = {
     },
 
     /**
-     * Дата, коли проєкт перейшов на поточний етап.
+     * Хронологія переходів між етапами.
      *
-     * Під час переходу на наступний етап ця дата
-     * переноситься до stages як startedAt.
-     */
-    currentStageStartedAt: {
-      type: 'number'
-    },
-
-    /**
-     * Архів завершених етапів.
+     * Масив містить усі етапи, на які вже перейшов проєкт,
+     * включно з поточним етапом.
      *
-     * Тут зберігаються лише вже пройдені етапи.
-     * Поточний етап у цей масив не додається,
-     * доки не буде виконано перехід на наступний.
+     * enteredAt — дата і час переходу на відповідний етап.
+     *
+     * Окремі startedAt і completedAt не потрібні:
+     * дата переходу на наступний етап одночасно означає,
+     * що попередній етап було завершено.
      *
      * Формат:
      *
      * [
      *   {
      *     key: 'request-received',
-     *     startedAt: 1785410400000,
-     *     completedAt: 1785496800000,
-     *     note: 'Заявку прийнято менеджером'
+     *     enteredAt: 1785410400000,
+     *     note: 'Заявку отримано та передано менеджеру'
+     *   },
+     *   {
+     *     key: 'visit-scheduled',
+     *     enteredAt: 1785496800000,
+     *     note: 'Виїзд погоджено на 15 серпня'
      *   },
      *   {
      *     key: 'diagnostics',
-     *     startedAt: 1785583200000,
-     *     completedAt: 1785756000000,
-     *     note: 'Виявлено зношення шпиндельного вузла'
+     *     enteredAt: 1785583200000,
+     *     note: 'Проводиться перевірка шпиндельного вузла'
      *   }
      * ]
+     *
+     * Останній елемент масиву відповідає currentStage.
      */
     stages: {
       type: 'json',
@@ -273,16 +276,24 @@ module.exports = {
         valuesToSet.currentStage = PROJECT_STAGES[0];
       }
 
-      if (!valuesToSet.currentStageStartedAt) {
-        valuesToSet.currentStageStartedAt = Date.now();
-      }
-
       if (typeof valuesToSet.currentStageNote !== 'string') {
         valuesToSet.currentStageNote = '';
+      } else {
+        valuesToSet.currentStageNote =
+          valuesToSet.currentStageNote.trim();
       }
 
-      if (!Array.isArray(valuesToSet.stages)) {
-        valuesToSet.stages = [];
+      if (
+        !Array.isArray(valuesToSet.stages) ||
+        valuesToSet.stages.length === 0
+      ) {
+        valuesToSet.stages = [
+          {
+            key: valuesToSet.currentStage,
+            enteredAt: Date.now(),
+            note: valuesToSet.currentStageNote
+          }
+        ];
       }
 
       valuesToSet.photos = normalizePhotos(
@@ -353,20 +364,19 @@ module.exports = {
    *
    * Логіка переходу:
    *
-   * 1. Отримуємо актуальний проєкт із бази.
-   * 2. Якщо поточний етап completed — нічого не змінюємо.
+   * 1. Отримуємо актуальний проєкт.
+   * 2. Якщо currentStage === 'completed' — нічого не змінюємо.
    * 3. Визначаємо наступний етап із PROJECT_STAGES.
-   * 4. Поточний етап переносимо до архіву stages:
-   *    - key — назва етапу;
-   *    - startedAt — дата початку етапу;
-   *    - completedAt — дата завершення етапу;
-   *    - note — коментар до етапу.
-   * 5. Наступний етап записуємо в currentStage.
-   * 6. Встановлюємо нову дату currentStageStartedAt.
-   * 7. Очищаємо currentStageNote.
+   * 4. Зберігаємо актуальний коментар поточного етапу
+   *    в останньому елементі stages.
+   * 5. Додаємо до stages новий елемент із:
+   *    - ключем нового етапу;
+   *    - датою переходу;
+   *    - початковим коментарем.
+   * 6. Оновлюємо currentStage і currentStageNote.
    *
    * @param {string|number} projectId ID проєкту
-   * @param {string} nextStageNote Початковий коментар до нового етапу
+   * @param {string} nextStageNote Початковий коментар нового етапу
    *
    * @returns {Promise<Object>} Оновлений проєкт
    */
@@ -390,8 +400,7 @@ module.exports = {
     }
 
     /*
-     * Завершений проєкт більше не може переходити
-     * на наступний етап.
+     * Завершений проєкт більше нікуди не переходить.
      */
     if (project.currentStage === 'completed') {
       return project;
@@ -407,13 +416,12 @@ module.exports = {
       );
     }
 
-    const nextStage = PROJECT_STAGES[
-    currentStageIndex + 1
-      ];
+    const nextStage =
+      PROJECT_STAGES[currentStageIndex + 1];
 
     /*
-     * Додатковий захист на випадок, якщо поточний етап
-     * є останнім у списку, але має іншу назву.
+     * Захист на випадок, якщо поточний етап
+     * уже є останнім у переліку.
      */
     if (!nextStage) {
       return project;
@@ -421,47 +429,70 @@ module.exports = {
 
     const transitionDate = Date.now();
 
-    const previousStages = Array.isArray(project.stages)
-      ? project.stages
+    const currentNote =
+      typeof project.currentStageNote === 'string'
+        ? project.currentStageNote.trim()
+        : '';
+
+    const normalizedNextStageNote =
+      typeof nextStageNote === 'string'
+        ? nextStageNote.trim()
+        : '';
+
+    const stages = Array.isArray(project.stages)
+      ? project.stages.map(stage => ({ ...stage }))
       : [];
 
-    const completedStage = {
-      key: project.currentStage,
-      startedAt:
-        project.currentStageStartedAt || transitionDate,
-      completedAt: transitionDate,
-      note:
-        typeof project.currentStageNote === 'string'
-          ? project.currentStageNote.trim()
-          : ''
-    };
+    const lastStageIndex = stages.length - 1;
+    const lastStage = stages[lastStageIndex];
 
     /*
-     * У критерії оновлення додатково перевіряємо currentStage.
-     *
-     * Це захищає від ситуації, коли два запити одночасно
-     * намагаються перевести проєкт на наступний етап.
+     * Перед переходом оновлюємо коментар поточного етапу
+     * в його записі хронології.
+     */
+    if (
+      lastStage &&
+      lastStage.key === project.currentStage
+    ) {
+      stages[lastStageIndex] = {
+        ...lastStage,
+        note: currentNote
+      };
+    } else {
+      /*
+       * Резервна логіка для старих або пошкоджених записів,
+       * де поточного етапу немає в stages.
+       */
+      stages.push({
+        key: project.currentStage,
+        enteredAt:
+          typeof project.createdAt === 'number'
+            ? project.createdAt
+            : transitionDate,
+        note: currentNote
+      });
+    }
+
+    /*
+     * Додаємо новий етап одразу в момент переходу на нього.
+     */
+    stages.push({
+      key: nextStage,
+      enteredAt: transitionDate,
+      note: normalizedNextStageNote
+    });
+
+    /*
+     * Перевірка currentStage у критеріях захищає
+     * від двох одночасних переходів.
      */
     const updatedProject = await Project.updateOne({
       id: project.id,
       currentStage: project.currentStage
     }).set({
-      stages: [
-        ...previousStages,
-        completedStage
-      ],
-
       currentStage: nextStage,
-      currentStageStartedAt: transitionDate,
-
-      /*
-       * Можна одразу передати коментар для нового етапу.
-       * Якщо його немає — поле очищається.
-       */
-      currentStageNote:
-        typeof nextStageNote === 'string'
-          ? nextStageNote.trim()
-          : ''
+      currentStageNote: normalizedNextStageNote,
+      stages
     });
 
     if (!updatedProject) {
