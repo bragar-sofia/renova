@@ -2,17 +2,255 @@
 <style>
   .fade-left {
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 28%);
-            mask-image: linear-gradient(to right, transparent 0%, #000 28%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 28%);
   }
+
   .fade-right {
     -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 28%);
-            mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+    mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+  }
+
+  .service-section {
+    position: relative;
+  }
+
+  .service-section + .service-section::before {
+    content: "";
+    display: block;
+    width: min(100% - 3rem, 96rem);
+    height: 1px;
+    margin: 0 auto;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(82, 123, 141, 0.38) 16%,
+      rgba(82, 123, 141, 0.38) 84%,
+      transparent
+    );
+  }
+
+  .service-sticky-heading {
+    background: rgba(238, 246, 250, 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .service-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 0.75rem;
+    background: #15324c;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(21, 50, 76, 0.16);
+  }
+
+  .service-image {
+    isolation: isolate;
+    background: #e5f1f7;
+  }
+
+  .service-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.11;
+    background-image:
+      linear-gradient(rgba(43, 109, 151, 0.52) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43, 109, 151, 0.52) 1px, transparent 1px);
+    background-size: 38px 38px;
+    mix-blend-mode: multiply;
+  }
+
+  .service-image:has(.fade-left)::after {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 28%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 28%);
+  }
+
+  .service-image:has(.fade-right)::after {
+    -webkit-mask-image:
+      linear-gradient(to left, transparent 0%, #000 28%);
+    mask-image:
+      linear-gradient(to left, transparent 0%, #000 28%);
+  }
+
+  .service-image img {
+    z-index: 0;
+  }
+
+  .service-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+    box-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-0.25rem);
+    border-color: #9cc4de;
+    box-shadow: 0 22px 52px rgba(7, 49, 78, 0.12);
+  }
+
+  .service-card::after {
+    content: "";
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    width: 8rem;
+    height: 8rem;
+    pointer-events: none;
+    opacity: 0.14;
+    background-image:
+      radial-gradient(circle, rgba(43, 109, 151, 0.75) 1.3px, transparent 1.5px);
+    background-size: 11px 11px;
+    -webkit-mask-image:
+      radial-gradient(circle at bottom right, #000 0%, transparent 72%);
+    mask-image:
+      radial-gradient(circle at bottom right, #000 0%, transparent 72%);
+  }
+
+  .check-list {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .check-list li {
+    position: relative;
+    padding-left: 1.65rem;
+    line-height: 1.45;
+  }
+
+  .check-list li::before {
+    content: "✓";
+    position: absolute;
+    top: 0.12rem;
+    left: 0;
+    display: flex;
+    width: 1.05rem;
+    height: 1.05rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #527b8d;
+    border-radius: 999px;
+    color: #527b8d;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  @media (max-width: 767px) {
+    .service-image::after {
+      opacity: 0.07;
+    }
+
+    .service-card:hover {
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card {
+      transition: none;
+    }
+
+    .service-card:hover {
+      transform: none;
+    }
+  }
+
+  /* Вступний блок сторінки послуг */
+
+  .services-intro {
+    isolation: isolate;
+  }
+
+  .services-intro::after {
+    content: "";
+    position: absolute;
+    top: -12rem;
+    right: -10rem;
+    width: 34rem;
+    height: 34rem;
+    border: 1px solid rgba(43, 109, 151, 0.12);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .services-intro::before {
+    content: "";
+    position: absolute;
+    top: -5rem;
+    right: -3rem;
+    width: 22rem;
+    height: 22rem;
+    border: 1px solid rgba(43, 109, 151, 0.16);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .services-intro-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+
+    background-image:
+      linear-gradient(
+        rgba(43, 109, 151, 0.55) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(43, 109, 151, 0.55) 1px,
+        transparent 1px
+      );
+
+    background-size: 42px 42px;
+
+    -webkit-mask-image:
+      linear-gradient(
+        to left,
+        #000 0%,
+        rgba(0, 0, 0, 0.75) 40%,
+        transparent 75%
+      );
+
+    mask-image:
+      linear-gradient(
+        to left,
+        #000 0%,
+        rgba(0, 0, 0, 0.75) 40%,
+        transparent 75%
+      );
+  }
+
+  @media (max-width: 767px) {
+    .services-intro::before {
+      top: -6rem;
+      right: -8rem;
+    }
+
+    .services-intro::after {
+      display: none;
+    }
+
+    .services-intro-grid {
+      opacity: 0.055;
+    }
   }
 </style>
 <%
 var repairTypes = [
   { title: 'Діагностика обладнання', text: 'Комплексна перевірка обладнання, визначення причин несправності та оцінка поточного стану' },
-  { title: 'Поточний та аварійний ремонт', text: 'Оперативне усунення несправностей, заміна вузлів що вийшли з ладу і повернення обладнання до роботи.' },
+  { title: 'Поточний та аварійний ремонт', text: 'Оперативне усунення несправностей, заміна вузлів, що вийшли з ладу і повернення обладнання до роботи.' },
   { title: 'Капітальний ремонт', text: 'Повне розбирання, виявлення дефектів, відновлення основних вузлів, складання, налаштування та випробування обладнання.' },
   { title: 'Косметичний ремонт', text: 'Очищення, усунення корозії, підготовка поверхонь, відновлення вигляду обладнання із захистом від подальшого впливу корозії.' },
   { title: 'Відновлення точності', text: 'Шліфування базових поверхонь, відновлення напрямних, регулювання геометрії та перевірка відповідності нормам.' },
@@ -22,7 +260,7 @@ var repairTypes = [
 ];
 
 var overhaulScope = [
-  'комплексну діагностику, розбирання та дефектацію верстату;',
+  'комплексну діагностику, розбирання та дефектацію верстата;',
   'підготовку технічного завдання;',
   'відновлення або заміну механічних вузлів;',
   'шліфування базових поверхонь і відновлення напрямних;',
@@ -67,8 +305,8 @@ var supplyCatalog = [
   'Токарні верстати (також з ЧПК)',
   'Фрезерні верстати (також з ЧПК)',
   'Шліфувальні верстати (також з ЧПК)',
-  'Вертикальні, горизонтальні, п’ятиосьові обробні центри;',
-  'Електроерозійні верстат',
+  'Вертикальні, горизонтальні та п’ятиосьові обробні центри',
+  'Електроерозійні верстати',
   'Гідравлічні та механічні преси',
   'Обладнання для обробки листового металу',
   'Інше обладнання відповідно до завдань виробництва'
@@ -79,30 +317,83 @@ var supplyCatalog = [
   <%- include('../partials/site-header', { base: '/renova', active: 'services' }) %>
 
   <main id="services">
+      <header class="services-intro relative overflow-hidden border-b border-steel/30 bg-white">
+          <div class="services-intro-grid" aria-hidden="true"></div>
+
+          <div class="relative z-10 mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24 2xl:py-16">
+              <div class="max-w-4xl">
+                  <div class="mb-5 flex items-center gap-4">
+                      <span class="h-px w-10 bg-steel/60"></span>
+
+                      <p class="font-display text-sm font-bold uppercase tracking-[0.28em] text-steel">
+                          Ремонт · сервіс · постачання
+                      </p>
+                  </div>
+
+                  <h1 class="max-w-[15em] font-display text-h1 font-normal text-navy">
+                      Послуги RENOVA
+                  </h1>
+
+                  <p class="mt-5 max-w-3xl text-base leading-7 text-navy">
+                      Відновлюємо та обслуговуємо металорізальне і пресове обладнання,
+                      а коли ремонт недоцільний — підбираємо, постачаємо та запускаємо
+                      нове рішення під завдання виробництва.
+                  </p>
+
+                  <nav class="mt-7 flex flex-wrap gap-2" aria-label="Напрями послуг">
+                      <a
+                              href="#restoration"
+                              class="rounded-pill border border-steel bg-sky/60 px-4 py-2 text-sm font-semibold text-navy transition hover:border-navy hover:bg-sky"
+                      >
+                          Відновлення обладнання
+                      </a>
+
+                      <a
+                              href="#service"
+                              class="rounded-pill border border-steel bg-sky/60 px-4 py-2 text-sm font-semibold text-navy transition hover:border-navy hover:bg-sky"
+                      >
+                          Сервісне обслуговування
+                      </a>
+
+                      <a
+                              href="#supply"
+                              class="rounded-pill border border-steel bg-sky/60 px-4 py-2 text-sm font-semibold text-navy transition hover:border-navy hover:bg-sky"
+                      >
+                          Постачання обладнання
+                      </a>
+                  </nav>
+              </div>
+          </div>
+      </header>
 
     <%/* ===================== Restoration ===================== */%>
-    <section id="restoration" class="space-y-8 pb-12 pt-8 lg:space-y-12 lg:pb-20 lg:pt-10">
+    <section id="restoration" class="service-section scroll-mt-24 space-y-8 pb-10 pt-6 lg:space-y-10 lg:pb-14 lg:pt-8">
 
-    <div class="sticky top-[5.125rem] z-30 flex items-center gap-3 border-b border-steel/40 bg-sky px-6 py-3 md:hidden">
-      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-base font-bold leading-none text-white">1</span>
+    <div class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 border-y border-steel/30 px-6 py-3 md:hidden">
+      <span class="service-number h-10 w-10 font-display text-base font-bold leading-none">1</span>
       <span class="font-display text-h1 font-normal text-navy">Відновлення обладнання</span>
     </div>
 
     <%/* ---------- Equipment restoration ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <span class="mb-3 hidden h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-h2 font-bold leading-none text-white md:flex">1</span>
-        <h1 class="hidden font-display text-h1 font-normal text-navy md:block">Відновлення обладнання</h1>
-        <p class="mt-6 text-justify text-base text-navy">
+        <span class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-bold leading-none md:flex">1</span>
+        <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Відновлення обладнання</h2>
+        <p class="mt-6 text-left text-base leading-7 text-navy">
           RENOVA спеціалізується на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання незалежно від його типу, виробника та року випуску. Ми виконуємо роботи різного рівня складності — від усунення окремих несправностей і&nbsp;відновлення вузлів до капітального ремонту та модернізації верстата.
         </p>
-        <p class="mt-4 text-justify text-base text-navy">
+        <p class="mt-4 text-left text-base leading-7 text-navy">
           Перед початком робіт наші спеціалісти проводять діагностику, визначають причини несправності, оцінюють загальний технічний стан обладнання та залишковий ресурс його основних вузлів. На основі отриманих результатів ми пропонуємо технічно й&nbsp;економічно обґрунтований варіант відновлення з&nbsp;урахуванням технічного завдання та побажань замовника. Наші спеціалісти виїжджають на підприємства по всій Україні.
         </p>
-        <a href="/renova#contacts" class="mt-6 inline-block rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]">Замовити відновлення</a>
+        <a href="/renova#contacts" class="mt-7 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити відновлення
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="M13 5l7 7-7 7"></path>
+          </svg>
+        </a>
       </div>
-      <div class="relative -mr-6 h-64 overflow-hidden md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
-        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png" alt="Ремонт токарного верстата у майстерні RENOVA">
+        <div class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
+        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png" alt="Ремонт токарного верстата у майстерні RENOVA" fetchpriority="high" decoding="async">
       </div>
     </section>
 
@@ -111,9 +402,10 @@ var supplyCatalog = [
       <h3 class="font-display text-h2 font-normal text-navy">Типи ремонту</h3>
       <div data-stagger class="mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
         <% repairTypes.forEach(function (card) { %>
-          <article class="flex h-full flex-col rounded-card bg-white p-6">
-            <h4 class="font-display text-h3 font-normal text-navy"><%= card.title %></h4>
-            <p class="mt-2 flex-grow text-left text-base text-navy"><%= card.text %></p>
+          <article class="service-card flex h-full flex-col rounded-card bg-white p-6">
+            <span class="mb-4 h-1 w-10 rounded-full bg-steel" aria-hidden="true"></span>
+            <h4 class="relative z-10 font-display text-h3 font-normal text-navy"><%= card.title %></h4>
+            <p class="relative z-10 mt-3 flex-grow text-left text-base leading-7 text-navy"><%= card.text %></p>
           </article>
         <% }); %>
       </div>
@@ -122,7 +414,7 @@ var supplyCatalog = [
     <%/* ---------- Repair stages ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Етапи ремонту</h3>
-      <div class="mt-8">
+        <div class="mt-6">
         <%- include('../partials/process-steps', { steps: repairSteps, captionLines: 3 }) %>
       </div>
     </section>
@@ -131,32 +423,32 @@ var supplyCatalog = [
     <section class="mx-auto grid max-w-shell items-start gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[0.4fr_0.6fr]">
       <div>
         <h3 class="font-display text-h2 font-normal text-navy">Капітальний ремонт</h3>
-        <p class="mt-6 text-justify text-base text-navy">
+        <p class="mt-6 text-left text-base leading-7 text-navy">
           Капітальний ремонт проводиться у&nbsp;разі значного зношення вузлів обладнання, втрати точності, системних несправностей або необхідності комплексного оновлення верстата.
         </p>
-        <div class="mt-8 rounded-card bg-white p-8">
+          <div class="service-card mt-6 rounded-card bg-white p-6 md:p-8">
           <h4 class="font-display text-h3 font-normal text-navy">Що може включати капітальний ремонт</h4>
-          <ul class="mt-4 list-disc space-y-1 pl-5 text-base text-navy">
+          <ul class="check-list relative z-10 mt-5 text-base text-navy">
             <% overhaulScope.forEach(function (item) { %>
               <li><%= item %></li>
             <% }); %>
           </ul>
         </div>
       </div>
-      <div class="relative -mr-6 h-72 overflow-hidden md:h-96 lg:-mr-8 lg:h-full lg:min-h-[36.4375rem] xl:-mr-16 2xl:-mr-24">
-        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png" alt="Розбирання коробки передач під час капітального ремонту">
+        <div class="service-image relative -mr-6 hidden h-72 overflow-hidden md:block md:h-96 lg:-mr-8 lg:h-full lg:min-h-[36.4375rem] xl:-mr-16 2xl:-mr-24">
+        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png" alt="Розбирання коробки передач під час капітального ремонту" loading="lazy" decoding="async">
       </div>
     </section>
 
     <%/* ---------- Cost and timeline ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[auto_1fr] lg:gap-14">
-      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-52" src="/images/icons/illustration-cost-terms.svg" alt="">
+      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-52" src="/images/icons/illustration-cost-terms.svg" alt="" loading="lazy" decoding="async" aria-hidden="true">
       <div>
         <h3 class="font-display text-h2 font-normal text-navy">Вартість і терміни</h3>
-        <p class="mt-6 text-justify text-base text-navy">
+        <p class="mt-6 text-left text-base leading-7 text-navy">
           Вартість і&nbsp;термін виконання ремонтних робіт визначається індивідуально після проведення діагностики обладнання, та залежить від його технічного стану, складності та обсягу необхідних робіт, потреб у&nbsp;відновленні або заміні вузлів, а&nbsp;також вимог описаних у&nbsp;технічному завданні замовника.
         </p>
-        <p class="mt-4 text-justify text-base text-navy">
+        <p class="mt-4 text-left text-base leading-7 text-navy">
           За результатами діагностики ми пропонуємо оптимальний варіант ремонту та формуємо комерційну пропозицію із переліком робіт, строками виконання робіт, та&nbsp;їх вартістю.
         </p>
       </div>
@@ -165,28 +457,33 @@ var supplyCatalog = [
     </section>
 
     <%/* ===================== Service ===================== */%>
-    <section id="service" class="space-y-8 py-12 lg:space-y-12 lg:py-20">
+    <section id="service" class="service-section scroll-mt-24 space-y-8 py-10 lg:space-y-10 lg:py-14">
 
-    <div class="sticky top-[5.125rem] z-30 flex items-center gap-3 border-b border-steel/40 bg-sky px-6 py-3 md:hidden">
-      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-base font-bold leading-none text-white">2</span>
+    <div class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 border-y border-steel/30 px-6 py-3 md:hidden">
+      <span class="service-number h-10 w-10 font-display text-base font-bold leading-none">2</span>
       <span class="font-display text-h1 font-normal text-navy">Сервісне обслуговування</span>
     </div>
 
     <%/* ---------- Maintenance ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[0.8fr_1.2fr]">
-      <div class="relative -ml-6 h-64 overflow-hidden md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
-        <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата">
+        <div class="service-image relative -ml-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
+        <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата" loading="lazy" decoding="async">
       </div>
       <div>
-        <span class="mb-3 hidden h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-h2 font-bold leading-none text-white md:flex">2</span>
-        <h1 class="hidden font-display text-h1 font-normal text-navy md:block">Сервісне обслуговування</h1>
-        <p class="mt-6 text-justify text-base text-navy">
+        <span class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-bold leading-none md:flex">2</span>
+        <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Сервісне обслуговування</h2>
+        <p class="mt-6 text-left text-base leading-7 text-navy">
           Найкращий ремонт – це той, якого вдалося уникнути. Тому RENOVA допомагає підтримувати металорізальне та пресове обладнання у&nbsp;стабільному робочому стані протягом усього періоду експлуатації. Ми проводимо планове технічне обслуговування, діагностику та профілактичні роботи, щоб своєчасно виявляти зношення, усувати несправності на ранніх етапах і&nbsp;знижувати ризик аварійних зупинок.
         </p>
-        <p class="mt-4 text-justify text-base text-navy">
+        <p class="mt-4 text-left text-base leading-7 text-navy">
           Для кожного підприємства ми розробляємо індивідуальний графік обслуговування з&nbsp;урахуванням типу обладнання, його поточного стану, навантаження та графіку роботи підприємства.
         </p>
-        <a href="/renova#contacts" class="mt-6 inline-block rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]">Замовити сервісне обслуговування</a>
+        <a href="/renova#contacts" class="mt-7 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити сервісне обслуговування
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="M13 5l7 7-7 7"></path>
+          </svg>
+        </a>
       </div>
     </section>
 
@@ -194,20 +491,20 @@ var supplyCatalog = [
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
       <div>
         <h3 class="font-display text-h2 font-normal text-navy">Попередити несправність завжди краще ніж усувати її</h3>
-        <p class="mt-6 text-justify text-base text-navy">
+        <p class="mt-6 text-left text-base leading-7 text-navy">
           Аварійна поломка часто виникає в&nbsp;найбільш невідповідний момент і&nbsp;призводить не лише до витрат на ремонт, а&nbsp;й до простою обладнання та пов’язаних із ним виробничих процесів.
         </p>
-        <p class="mt-4 text-justify text-base text-navy">
+        <p class="mt-4 text-left text-base leading-7 text-navy">
           Завдання планового сервісного обслуговування – контролювати технічний стан верстата, своєчасно виявляти дефекти та виконувати необхідні роботи по їх усуненню до виникнення серйозної поломки. RENOVA може взяти на себе функції технічного супроводу верстатного парку або доповнити роботу власної служби з&nbsp;обслуговування на вашому підприємстві.
         </p>
       </div>
-      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[17.625rem]" src="/images/icons/illustration-prevention.svg" alt="">
+      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[17.625rem]" src="/images/icons/illustration-prevention.svg" alt="" loading="lazy" decoding="async" aria-hidden="true">
     </section>
 
     <%/* ---------- Maintenance stages ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Етапи проведення сервісного обслуговування</h3>
-      <div class="mt-8">
+        <div class="mt-6">
         <%- include('../partials/process-steps', { steps: serviceSteps, fullWidth: true }) %>
       </div>
     </section>
@@ -215,48 +512,53 @@ var supplyCatalog = [
     </section>
 
     <%/* ===================== Supply ===================== */%>
-    <section id="supply" class="space-y-8 py-12 lg:space-y-12 lg:py-20">
+    <section id="supply" class="service-section scroll-mt-24 space-y-8 py-10 lg:space-y-10 lg:py-14">
 
-    <div class="sticky top-[5.125rem] z-30 flex items-center gap-3 border-b border-steel/40 bg-sky px-6 py-3 md:hidden">
-      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy font-display text-base font-bold leading-none text-white">3</span>
+    <div class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 border-y border-steel/30 px-6 py-3 md:hidden">
+      <span class="service-number h-10 w-10 font-display text-base font-bold leading-none">3</span>
       <span class="font-display text-h1 font-normal text-navy">Постачання нового обладнання</span>
     </div>
 
     <%/* ---------- New equipment supply ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <span class="mb-3 hidden h-14 w-14 items-center justify-center rounded-full bg-navy font-display text-h2 font-bold leading-none text-white md:flex">3</span>
-        <h1 class="hidden font-display text-h1 font-normal text-navy md:block">Постачання нового обладнання</h1>
-        <p class="mt-6 text-justify text-base text-navy">
+        <span class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-bold leading-none md:flex">3</span>
+        <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Постачання нового обладнання</h2>
+        <p class="mt-6 text-left text-base leading-7 text-navy">
           Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове рішення відповідно до завдань вашого виробництва.
         </p>
-        <p class="mt-4 text-justify text-base text-navy">
+        <p class="mt-4 text-left text-base leading-7 text-navy">
           Ми аналізуємо технологічні потреби підприємства, підбираємо обладнання від перевірених виробників з&nbsp;Європи та Азії, розраховуємо вартість постачання, монтажу та пусконалагоджувальних робіт. Після встановлення виконуємо налаштування, проводимо перевірку роботи обладнання та базове навчання представників замовника.
         </p>
-        <a href="/renova#contacts" class="mt-6 inline-block rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]">Замовити нове обладнання</a>
+        <a href="/renova#contacts" class="mt-7 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити нове обладнання
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="M13 5l7 7-7 7"></path>
+          </svg>
+        </a>
       </div>
-      <div class="relative -mr-6 h-64 overflow-hidden md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
-        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png" alt="Складання нового обладнання перед відвантаженням">
+        <div class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
+        <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png" alt="Складання нового обладнання перед відвантаженням" loading="lazy" decoding="async">
       </div>
     </section>
 
     <%/* ---------- Equipment catalog ---------- */%>
     <section class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
-      <div class="w-fit rounded-card bg-white p-8">
-        <h3 class="w-fit font-display text-h3 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
-        <ul class="w-fit mt-4 list-disc space-y-1 pl-5 text-base text-navy">
+      <div class="service-card w-full max-w-2xl rounded-card bg-white p-6 md:p-8">
+        <h3 class="relative z-10 font-display text-h3 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
+        <ul class="check-list relative z-10 mt-5 text-base text-navy">
           <% supplyCatalog.forEach(function (item) { %>
             <li><%= item %></li>
           <% }); %>
         </ul>
       </div>
-      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[17.625rem]" src="/images/icons/icon-equipment-spectrum.svg" alt="Спектр постачання обладнання">
+      <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-[17.625rem]" src="/images/icons/icon-equipment-spectrum.svg" alt="Спектр постачання обладнання" loading="lazy" decoding="async">
     </section>
 
     <%/* ---------- Supply stages ---------- */%>
     <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
       <h3 class="font-display text-h2 font-normal text-navy">Етапи постачання обладнання</h3>
-      <div class="mt-8">
+        <div class="mt-6">
         <%- include('../partials/process-steps', { steps: supplySteps, captionLines: 3 }) %>
       </div>
     </section>
