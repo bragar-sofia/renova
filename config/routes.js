@@ -32,6 +32,12 @@ module.exports.routes = {
   'POST /admin/projects/:id': 'AdminProjectController.update',
   'POST /admin/projects/:id/advance-stage': 'AdminProjectController.advanceStage',
 
+  // Авторизація адміністратора
+  'GET /admin/login': 'AdminAuthController.loginPage',
+  'POST /admin/login': 'AdminAuthController.login',
+  'POST /admin/logout': 'AdminAuthController.logout',
+  'GET /admin': '/admin/projects'
+
 
   /***************************************************************************
   *                                                                          *

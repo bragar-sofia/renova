@@ -10,13 +10,12 @@
 
 module.exports.policies = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Default policy for all controllers and actions, unless overridden.       *
-  * (`true` allows public access)                                            *
-  *                                                                          *
-  ***************************************************************************/
-
-  // '*': true,
+  /**
+   * Policy запускається перед усіма controller actions.
+   *
+   * Усередині protectAdmin перевіряється,
+   * чи починається URL із /admin.
+   */
+  '*': 'protectAdmin'
 
 };

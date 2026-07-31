@@ -140,3 +140,4 @@ lib-cov
 .claude
 .agents
 
+.env
