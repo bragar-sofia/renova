@@ -1,0 +1,823 @@
+<%
+const stageLabels = {
+  'request-received': 'Заявку отримано',
+  'visit-scheduled': 'Виїзд погоджено',
+  'diagnostics': 'Діагностика',
+  'technical-solution': 'Технічне рішення',
+  'offer-approved': 'Пропозицію погоджено',
+  'repair': 'Ремонт',
+  'assembly': 'Складання та налаштування',
+  'testing': 'Випробування',
+  'completed': 'Завершено'
+};
+
+const successMessages = {
+  created: 'Проєкт успішно створено.',
+  updated: 'Зміни успішно збережено.',
+  'stage-advanced': 'Проєкт успішно переведено на наступний етап.'
+};
+
+const formatDate = (value) => {
+  if (!value) {
+    return '—';
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return '—';
+  }
+
+  return new Intl.DateTimeFormat('uk-UA', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date);
+};
+
+const getStageLabel = (key) => {
+  return stageLabels[key] || key || 'Не визначено';
+};
+
+const stageHistory = Array.isArray(project.stages)
+  ? project.stages
+  : [];
+
+const stageHistoryMap = {};
+
+stageHistory.forEach((stage) => {
+  if (stage && stage.key) {
+    stageHistoryMap[stage.key] = stage;
+  }
+});
+
+const formErrors = Array.isArray(errors)
+  ? errors
+  : [];
+
+const successMessage =
+  successMessages[success] || '';
+
+const progress =
+  currentStageIndex >= 0 && projectStages.length > 0
+    ? Math.round(
+      ((currentStageIndex + 1) / projectStages.length) * 100
+    )
+    : 0;
+
+const isCompleted =
+  project.currentStage === 'completed';
+
+const beforePhotos =
+  project.photos &&
+  Array.isArray(project.photos.before)
+    ? project.photos.before
+    : [];
+
+const afterPhotos =
+  project.photos &&
+  Array.isArray(project.photos.after)
+    ? project.photos.after
+    : [];
+%>
+
+<section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+
+    <!-- Навігація -->
+    <nav
+      class="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500"
+      aria-label="Навігація"
+    >
+      <a
+        href="/admin/projects"
+        class="transition hover:text-navy"
+      >
+        Проєкти та заявки
+      </a>
+
+      <svg
+        class="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+
+      <span class="text-slate-700">
+        №<%= project.requestNumber %>
+      </span>
+    </nav>
+
+    <!-- Шапка сторінки -->
+    <div
+      class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between"
+    >
+      <div>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Редагування заявки
+          </h1>
+
+          <span
+            class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 font-mono text-sm font-semibold text-slate-700"
+          >
+            №<%= project.requestNumber %>
+          </span>
+        </div>
+
+        <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+          <%= project.title %>
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <a
+          href="/admin/projects"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="m15 18-6-6 6-6"></path>
+          </svg>
+
+          До списку
+        </a>
+
+        <button
+          type="submit"
+          form="project-edit-form"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M5 4h12l2 2v14H5z"></path>
+            <path d="M8 4v6h8V4"></path>
+            <path d="M8 20v-6h8v6"></path>
+          </svg>
+
+          Зберегти зміни
+        </button>
+      </div>
+    </div>
+
+    <!-- Повідомлення -->
+    <% if (successMessage) { %>
+      <div
+        class="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+        role="status"
+      >
+        <svg
+          class="mt-0.5 h-5 w-5 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+
+        <span><%= successMessage %></span>
+      </div>
+    <% } %>
+
+    <% if (formErrors.length > 0) { %>
+      <div
+        class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800"
+        role="alert"
+      >
+        <div class="flex items-start gap-3">
+          <svg
+            class="mt-0.5 h-5 w-5 shrink-0"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 8v5"></path>
+            <path d="M12 17h.01"></path>
+          </svg>
+
+          <div>
+            <p class="font-semibold">
+              Не вдалося зберегти зміни:
+            </p>
+
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+              <% formErrors.forEach((error) => { %>
+                <li><%= error %></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+
+      <!-- Основна форма -->
+      <form
+        id="project-edit-form"
+        action="/admin/projects/<%= project.id %>"
+        method="post"
+        class="space-y-6"
+      >
+        <!-- Основні дані -->
+        <div
+          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        >
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900">
+              Основна інформація
+            </h2>
+
+            <p class="mt-1 text-sm leading-6 text-slate-500">
+              Назва проєкту, обладнання та основний вид ремонтних робіт.
+            </p>
+          </div>
+
+          <div class="mt-6 space-y-5">
+            <div>
+              <label
+                for="title"
+                class="block text-sm font-semibold text-slate-700"
+              >
+                Заголовок проєкту
+                <span class="text-red-500">*</span>
+              </label>
+
+              <input
+                id="title"
+                type="text"
+                name="title"
+                value="<%= project.title || '' %>"
+                required
+                class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
+                placeholder="Наприклад: Капітальний ремонт токарного верстата 16К20"
+              >
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <div>
+                <label
+                  for="equipment"
+                  class="block text-sm font-semibold text-slate-700"
+                >
+                  Обладнання
+                  <span class="text-red-500">*</span>
+                </label>
+
+                <input
+                  id="equipment"
+                  type="text"
+                  name="equipment"
+                  value="<%= project.equipment || '' %>"
+                  required
+                  class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
+                  placeholder="Тип, виробник і модель обладнання"
+                >
+              </div>
+
+              <div>
+                <label
+                  for="repairType"
+                  class="block text-sm font-semibold text-slate-700"
+                >
+                  Вид ремонту
+                  <span class="text-red-500">*</span>
+                </label>
+
+                <input
+                  id="repairType"
+                  type="text"
+                  name="repairType"
+                  value="<%= project.repairType || '' %>"
+                  required
+                  class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
+                  placeholder="Наприклад: Капітальний ремонт"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Поточний етап -->
+        <div
+          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        >
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-900">
+                Поточний етап
+              </h2>
+
+              <p class="mt-1 text-sm leading-6 text-slate-500">
+                Коментар, який бачить користувач біля поточного стану проєкту.
+              </p>
+            </div>
+
+            <span
+              class="<%= isCompleted
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                : 'border-sky-200 bg-sky-50 text-sky-700'
+              %> inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold"
+            >
+              <%= getStageLabel(project.currentStage) %>
+            </span>
+          </div>
+
+          <div class="mt-5">
+            <label
+              for="currentStageNote"
+              class="block text-sm font-semibold text-slate-700"
+            >
+              Коментар до поточного етапу
+            </label>
+
+            <textarea
+              id="currentStageNote"
+              name="currentStageNote"
+              rows="4"
+              class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
+              placeholder="Опишіть, що зараз відбувається з обладнанням"
+            ><%= project.currentStageNote || '' %></textarea>
+          </div>
+
+          <div class="mt-5">
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm font-medium text-slate-600">
+                Загальний прогрес
+              </span>
+
+              <span class="text-sm font-semibold text-slate-900">
+                <%= progress %>%
+              </span>
+            </div>
+
+            <div
+              class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="<%= progress %>"
+            >
+              <div
+                class="<%= isCompleted ? 'bg-emerald-500' : 'bg-navy' %> h-full rounded-full transition-all"
+                style="width: <%= progress %>%"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Опис -->
+        <div
+          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        >
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900">
+              Опис проєкту
+            </h2>
+
+            <p class="mt-1 text-sm leading-6 text-slate-500">
+              Початковий стан, несправності, виконані роботи, труднощі та результат.
+            </p>
+          </div>
+
+          <div class="mt-5">
+            <label
+              for="description"
+              class="sr-only"
+            >
+              Опис проєкту
+            </label>
+
+            <textarea
+              id="description"
+              name="description"
+              rows="18"
+              class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"
+            ><%= project.description || '' %></textarea>
+          </div>
+        </div>
+
+        <!-- Публікація -->
+        <div
+          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        >
+          <h2 class="text-lg font-semibold text-slate-900">
+            Відображення на сайті
+          </h2>
+
+          <input
+            type="hidden"
+            name="isVisible"
+            value="false"
+          >
+
+          <label
+            for="isVisible"
+            class="mt-5 flex cursor-pointer items-start gap-4 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50"
+          >
+            <input
+              id="isVisible"
+              type="checkbox"
+              name="isVisible"
+              value="true"
+              <%= project.isVisible ? 'checked' : '' %>
+              class="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-navy focus:ring-navy"
+            >
+
+            <span>
+              <span class="block text-sm font-semibold text-slate-900">
+                Показувати проєкт на сайті
+              </span>
+
+              <span class="mt-1 block text-sm leading-6 text-slate-500">
+                Незавершений проєкт відображатиметься серед поточних робіт,
+                а завершений — у портфоліо.
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Кнопки -->
+        <div
+          class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <a
+            href="/admin/projects"
+            class="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            Скасувати
+          </a>
+
+          <button
+            type="submit"
+            class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M5 4h12l2 2v14H5z"></path>
+              <path d="M8 4v6h8V4"></path>
+            </svg>
+
+            Зберегти зміни
+          </button>
+        </div>
+      </form>
+
+      <!-- Права колонка -->
+      <aside class="space-y-6">
+
+        <!-- Стан проєкту -->
+        <div
+          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+        >
+          <h2 class="text-base font-semibold text-slate-900">
+            Інформація про заявку
+          </h2>
+
+          <dl class="mt-5 space-y-4 text-sm">
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Номер
+              </dt>
+
+              <dd class="font-mono font-semibold text-slate-900">
+                №<%= project.requestNumber %>
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Створено
+              </dt>
+
+              <dd class="text-right font-medium text-slate-700">
+                <%= formatDate(project.createdAt) %>
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Оновлено
+              </dt>
+
+              <dd class="text-right font-medium text-slate-700">
+                <%= formatDate(project.updatedAt) %>
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Видимість
+              </dt>
+
+              <dd>
+                <% if (project.isVisible) { %>
+                  <span
+                    class="inline-flex items-center gap-1.5 font-medium text-emerald-700"
+                  >
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                    Відображається
+                  </span>
+                <% } else { %>
+                  <span
+                    class="inline-flex items-center gap-1.5 font-medium text-slate-500"
+                  >
+                    <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+                    Приховано
+                  </span>
+                <% } %>
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Фото до
+              </dt>
+
+              <dd class="font-medium text-slate-700">
+                <%= beforePhotos.length %>
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Фото після
+              </dt>
+
+              <dd class="font-medium text-slate-700">
+                <%= afterPhotos.length %>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Перехід на наступний етап -->
+        <div
+          class="rounded-2xl border <%= isCompleted
+            ? 'border-emerald-200 bg-emerald-50'
+            : 'border-slate-200 bg-white'
+          %> p-5 shadow-sm"
+        >
+          <% if (isCompleted) { %>
+            <div class="flex items-start gap-3">
+              <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
+              >
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              </div>
+
+              <div>
+                <h2 class="font-semibold text-emerald-900">
+                  Проєкт завершено
+                </h2>
+
+                <p class="mt-1 text-sm leading-6 text-emerald-800">
+                  Цей проєкт уже перебуває на останньому етапі.
+                </p>
+              </div>
+            </div>
+          <% } else if (nextStage) { %>
+            <h2 class="text-base font-semibold text-slate-900">
+              Наступний етап
+            </h2>
+
+            <div class="mt-4 rounded-xl bg-slate-50 p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Після підтвердження
+              </p>
+
+              <p class="mt-2 font-semibold text-slate-900">
+                <%= getStageLabel(nextStage) %>
+              </p>
+            </div>
+
+            <form
+              action="/admin/projects/<%= project.id %>/advance-stage"
+              method="post"
+              class="mt-4"
+              data-advance-stage-form
+            >
+              <label
+                for="nextStageNote"
+                class="block text-sm font-semibold text-slate-700"
+              >
+                Коментар до нового етапу
+              </label>
+
+              <textarea
+                id="nextStageNote"
+                name="nextStageNote"
+                rows="4"
+                class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm leading-5 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"
+                placeholder="Необов’язковий коментар"
+              ></textarea>
+
+              <p class="mt-3 text-xs leading-5 text-slate-500">
+                Перед переходом збережіть зміни основної форми,
+                якщо редагували коментар поточного етапу.
+              </p>
+
+              <button
+                type="submit"
+                class="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b527b]"
+              >
+                Перейти до етапу
+
+                <svg
+                  class="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="m13 5 7 7-7 7"></path>
+                </svg>
+              </button>
+            </form>
+          <% } %>
+        </div>
+
+        <!-- Хронологія -->
+        <div
+          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+        >
+          <div class="flex items-center justify-between gap-4">
+            <h2 class="text-base font-semibold text-slate-900">
+              Хронологія
+            </h2>
+
+            <span class="text-xs text-slate-500">
+              <%= currentStageIndex + 1 %> / <%= projectStages.length %>
+            </span>
+          </div>
+
+          <ol class="mt-6">
+            <% projectStages.forEach((stageKey, index) => { %>
+              <%
+                const stage = stageHistoryMap[stageKey];
+                const isCurrent = stageKey === project.currentStage;
+                const isReached = index <= currentStageIndex;
+                const isLast = index === projectStages.length - 1;
+
+                const stageNote = isCurrent
+                  ? project.currentStageNote
+                  : stage && stage.note
+                    ? stage.note
+                    : '';
+              %>
+
+              <li class="relative flex gap-4 <%= !isLast ? 'pb-6' : '' %>">
+                <% if (!isLast) { %>
+                  <span
+                    class="absolute left-[15px] top-8 h-[calc(100%-1rem)] w-px <%= index < currentStageIndex
+                      ? 'bg-navy'
+                      : 'bg-slate-200'
+                    %>"
+                    aria-hidden="true"
+                  ></span>
+                <% } %>
+
+                <span
+                  class="<%=
+                    isCurrent
+                      ? 'border-navy bg-navy text-white'
+                      : isReached
+                        ? 'border-navy bg-white text-navy'
+                        : 'border-slate-300 bg-white text-slate-300'
+                  %> relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2"
+                >
+                  <% if (isReached && !isCurrent) { %>
+                    <svg
+                      class="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      aria-hidden="true"
+                    >
+                      <path d="M20 6 9 17l-5-5"></path>
+                    </svg>
+                  <% } else { %>
+                    <span class="text-xs font-semibold">
+                      <%= index + 1 %>
+                    </span>
+                  <% } %>
+                </span>
+
+                <div class="min-w-0 pt-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p
+                      class="<%= isReached
+                        ? 'text-slate-900'
+                        : 'text-slate-400'
+                      %> text-sm font-semibold"
+                    >
+                      <%= getStageLabel(stageKey) %>
+                    </p>
+
+                    <% if (isCurrent) { %>
+                      <span
+                        class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700"
+                      >
+                        Поточний
+                      </span>
+                    <% } %>
+                  </div>
+
+                  <% if (stage && stage.enteredAt) { %>
+                    <time
+                      class="mt-1 block text-xs text-slate-500"
+                      datetime="<%= new Date(stage.enteredAt).toISOString() %>"
+                    >
+                      <%= formatDate(stage.enteredAt) %>
+                    </time>
+                  <% } %>
+
+                  <% if (stageNote) { %>
+                    <p class="mt-2 text-xs leading-5 text-slate-500">
+                      <%= stageNote %>
+                    </p>
+                  <% } %>
+                </div>
+              </li>
+            <% }) %>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const editorElement = document.querySelector('#description');
+
+    /*
+     * Працює, якщо ClassicEditor уже підключений
+     * у layout або в загальних скриптах адмінпанелі.
+     */
+    if (editorElement && window.ClassicEditor) {
+      window.ClassicEditor
+        .create(editorElement)
+        .catch(function (error) {
+          console.error('CKEditor initialization error:', error);
+        });
+    }
+
+    const advanceStageForm = document.querySelector(
+      '[data-advance-stage-form]'
+    );
+
+    if (advanceStageForm) {
+      advanceStageForm.addEventListener('submit', function (event) {
+        const confirmed = window.confirm(
+          'Перевести проєкт на наступний етап? Повернення до попереднього етапу поки не передбачено.'
+        );
+
+        if (!confirmed) {
+          event.preventDefault();
+        }
+      });
+    }
+  });
+</script>

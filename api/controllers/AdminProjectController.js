@@ -265,6 +265,106 @@ module.exports = {
   },
 
   /**
+   * Переводить проєкт на наступний етап.
+   *
+   * Саму логіку переходу, оновлення currentStage
+   * та формування stages виконує метод моделі
+   * Project.advanceStage().
+   *
+   * POST /admin/projects/:id/advance-stage
+   */
+  advanceStage: async function (req, res) {
+    const projectId = req.params.id;
+
+    try {
+      const project = await Project.findOne({
+        id: projectId
+      });
+
+      if (!project) {
+        return res.notFound();
+      }
+
+      /*
+       * Додаткова перевірка на рівні контролера.
+       *
+       * Аналогічна перевірка вже є в методі моделі,
+       * але тут ми уникаємо зайвого виклику та повертаємо
+       * адміністратора на сторінку проєкту.
+       */
+      if (project.currentStage === 'completed') {
+        return res.redirect(
+          `/admin/projects/${project.id}/edit`
+        );
+      }
+
+      const nextStageNote = normalizeText(
+        req.body && req.body.nextStageNote
+      );
+
+      await Project.advanceStage(
+        project.id,
+        nextStageNote
+      );
+
+      return res.redirect(
+        `/admin/projects/${project.id}/edit?success=stage-advanced`
+      );
+    } catch (error) {
+      sails.log.error(
+        'AdminProjectController.advanceStage error:',
+        error
+      );
+
+      /*
+       * Повторно отримуємо актуальний запис, оскільки
+       * етап міг бути змінений паралельним запитом.
+       */
+      const project = await Project.findOne({
+        id: projectId
+      });
+
+      if (!project) {
+        return res.notFound();
+      }
+
+      const currentStageIndex =
+        PROJECT_STAGES.indexOf(
+          project.currentStage
+        );
+
+      const nextStage =
+        currentStageIndex >= 0
+          ? PROJECT_STAGES[
+        currentStageIndex + 1
+          ] || null
+          : null;
+
+      res.status(409);
+
+      return res.view('admin/projects/edit', {
+        pageTitle:
+          `Редагування заявки №${project.requestNumber}`,
+
+        project,
+
+        projectStages: PROJECT_STAGES,
+
+        currentStageIndex,
+
+        nextStage,
+
+        errors: [
+          error.message ||
+          'Не вдалося перевести проєкт на наступний етап.'
+        ],
+
+        success: ''
+      });
+    }
+  },
+
+  /**
    * Виводить усі проєкти у форматі JSON.
    *
    * GET /admin/projects/export-json

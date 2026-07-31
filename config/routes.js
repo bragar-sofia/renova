@@ -30,6 +30,7 @@ module.exports.routes = {
   'POST /admin/projects': 'AdminProjectController.create',
   'GET /admin/projects/:id/edit': 'AdminProjectController.edit',
   'POST /admin/projects/:id': 'AdminProjectController.update',
+  'POST /admin/projects/:id/advance-stage': 'AdminProjectController.advanceStage',
 
 
   /***************************************************************************

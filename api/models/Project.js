@@ -6,21 +6,17 @@ const PROJECT_STAGES = require('../../lib/projectStages');
 /**
  * Генерує випадковий шестизначний номер заявки.
  *
- * Перед поверненням номера перевіряємо, чи він уже існує.
- * Остаточним захистом від дублювання залишається unique-індекс БД.
+ * Перед поверненням номера перевіряємо, чи він уже існує, оскільки в БД не можна поставити unique без required,
+ * а генерація відбувається вже після передачі моделі до beforeCreate
  */
 async function generateUniqueRequestNumber() {
   const Project = sails.models.project;
   const maxAttempts = 30;
 
   for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    const requestNumber = crypto
-      .randomInt(100000, 1000000)
-      .toString();
+    const requestNumber = crypto.randomInt(100000, 1000000).toString();
 
-    const existingProject = await Project
-      .findOne({ requestNumber })
-      .select(['id']);
+    const existingProject = await Project.findOne({ requestNumber })
 
     if (!existingProject) {
       return requestNumber;
@@ -65,9 +61,7 @@ module.exports = {
      * Поле генерується автоматично в beforeCreate.
      */
     requestNumber: {
-      type: 'string',
-      required: true,
-      unique: true
+      type: 'string'
     },
 
     /**

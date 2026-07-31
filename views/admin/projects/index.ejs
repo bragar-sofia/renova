@@ -1,0 +1,538 @@
+<%
+const stageLabels = {
+  'request-received': 'Заявку отримано',
+  'visit-scheduled': 'Виїзд погоджено',
+  'diagnostics': 'Діагностика',
+  'technical-solution': 'Технічне рішення',
+  'offer-approved': 'Пропозицію погоджено',
+  'repair': 'Ремонт',
+  'assembly': 'Складання та налаштування',
+  'testing': 'Випробування',
+  'completed': 'Завершено'
+};
+
+const successMessages = {
+  created: 'Проєкт успішно створено.',
+  updated: 'Проєкт успішно оновлено.',
+  deleted: 'Проєкт успішно видалено.'
+};
+
+const formatDate = (value) => {
+  if (!value) {
+    return '—';
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return '—';
+  }
+
+  return new Intl.DateTimeFormat('uk-UA', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date);
+};
+
+const getStageLabel = (stage) => {
+  return stageLabels[stage] || stage || 'Не визначено';
+};
+
+const getStageBadgeClass = (stage) => {
+  if (stage === 'completed') {
+    return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+  }
+
+  if (stage === 'testing') {
+    return 'border-violet-200 bg-violet-50 text-violet-700';
+  }
+
+  if (stage === 'repair' || stage === 'assembly') {
+    return 'border-amber-200 bg-amber-50 text-amber-700';
+  }
+
+  return 'border-sky-200 bg-sky-50 text-sky-700';
+};
+
+const startPage = Math.max(1, pagination.page - 2);
+const endPage = Math.min(
+  pagination.totalPages,
+  pagination.page + 2
+);
+
+const successMessage = successMessages[success] || '';
+%>
+
+<section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+
+    <!-- Шапка сторінки -->
+    <div
+      class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Проєкти та заявки
+          </h1>
+
+          <span
+            class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-sm font-medium text-slate-700"
+          >
+            <%= pagination.totalProjects %>
+          </span>
+        </div>
+
+        <p class="mt-2 text-sm leading-6 text-slate-600">
+          Керування поточними заявками та завершеними проєктами.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <a
+          href="/admin/projects/export-json?download=1"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-50"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <path d="M12 3v12"></path>
+            <path d="m7 10 5 5 5-5"></path>
+            <path d="M5 21h14"></path>
+          </svg>
+
+          Експорт JSON
+        </a>
+
+        <a
+          href="/admin/projects/new"
+          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+          </svg>
+
+          Додати проєкт
+        </a>
+      </div>
+    </div>
+
+    <!-- Повідомлення про успішну операцію -->
+    <% if (successMessage) { %>
+      <div
+        class="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+        role="status"
+      >
+        <svg
+          class="mt-0.5 h-5 w-5 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+
+        <span><%= successMessage %></span>
+      </div>
+    <% } %>
+
+    <!-- Таблиця -->
+    <div
+      class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+    >
+      <% if (projects.length > 0) { %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50">
+            <tr>
+              <th
+                scope="col"
+                class="whitespace-nowrap px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Заявка
+              </th>
+
+              <th
+                scope="col"
+                class="min-w-[320px] px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Проєкт
+              </th>
+
+              <th
+                scope="col"
+                class="min-w-[230px] px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Поточний етап
+              </th>
+
+              <th
+                scope="col"
+                class="whitespace-nowrap px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Відображення
+              </th>
+
+              <th
+                scope="col"
+                class="whitespace-nowrap px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Оновлено
+              </th>
+
+              <th
+                scope="col"
+                class="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
+                Дії
+              </th>
+            </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-100 bg-white">
+            <% projects.forEach((project) => { %>
+              <%
+                const stageIndex = projectStages.indexOf(
+                  project.currentStage
+                );
+
+                const progress =
+                  stageIndex >= 0 && projectStages.length > 0
+                    ? Math.round(
+                      ((stageIndex + 1) / projectStages.length) * 100
+                    )
+                    : 0;
+
+                const currentStageNote =
+                  typeof project.currentStageNote === 'string'
+                    ? project.currentStageNote.trim()
+                    : '';
+              %>
+
+              <tr class="group transition hover:bg-slate-50/80">
+                <!-- Номер заявки -->
+                <td class="whitespace-nowrap px-5 py-5 align-top">
+                  <div
+                    class="font-mono text-sm font-semibold text-slate-900"
+                  >
+                    №<%= project.requestNumber || '—' %>
+                  </div>
+                </td>
+
+                <!-- Дані проєкту -->
+                <td class="px-5 py-5 align-top">
+                  <a
+                    href="/admin/projects/<%= project.id %>/edit"
+                    class="font-semibold leading-5 text-slate-900 transition hover:text-navy"
+                  >
+                    <%= project.title %>
+                  </a>
+
+                  <div class="mt-2 space-y-1 text-sm text-slate-600">
+                    <p>
+                        <span class="font-medium text-slate-700">
+                          Обладнання:
+                        </span>
+
+                      <%= project.equipment %>
+                    </p>
+
+                    <p>
+                        <span class="font-medium text-slate-700">
+                          Вид робіт:
+                        </span>
+
+                      <%= project.repairType %>
+                    </p>
+                  </div>
+                </td>
+
+                <!-- Етап -->
+                <td class="px-5 py-5 align-top">
+                    <span
+                      class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold <%= getStageBadgeClass(project.currentStage) %>"
+                    >
+                      <%= getStageLabel(project.currentStage) %>
+                    </span>
+
+                  <div class="mt-3 flex items-center gap-3">
+                    <div
+                      class="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200"
+                      role="progressbar"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      aria-valuenow="<%= progress %>"
+                    >
+                      <div
+                        class="h-full rounded-full bg-navy"
+                        style="width: <%= progress %>%"
+                      ></div>
+                    </div>
+
+                    <span
+                      class="shrink-0 text-xs font-medium text-slate-500"
+                    >
+                        <%= progress %>%
+                      </span>
+                  </div>
+
+                  <% if (currentStageNote) { %>
+                    <p
+                      class="mt-2 max-w-xs line-clamp-2 text-xs leading-5 text-slate-500"
+                      title="<%= currentStageNote %>"
+                    >
+                      <%= currentStageNote %>
+                    </p>
+                  <% } %>
+                </td>
+
+                <!-- Видимість -->
+                <td class="whitespace-nowrap px-5 py-5 align-top">
+                  <% if (project.isVisible) { %>
+                    <span
+                      class="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700"
+                    >
+                        <span
+                          class="h-2 w-2 rounded-full bg-emerald-500"
+                        ></span>
+
+                        Відображається
+                      </span>
+                  <% } else { %>
+                    <span
+                      class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500"
+                    >
+                        <span
+                          class="h-2 w-2 rounded-full bg-slate-400"
+                        ></span>
+
+                        Приховано
+                      </span>
+                  <% } %>
+                </td>
+
+                <!-- Дата -->
+                <td class="whitespace-nowrap px-5 py-5 align-top">
+                  <time
+                    class="text-sm text-slate-700"
+                    datetime="<%= project.updatedAt ? new Date(project.updatedAt).toISOString() : '' %>"
+                  >
+                    <%= formatDate(project.updatedAt) %>
+                  </time>
+
+                  <p class="mt-1 text-xs text-slate-500">
+                    Створено: <%= formatDate(project.createdAt) %>
+                  </p>
+                </td>
+
+                <!-- Дії -->
+                <td class="whitespace-nowrap px-5 py-5 text-right align-top">
+                  <a
+                    href="/admin/projects/<%= project.id %>/edit"
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-navy hover:bg-slate-50 hover:text-navy"
+                    aria-label="Редагувати проєкт №<%= project.requestNumber %>"
+                    title="Редагувати"
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 20h9"></path>
+                      <path
+                        d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"
+                      ></path>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <!-- Порожній стан -->
+        <div
+          class="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center"
+        >
+          <div
+            class="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-500"
+          >
+            <svg
+              class="h-8 w-8"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <path d="M8 3h8l4 4v14H4V3z"></path>
+              <path d="M16 3v5h5"></path>
+              <path d="M8 13h8"></path>
+              <path d="M8 17h5"></path>
+            </svg>
+          </div>
+
+          <h2 class="mt-5 text-lg font-semibold text-slate-900">
+            Проєктів поки немає
+          </h2>
+
+          <p class="mt-2 max-w-md text-sm leading-6 text-slate-600">
+            Створіть першу заявку, щоб почати вести історію виконання
+            робіт і формувати портфоліо.
+          </p>
+
+          <a
+            href="/admin/projects/new"
+            class="mt-6 inline-flex items-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b527b]"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14"></path>
+              <path d="M5 12h14"></path>
+            </svg>
+
+            Додати проєкт
+          </a>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Пагінація -->
+    <% if (pagination.totalPages > 1) { %>
+      <div
+        class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="text-sm text-slate-600">
+          Сторінка
+          <span class="font-semibold text-slate-900">
+            <%= pagination.page %>
+          </span>
+          із
+          <span class="font-semibold text-slate-900">
+            <%= pagination.totalPages %>
+          </span>
+        </p>
+
+        <nav
+          class="flex flex-wrap items-center gap-1"
+          aria-label="Пагінація проєктів"
+        >
+          <!-- Попередня сторінка -->
+          <% if (pagination.page > 1) { %>
+            <a
+              href="/admin/projects?page=<%= pagination.page - 1 %>"
+              class="inline-flex h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              Назад
+            </a>
+          <% } else { %>
+            <span
+              class="inline-flex h-10 cursor-not-allowed items-center justify-center rounded-lg border border-slate-200 bg-slate-100 px-3 text-sm text-slate-400"
+            >
+              Назад
+            </span>
+          <% } %>
+
+          <!-- Перша сторінка -->
+          <% if (startPage > 1) { %>
+            <a
+              href="/admin/projects?page=1"
+              class="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              1
+            </a>
+
+            <% if (startPage > 2) { %>
+              <span
+                class="inline-flex h-10 min-w-8 items-center justify-center text-slate-400"
+              >
+                …
+              </span>
+            <% } %>
+          <% } %>
+
+          <!-- Сторінки навколо поточної -->
+          <% for (let page = startPage; page <= endPage; page += 1) { %>
+            <% if (page === pagination.page) { %>
+              <span
+                class="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-navy bg-navy px-3 text-sm font-semibold text-white"
+                aria-current="page"
+              >
+                <%= page %>
+              </span>
+            <% } else { %>
+              <a
+                href="/admin/projects?page=<%= page %>"
+                class="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                <%= page %>
+              </a>
+            <% } %>
+          <% } %>
+
+          <!-- Остання сторінка -->
+          <% if (endPage < pagination.totalPages) { %>
+            <% if (endPage < pagination.totalPages - 1) { %>
+              <span
+                class="inline-flex h-10 min-w-8 items-center justify-center text-slate-400"
+              >
+                …
+              </span>
+            <% } %>
+
+            <a
+              href="/admin/projects?page=<%= pagination.totalPages %>"
+              class="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              <%= pagination.totalPages %>
+            </a>
+          <% } %>
+
+          <!-- Наступна сторінка -->
+          <% if (pagination.page < pagination.totalPages) { %>
+            <a
+              href="/admin/projects?page=<%= pagination.page + 1 %>"
+              class="inline-flex h-10 items-center justify-center rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              Далі
+            </a>
+          <% } else { %>
+            <span
+              class="inline-flex h-10 cursor-not-allowed items-center justify-center rounded-lg border border-slate-200 bg-slate-100 px-3 text-sm text-slate-400"
+            >
+              Далі
+            </span>
+          <% } %>
+        </nav>
+      </div>
+    <% } %>
+  </div>
+</section>
