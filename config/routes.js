@@ -19,11 +19,17 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': { view: 'pages/homepage' },
-
   // Тимчасово рендеримо в’ю напряму, в обхід контролера.
-  '/renova': { view: 'pages/renova' },
-  '/renova/services': { view: 'pages/renova-services' },
+  'GET /': { view: 'pages/homepage' },
+  'GET /services': { view: 'pages/services' },
+
+  // Проєкти та заявки — адмінпанель
+  'GET /admin/projects': 'AdminProjectController.index',
+  'GET /admin/projects/export-json': 'AdminProjectController.exportJson',
+  'GET /admin/projects/new': 'AdminProjectController.createPage',
+  'POST /admin/projects': 'AdminProjectController.create',
+  'GET /admin/projects/:id/edit': 'AdminProjectController.edit',
+  'POST /admin/projects/:id': 'AdminProjectController.update',
 
 
   /***************************************************************************
