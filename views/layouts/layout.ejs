@@ -884,6 +884,90 @@
           opacity: 0.055;
         }
       }
+
+      /* Сторінка "Наші проекти" */
+      #views-wrap { transition: opacity .18s ease; }
+      .project-card-border {
+        border: 2px solid #527b8d;
+        border-radius: 1.875rem;
+        clip-path: inset(0 50% 0 50% round 1.875rem);
+        transition: clip-path .5s cubic-bezier(.16, 1, .3, 1);
+      }
+      .project-card:hover .project-card-border,
+      .project-card:focus-visible .project-card-border { clip-path: inset(0 0 0 0 round 1.875rem); }
+      .project-row-border {
+        border: 2px solid #527b8d;
+        clip-path: inset(0 50% 0 50%);
+        transition: clip-path .5s cubic-bezier(.16, 1, .3, 1);
+      }
+      .project-row:hover .project-row-border,
+      .project-row:focus-visible .project-row-border { clip-path: inset(0 0 0 0); }
+      .req-clamp {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+      }
+      @property --cp-x { syntax: '<percentage>'; inherits: false; initial-value: -25%; }
+      .card-photo .cp-after {
+        --cp-x: -25%;
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--cp-x) - 2rem), rgba(0,0,0,.55) var(--cp-x), transparent calc(var(--cp-x) + 2rem), transparent 100%);
+        mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--cp-x) - 2rem), rgba(0,0,0,.55) var(--cp-x), transparent calc(var(--cp-x) + 2rem), transparent 100%);
+        filter: brightness(1.05) saturate(1.04);
+        transition: --cp-x 2s cubic-bezier(.65, 0, .35, 1);
+      }
+      .cp-dragging .cp-after { transition: none; }
+      .card-photo .cp-beam {
+        position: absolute; top: -6%; bottom: -6%; left: -25%; width: 26px;
+        transform: translateX(-50%); pointer-events: none; opacity: 0; z-index: 3;
+        mix-blend-mode: screen; filter: blur(.5px);
+        background: linear-gradient(90deg, transparent 0%, rgba(160,215,255,.10) 28%, rgba(220,242,255,.95) 50%, rgba(160,215,255,.10) 72%, transparent 100%);
+        box-shadow: 0 0 22px 7px rgba(130,200,255,.5);
+        transition: left 2s cubic-bezier(.65, 0, .35, 1), opacity .35s ease;
+      }
+      .card-photo .cp-beam::after {
+        content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px;
+        transform: translateX(-50%); background: rgba(255,255,255,.9); box-shadow: 0 0 10px 2px rgba(210,240,255,.9);
+      }
+      .cp-slider { display: none; }
+      .cp-track { touch-action: none; cursor: pointer; }
+      .cp-handle { touch-action: none; cursor: grab; transition: left .05s linear; }
+      .cp-dragging .cp-handle { cursor: grabbing; transition: none; }
+
+      @media (hover: hover) {
+        .project-card:hover .cp-after,
+        .project-card:focus-visible .cp-after { --cp-x: 130%; }
+        .project-card:hover .cp-beam,
+        .project-card:focus-visible .cp-beam { left: 130%; opacity: 1; }
+      }
+      @media (hover: none) {
+        .cp-slider { display: block; }
+        .card-photo .cp-beam { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .card-photo .cp-after { transition: none; }
+        .card-photo .cp-beam { display: none; }
+        .cp-handle { transition: none; }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        html.reveal-ready .reveal-item { opacity: 0; transform: translateY(44px) scale(.94); filter: blur(6px); }
+        html.reveal-ready .reveal-item.reveal-in {
+          opacity: 1; transform: none; filter: none;
+          transition: opacity 1.35s var(--reveal-ease, cubic-bezier(.16, 1, .3, 1)),
+                      transform 1.35s var(--reveal-ease, cubic-bezier(.16, 1, .3, 1)),
+                      filter 1.35s var(--reveal-ease, cubic-bezier(.16, 1, .3, 1));
+        }
+      }
+      [data-subtitle] { transition: opacity .22s ease, transform .22s var(--reveal-ease, cubic-bezier(.16, 1, .3, 1)); }
+      .sort-menu { transform: translateY(-6px); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s var(--reveal-ease, ease); }
+      .sort-open .sort-menu { transform: none; opacity: 1; pointer-events: auto; }
+      .sort-open .sort-chevron { transform: rotate(180deg); }
+
+      /* Сторінка окремої заявки */
+      #stages-details > summary { list-style: none; cursor: pointer; }
+      #stages-details > summary::-webkit-details-marker { display: none; }
+      #stages-details[open] .stages-chevron { transform: rotate(180deg); }
     </style>
 
     <!--STYLES-->
@@ -892,7 +976,7 @@
 </head>
 
 <body>
-<%- include('../partials/site-header', { base: '', active: 'home' }) %>
+<%- include('../partials/site-header', { base: '', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
 <%- body %>
 <%- include('../partials/site-footer', { base: '' }) %>
 

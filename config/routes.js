@@ -23,6 +23,10 @@ module.exports.routes = {
   'GET /': { view: 'pages/homepage' },
   'GET /services': { view: 'pages/services' },
 
+  // Наші проекти (портфоліо заявок)
+  'GET /projects': 'ProjectController.index',
+  'GET /projects/:requestNumber': 'ProjectController.show',
+
   // Проєкти та заявки — адмінпанель
   'GET /admin/projects': 'AdminProjectController.index',
   'GET /admin/projects/export-json': 'AdminProjectController.exportJson',

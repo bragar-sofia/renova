@@ -1,0 +1,326 @@
+<%
+var SUB_ACTIVE = 'Тут ви можете відслідковувати статуси заявок з якими ми працюємо';
+var SUB_COMPLETED = 'Тут ви можете переглянути наше портфоліо із завершених проектів';
+function cardStatus(p) { return p.completed ? 'completed' : 'active'; }
+function matchInit(p) { return cardStatus(p) === status && (!q || p.requestNumber.indexOf(q) !== -1); }
+var matchTotal = projects.filter(matchInit).length;
+var shownInit = 0;
+function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) { shownInit++; } return v; }
+%>
+<script>document.documentElement.classList.add('reveal-ready');</script>
+
+<div class="min-h-screen bg-sky font-sans text-navy antialiased">
+  <main class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+
+    <section>
+      <h1 class="font-display text-h1 font-normal">Заявки</h1>
+      <p data-subtitle class="mt-3 max-w-2xl text-base text-navy/70"><%= status === 'completed' ? SUB_COMPLETED : SUB_ACTIVE %></p>
+
+      <div class="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div data-toggle class="relative inline-grid shrink-0 grid-cols-2 overflow-hidden rounded-pill border-2 border-steel/40 bg-white font-display text-base font-bold">
+          <span data-toggle-thumb class="pointer-events-none absolute inset-y-0 left-0 w-1/2 rounded-pill bg-navy transition-transform duration-300" style="transition-timing-function: cubic-bezier(.16,1,.3,1); transform: translateX(<%= status === 'completed' ? '100%' : '0%' %>);"></span>
+          <button type="button" data-status-tab="active" class="relative z-10 rounded-pill px-5 py-2.5 text-center transition-colors duration-300 <%= status === 'active' ? 'text-white' : 'text-navy' %>">Активні</button>
+          <button type="button" data-status-tab="completed" class="relative z-10 rounded-pill px-5 py-2.5 text-center transition-colors duration-300 <%= status === 'completed' ? 'text-white' : 'text-navy' %>">Завершені</button>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <div class="group relative">
+            <input type="text" data-search-input value="<%= q %>" placeholder="Пошук за номером заявки" class="h-12 w-full rounded-pill border-2 border-steel bg-white pl-4 pr-11 text-base text-steel placeholder:text-steel/70 outline-none transition focus:border-navy sm:w-72">
+            <span class="pointer-events-none absolute right-4 top-1/2 flex -translate-y-1/2 items-center text-steel transition group-hover:text-navy group-focus-within:text-navy">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            </span>
+          </div>
+
+          <div class="relative" data-sort>
+            <button type="button" data-sort-toggle class="flex h-12 w-full items-center justify-between gap-6 rounded-pill border-2 border-steel bg-white pl-5 pr-5 text-base text-navy outline-none transition hover:border-navy sm:w-auto">
+              <span data-sort-label>Сортувати за</span>
+              <svg class="sort-chevron h-4 w-4 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="sort-menu absolute left-0 z-20 mt-2 w-full overflow-hidden rounded-pill border-2 border-navy/30 bg-white p-1 shadow-[0_16px_42px_rgba(7,49,78,0.12)] sm:left-auto sm:right-0 sm:w-56">
+              <button type="button" data-sort-opt="new" class="block w-full rounded-pill px-4 py-2.5 text-left text-base text-navy transition hover:bg-sky">Спочатку новіші</button>
+              <button type="button" data-sort-opt="old" class="block w-full rounded-pill px-4 py-2.5 text-left text-base text-navy transition hover:bg-sky">Спочатку старіші</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="views-wrap" class="mt-8">
+
+      <section data-empty class="rounded-card bg-white px-6 py-20 text-center <%= matchTotal > 0 ? 'hidden' : '' %>">
+        <p class="font-display text-h3 font-normal text-navy/70" data-empty-text>
+          <%= q ? 'За вашим запитом заявок не знайдено.' : (status === 'completed' ? 'Поки що немає завершених проектів.' : 'Наразі немає активних заявок.') %>
+        </p>
+      </section>
+
+      <%/* ---------- Активні: таблиця ---------- */%>
+      <div data-view="active" class="<%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>">
+        <div class="reveal-item">
+        <div class="hidden pb-4 font-display text-h3 font-normal text-navy lg:grid lg:grid-cols-[160px_1fr_250px_175px]">
+          <div class="text-center">Номер заявки</div>
+          <div class="text-center">Запит</div>
+          <div class="text-center">Статус</div>
+          <div class="whitespace-nowrap text-center">Дата оновлення</div>
+        </div>
+        <% var activeRows = projects.filter(function (p) { return !p.completed; }); %>
+        <div class="divide-y-2 divide-[#527B8D] overflow-hidden rounded-card bg-white">
+          <% activeRows.forEach(function (p, i) {
+               var rnd = activeRows.length === 1 ? 'rounded-card' : (i === 0 ? 'rounded-t-card' : (i === activeRows.length - 1 ? 'rounded-b-card' : '')); %>
+            <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="active" data-number="<%= p.requestNumber %>" data-updated="<%= p.updatedAt %>" data-created="<%= p.createdAt %>"
+               class="project-row group relative grid grid-cols-1 gap-2 px-6 py-5 text-base transition lg:grid-cols-[160px_1fr_250px_175px] lg:items-stretch lg:gap-0 lg:px-0 lg:py-0 <%= visInit(p) ? '' : 'hidden' %>">
+              <div class="text-navy lg:flex lg:items-center lg:justify-center lg:px-6 lg:py-6">№<%= p.requestNumber %></div>
+              <div class="text-navy lg:flex lg:items-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><div class="w-full"><span class="req-clamp"><%= p.requestText %></span></div></div>
+              <div class="text-navy lg:flex lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><span class="text-navy lg:hidden">Статус: </span><%= p.statusText %></div>
+              <div class="whitespace-nowrap text-navy lg:flex lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><span class="lg:hidden">Оновлено: </span><%= p.updatedDate %></div>
+              <span class="project-row-border pointer-events-none absolute inset-0 hidden lg:block <%= rnd %>" aria-hidden="true"></span>
+            </a>
+          <% }); %>
+        </div>
+        </div>
+      </div>
+
+      <%/* ---------- Завершені: картки ---------- */%>
+      <div data-view="completed" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>">
+        <% projects.forEach(function (p) { if (!p.completed) { return; } %>
+          <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="completed" data-number="<%= p.requestNumber %>" data-updated="<%= p.updatedAt %>" data-created="<%= p.createdAt %>"
+             class="reveal-item project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] <%= visInit(p) ? '' : 'hidden' %>">
+            <div class="card-photo relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-sky to-white">
+              <% if (p.imageMain) { %>
+                <img class="absolute inset-0 h-full w-full object-cover" src="<%= p.imageMain %>" alt="<%= p.title %>" loading="lazy">
+                <% if (p.imageHover) { %>
+                  <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= p.imageHover %>" alt="<%= p.title %> — після ремонту" loading="lazy">
+                  <span class="cp-beam" aria-hidden="true"></span>
+                <% } %>
+              <% } else { %>
+                <div class="flex h-full items-center justify-center text-steel/40">
+                  <svg viewBox="0 0 24 24" class="h-12 w-12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25z"/></svg>
+                </div>
+              <% } %>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <% if (p.imageHover) { %>
+                <div class="cp-slider mb-4" data-cp-slider>
+                  <div class="flex items-center justify-between text-sm text-steel">
+                    <span>До</span>
+                    <span>Після</span>
+                  </div>
+                  <div class="cp-track relative mt-2 h-9 rounded-full border-2 border-steel/40 bg-sky" data-cp-track>
+                    <span class="cp-handle absolute left-0 top-1/2 h-7 w-7 -translate-y-1/2 rounded-full bg-navy shadow-[0_2px_6px_rgba(7,49,78,0.3)]" data-cp-handle></span>
+                  </div>
+                </div>
+              <% } %>
+              <div class="flex items-center justify-between gap-2 text-base text-steel">
+                <span class="shrink-0">№<%= p.requestNumber %></span>
+                <span class="truncate text-right"><%= p.equipment %></span>
+              </div>
+              <h3 class="mt-2 font-display text-h3 font-normal text-navy"><%= p.title %></h3>
+              <p class="mt-2 flex-1 text-base text-navy/70"><%= p.excerpt %></p>
+              <div class="mt-4 flex items-center justify-between">
+                <span class="flex items-center gap-1 text-base text-steel">
+                  <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>
+                  Завершено
+                </span>
+                <span class="flex items-center gap-1 font-display text-base font-bold text-navy transition group-hover:text-steel">
+                  Детальніше
+                  <img class="h-3 w-auto -rotate-90 object-contain" src="/images/icons/icon-chevron-inactive.svg" alt="">
+                </span>
+              </div>
+            </div>
+            <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
+          </a>
+        <% }); %>
+      </div>
+
+    </div>
+
+    <div data-load-more-wrap class="mt-10 flex justify-center <%= matchTotal > 6 ? '' : 'hidden' %>">
+      <button type="button" data-load-more class="rounded-pill bg-navy px-8 py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]">Завантажити ще</button>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  (function () {
+    var wrap = document.getElementById('views-wrap');
+    if (!wrap) { return; }
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var revealed = false;
+    var items = Array.prototype.slice.call(document.querySelectorAll('[data-project-item]'));
+    var viewActive = document.querySelector('[data-view="active"]');
+    var viewCompleted = document.querySelector('[data-view="completed"]');
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-status-tab]'));
+    var thumb = document.querySelector('[data-toggle-thumb]');
+    var searchInput = document.querySelector('[data-search-input]');
+    var sortWrap = document.querySelector('[data-sort]');
+    var sortLabel = document.querySelector('[data-sort-label]');
+    var loadWrap = document.querySelector('[data-load-more-wrap]');
+    var loadBtn = document.querySelector('[data-load-more]');
+    var emptyEl = document.querySelector('[data-empty]');
+    var emptyText = document.querySelector('[data-empty-text]');
+    var subtitle = document.querySelector('[data-subtitle]');
+    var SUB = { active: 'Тут ви можете відслідковувати статуси заявок з якими ми працюємо', completed: 'Тут ви можете переглянути наше портфоліо із завершених проектів' };
+    var SORT_LABELS = { new: 'Спочатку новіші', old: 'Спочатку старіші' };
+    var PER = 6;
+
+    var params = new URLSearchParams(location.search);
+    var state = {
+      status: params.get('status') === 'completed' ? 'completed' : 'active',
+      q: (params.get('q') || '').trim(),
+      sort: params.get('sort') === 'old' ? 'old' : 'new',
+      shown: PER
+    };
+
+    function num(el, key) { return parseInt(el.getAttribute('data-' + key), 10) || 0; }
+    function moveThumb() { if (thumb) { thumb.style.transform = state.status === 'completed' ? 'translateX(100%)' : 'translateX(0%)'; } }
+
+    function visibleItems() {
+      var c = state.status === 'active' ? viewActive : viewCompleted;
+      if (!c) { return []; }
+      return Array.prototype.filter.call(c.querySelectorAll('.reveal-item'), function (el) { return !el.classList.contains('hidden'); });
+    }
+    function ensureRevealed() { visibleItems().forEach(function (el) { el.classList.add('reveal-in'); }); }
+    function staggerReveal() {
+      var vis = visibleItems();
+      if (reduceMotion) { vis.forEach(function (el) { el.classList.add('reveal-in'); }); return; }
+      vis.forEach(function (el) { el.classList.remove('reveal-in'); });
+      void wrap.offsetWidth;
+      vis.forEach(function (el, i) {
+        el.style.transitionDelay = (Math.min(i, 8) * 0.06) + 's';
+        el.classList.add('reveal-in');
+      });
+    }
+
+    function apply() {
+      var isActive = state.status === 'active';
+      var current = items.filter(function (c) { return c.getAttribute('data-status') === state.status; });
+      current.sort(function (a, b) {
+        return state.sort === 'old' ? num(a, 'created') - num(b, 'created') : num(b, 'updated') - num(a, 'updated');
+      });
+      current.forEach(function (c) { c.parentNode.appendChild(c); });
+
+      var matched = 0;
+      current.forEach(function (c) {
+        var ok = !state.q || c.getAttribute('data-number').indexOf(state.q) !== -1;
+        if (ok) { c.classList.toggle('hidden', matched >= state.shown); matched++; }
+        else { c.classList.add('hidden'); }
+      });
+
+      if (viewActive) { viewActive.classList.toggle('hidden', !(isActive && matched > 0)); }
+      if (viewCompleted) { viewCompleted.classList.toggle('hidden', !(!isActive && matched > 0)); }
+      if (emptyText) { emptyText.textContent = state.q ? 'За вашим запитом заявок не знайдено.' : (isActive ? 'Наразі немає активних заявок.' : 'Поки що немає завершених проектів.'); }
+      if (emptyEl) { emptyEl.classList.toggle('hidden', matched > 0); }
+      if (loadWrap) { loadWrap.classList.toggle('hidden', matched <= state.shown); }
+      if (subtitle) { subtitle.textContent = SUB[state.status]; }
+
+      tabs.forEach(function (t) {
+        var on = t.getAttribute('data-status-tab') === state.status;
+        t.classList.toggle('text-white', on);
+        t.classList.toggle('text-navy', !on);
+      });
+      moveThumb();
+      if (sortLabel) { sortLabel.textContent = SORT_LABELS[state.sort]; }
+
+      var p = new URLSearchParams();
+      if (state.status === 'completed') { p.set('status', 'completed'); }
+      if (state.q) { p.set('q', state.q); }
+      if (state.sort === 'old') { p.set('sort', 'old'); }
+      var qs = p.toString();
+      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
+
+      if (revealed) { ensureRevealed(); }
+    }
+
+    function fadeApply() {
+      wrap.style.opacity = '0';
+      if (subtitle) { subtitle.style.opacity = '0'; subtitle.style.transform = 'translateY(6px)'; }
+      setTimeout(function () {
+        apply(); staggerReveal();
+        wrap.style.opacity = '1';
+        if (subtitle) { subtitle.style.opacity = '1'; subtitle.style.transform = 'none'; }
+      }, 170);
+    }
+
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        var s = t.getAttribute('data-status-tab');
+        if (state.status === s) { return; }
+        state.status = s; state.shown = PER; fadeApply();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.value = state.q;
+      searchInput.addEventListener('input', function () { state.q = searchInput.value.trim(); state.shown = PER; apply(); });
+    }
+
+    if (sortWrap) {
+      sortWrap.querySelector('[data-sort-toggle]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        sortWrap.classList.toggle('sort-open');
+      });
+      Array.prototype.forEach.call(sortWrap.querySelectorAll('[data-sort-opt]'), function (o) {
+        o.addEventListener('click', function () { state.sort = o.getAttribute('data-sort-opt'); sortWrap.classList.remove('sort-open'); apply(); });
+      });
+      document.addEventListener('click', function (e) { if (!sortWrap.contains(e.target)) { sortWrap.classList.remove('sort-open'); } });
+    }
+
+    if (loadBtn) { loadBtn.addEventListener('click', function () { state.shown += PER; apply(); }); }
+
+    if (window.matchMedia && window.matchMedia('(hover: none)').matches)
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cp-slider]'), function (slider) {
+      var track = slider.querySelector('[data-cp-track]');
+      var handle = slider.querySelector('[data-cp-handle]');
+      var card = slider.closest('.project-card');
+      var after = card && card.querySelector('.cp-after');
+      if (!track || !handle || !card || !after) { return; }
+      var dragging = false;
+
+      function pad() { return Math.max(0, (track.clientHeight - handle.offsetHeight) / 2); }
+      function setT(t) {
+        t = Math.max(0, Math.min(1, t));
+        var p = pad();
+        var usable = track.clientWidth - handle.offsetWidth - 2 * p;
+        handle.style.left = (p + t * usable) + 'px';
+        after.style.setProperty('--cp-x', (-25 + t * 155) + '%');
+      }
+      function tFromEvent(e) {
+        var rect = track.getBoundingClientRect();
+        var bl = parseFloat(getComputedStyle(track).borderLeftWidth) || 0;
+        var p = pad();
+        var usable = track.clientWidth - handle.offsetWidth - 2 * p;
+        return usable > 0 ? (e.clientX - rect.left - bl - p - handle.offsetWidth / 2) / usable : 0;
+      }
+
+      track.addEventListener('pointerdown', function (e) {
+        dragging = true;
+        card.classList.add('cp-dragging');
+        try { track.setPointerCapture(e.pointerId); } catch (err) {}
+        setT(tFromEvent(e));
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      track.addEventListener('pointermove', function (e) {
+        if (!dragging) { return; }
+        setT(tFromEvent(e));
+        e.preventDefault();
+      });
+      var stop = function () { dragging = false; card.classList.remove('cp-dragging'); };
+      track.addEventListener('pointerup', stop);
+      track.addEventListener('pointercancel', stop);
+      slider.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); });
+
+      setT(0);
+    });
+
+    apply();
+
+    function initialReveal() { revealed = true; staggerReveal(); }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialReveal);
+    } else {
+      initialReveal();
+    }
+    window.addEventListener('load', function () { revealed = true; ensureRevealed(); });
+  })();
+</script>
