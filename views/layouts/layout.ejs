@@ -161,61 +161,36 @@
         }
       }
 
-      /* На мобільному залишаємо простішу анімацію справа наліво */
-      @keyframes scan-reveal-mobile {
-        0%, 12% {
-          clip-path: inset(0 0 0 100%);
-        }
+      .machine-restored,
+      .restored-glow {
+        --reveal-x: 34%;
 
-        55%, 85% {
-          clip-path: inset(0 0 0 0);
-        }
+        -webkit-mask-image:
+          linear-gradient(
+            90deg,
+            #000 0,
+            #000 calc(var(--reveal-x) - 7rem),
+            rgba(0, 0, 0, 0.88) calc(var(--reveal-x) - 3.5rem),
+            rgba(0, 0, 0, 0.48) var(--reveal-x),
+            rgba(0, 0, 0, 0.14) calc(var(--reveal-x) + 4rem),
+            transparent calc(var(--reveal-x) + 7rem),
+            transparent 100%
+          );
 
-        100% {
-          clip-path: inset(0 0 0 100%);
-        }
-      }
+        mask-image:
+          linear-gradient(
+            90deg,
+            #000 0,
+            #000 calc(var(--reveal-x) - 7rem),
+            rgba(0, 0, 0, 0.88) calc(var(--reveal-x) - 3.5rem),
+            rgba(0, 0, 0, 0.48) var(--reveal-x),
+            rgba(0, 0, 0, 0.14) calc(var(--reveal-x) + 4rem),
+            transparent calc(var(--reveal-x) + 7rem),
+            transparent 100%
+          );
 
-      @media (min-width: 768px) {
-        .machine-restored,
-        .restored-glow {
-          --reveal-x: 34%;
-
-          -webkit-mask-image:
-            linear-gradient(
-              90deg,
-              #000 0,
-              #000 calc(var(--reveal-x) - 7rem),
-              rgba(0, 0, 0, 0.88) calc(var(--reveal-x) - 3.5rem),
-              rgba(0, 0, 0, 0.48) var(--reveal-x),
-              rgba(0, 0, 0, 0.14) calc(var(--reveal-x) + 4rem),
-              transparent calc(var(--reveal-x) + 7rem),
-              transparent 100%
-            );
-
-          mask-image:
-            linear-gradient(
-              90deg,
-              #000 0,
-              #000 calc(var(--reveal-x) - 7rem),
-              rgba(0, 0, 0, 0.88) calc(var(--reveal-x) - 3.5rem),
-              rgba(0, 0, 0, 0.48) var(--reveal-x),
-              rgba(0, 0, 0, 0.14) calc(var(--reveal-x) + 4rem),
-              transparent calc(var(--reveal-x) + 7rem),
-              transparent 100%
-            );
-
-          animation:
-            scan-reveal-soft 10s cubic-bezier(.65, 0, .35, 1) infinite;
-        }
-      }
-
-      @media (max-width: 767px) {
-        .machine-restored,
-        .restored-glow {
-          animation:
-            scan-reveal-mobile 10s cubic-bezier(.65, 0, .35, 1) infinite;
-        }
+        animation:
+          scan-reveal-soft 10s cubic-bezier(.65, 0, .35, 1) infinite;
       }
 
       @media (min-width: 1536px) {
@@ -239,19 +214,6 @@
           50%      { opacity: 1; }
           55%      { left: 100%; opacity: 0; }
           100%     { left: 100%; opacity: 0; }
-        }
-      }
-      @media (max-width: 767px) {
-        .hero-photo-fade {
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 85%);
-          mask-image: linear-gradient(to right, transparent 0%, #000 85%);
-        }
-        @keyframes scan-beam {
-          0%, 12%  { left: 100%; opacity: 0; }
-          18%      { opacity: 1; }
-          50%      { opacity: 1; }
-          55%      { left: 0%;   opacity: 0; }
-          100%     { left: 0%;   opacity: 0; }
         }
       }
       .scan-beam {
@@ -341,19 +303,20 @@
           flex-direction: column;
           justify-content: flex-start;
           gap: 0;
-          padding: 4px 15px;
+          padding: 4px clamp(3px, 1.1vw, 15px);
           border-bottom: 0;
           text-align: center;
         }
 
         .hero-benefit-item img {
-          width: 36px;
-          height: 36px;
+          width: clamp(26px, 2.9vw, 36px);
+          height: clamp(26px, 2.9vw, 36px);
         }
 
         .hero-benefit-item span {
           max-width: 8.5rem;
           margin-top: 9px;
+          font-size: clamp(0.66rem, 1.2vw, 0.875rem);
           line-height: 1.25;
         }
 
@@ -976,7 +939,7 @@
 </head>
 
 <body>
-<%- include('../partials/site-header', { base: '', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
+<%- include('../partials/site-header', { base: '/', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
 <%- body %>
 <%- include('../partials/site-footer', { base: '' }) %>
 

@@ -21,7 +21,7 @@ module.exports.routes = {
 
   // Тимчасово рендеримо в’ю напряму, в обхід контролера.
   'GET /': { view: 'pages/homepage' },
-  'GET /services': { view: 'pages/services' },
+  'GET /services': { view: 'pages/services', locals: { activePage: 'services' } },
 
   // Наші проекти (портфоліо заявок)
   'GET /projects': 'ProjectController.index',
