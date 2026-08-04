@@ -1,18 +1,10 @@
 <%
-const stageLabels = {
-  'request-received': 'Заявку отримано',
-  'visit-scheduled': 'Виїзд погоджено',
-  'diagnostics': 'Діагностика',
-  'technical-solution': 'Технічне рішення',
-  'offer-approved': 'Пропозицію погоджено',
-  'repair': 'Ремонт',
-  'assembly': 'Складання та налаштування',
-  'testing': 'Випробування',
-  'completed': 'Завершено'
-};
-
 const getStageLabel = (key) => {
-  return stageLabels[key] || key || 'Не визначено';
+  return (
+    projectStageLabels[key] ||
+    key ||
+    'Не визначено'
+  );
 };
 
 const formErrors = Array.isArray(errors)

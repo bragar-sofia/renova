@@ -1,16 +1,4 @@
 <%
-const stageLabels = {
-  'request-received': 'Заявку отримано',
-  'visit-scheduled': 'Виїзд погоджено',
-  'diagnostics': 'Діагностика',
-  'technical-solution': 'Технічне рішення',
-  'offer-approved': 'Пропозицію погоджено',
-  'repair': 'Ремонт',
-  'assembly': 'Складання та налаштування',
-  'testing': 'Випробування',
-  'completed': 'Завершено'
-};
-
 const successMessages = {
   created: 'Проєкт успішно створено.',
   updated: 'Проєкт успішно оновлено.',
@@ -37,8 +25,12 @@ const formatDate = (value) => {
   }).format(date);
 };
 
-const getStageLabel = (stage) => {
-  return stageLabels[stage] || stage || 'Не визначено';
+const getStageLabel = (key) => {
+  return (
+    projectStageLabels[key] ||
+    key ||
+    'Не визначено'
+  );
 };
 
 const getStageBadgeClass = (stage) => {
@@ -284,7 +276,10 @@ const successMessage = successMessages[success] || '';
                       aria-valuenow="<%= progress %>"
                     >
                       <div
-                        class="h-full rounded-full bg-navy"
+                        class="<%= project.currentStage === 'completed'
+                          ? 'bg-emerald-500'
+                          : 'bg-navy'
+                        %> h-full rounded-full"
                         style="width: <%= progress %>%"
                       ></div>
                     </div>

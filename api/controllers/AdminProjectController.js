@@ -1,6 +1,9 @@
 // api/controllers/AdminProjectController.js
 
-const PROJECT_STAGES = require('../../lib/projectStages');
+const {
+  keys: PROJECT_STAGES,
+  labels: PROJECT_STAGE_LABELS
+} = require('../../lib/projectStages');
 
 /**
  * Нормалізує звичайне текстове поле.
@@ -14,17 +17,21 @@ function normalizeText(value) {
 /**
  * Нормалізує boolean, отриманий із HTML-форми.
  *
- * Підтримує:
- * true, "true", "1", "on", 1
+ * Також обробляє масив значень, який може виникнути,
+ * якщо hidden input і checkbox мають однаковий name.
  */
 function normalizeBoolean(value) {
-  return (
-    value === true ||
-    value === 1 ||
-    value === '1' ||
-    value === 'true' ||
-    value === 'on'
-  );
+  const values = Array.isArray(value) ? value : [value];
+
+  return values.some((item) => {
+    return (
+      item === true ||
+      item === 1 ||
+      item === '1' ||
+      item === 'true' ||
+      item === 'on'
+    );
+  });
 }
 
 /**
@@ -111,6 +118,7 @@ module.exports = {
         pageTitle: 'Проєкти та заявки',
         projects,
         projectStages: PROJECT_STAGES,
+        projectStageLabels: PROJECT_STAGE_LABELS,
         pagination: {
           page: currentPage,
           perPage,
@@ -143,6 +151,7 @@ module.exports = {
         isVisible: true
       },
       projectStages: PROJECT_STAGES,
+      projectStageLabels: PROJECT_STAGE_LABELS,
       errors: []
     });
   },
@@ -166,6 +175,7 @@ module.exports = {
         pageTitle: 'Нова заявка',
         project: payload,
         projectStages: PROJECT_STAGES,
+        projectStageLabels: PROJECT_STAGE_LABELS,
         errors
       });
     }
@@ -181,6 +191,7 @@ module.exports = {
         pageTitle: 'Нова заявка',
         project: payload,
         projectStages: PROJECT_STAGES,
+        projectStageLabels: PROJECT_STAGE_LABELS,
         errors: [
           'Не вдалося створити проєкт. Перевірте введені дані.'
         ]
@@ -208,6 +219,7 @@ module.exports = {
         pageTitle: `Редагування заявки №${project.requestNumber}`,
         project,
         projectStages: PROJECT_STAGES,
+        projectStageLabels: PROJECT_STAGE_LABELS,
         currentStageIndex,
         nextStage,
         errors: [],
@@ -249,6 +261,7 @@ module.exports = {
             ...payload
           },
           projectStages: PROJECT_STAGES,
+          projectStageLabels: PROJECT_STAGE_LABELS,
           currentStageIndex: PROJECT_STAGES.indexOf(project.currentStage),
           nextStage: PROJECT_STAGES[PROJECT_STAGES.indexOf(project.currentStage) + 1] || null,
           errors,
@@ -343,22 +356,13 @@ module.exports = {
       res.status(409);
 
       return res.view('admin/projects/edit', {
-        pageTitle:
-          `Редагування заявки №${project.requestNumber}`,
-
+        pageTitle: `Редагування заявки №${project.requestNumber}`,
         project,
-
         projectStages: PROJECT_STAGES,
-
+        projectStageLabels: PROJECT_STAGE_LABELS,
         currentStageIndex,
-
         nextStage,
-
-        errors: [
-          error.message ||
-          'Не вдалося перевести проєкт на наступний етап.'
-        ],
-
+        errors: [error.message || 'Не вдалося перевести проєкт на наступний етап.'],
         success: ''
       });
     }

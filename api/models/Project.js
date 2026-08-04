@@ -1,7 +1,7 @@
 // api/models/Project.js
 
 const crypto = require('crypto');
-const PROJECT_STAGES = require('../../lib/projectStages');
+const { keys: PROJECT_STAGES } = require('../../lib/projectStages');
 
 /**
  * Генерує випадковий шестизначний номер заявки.

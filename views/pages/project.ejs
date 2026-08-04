@@ -1,3 +1,17 @@
+<style>
+    #stages-details .stages-chevron {
+        transform: rotate(0deg);
+    }
+
+    #stages-details.is-expanded .stages-chevron {
+        transform: rotate(180deg);
+    }
+
+    #stages-details[open] .stages-chevron {
+        transform: rotate(180deg);
+    }
+</style>
+
 <%
 function statusSvg(completed) {
   return completed
@@ -31,8 +45,42 @@ function statusSvg(completed) {
         <p class="mt-1 text-base text-navy"><%= project.repairType %></p>
 
         <% if (project.description && project.description.trim()) { %>
-          <h3 class="mt-7 font-display text-h3 font-normal text-navy">Про задачу:</h3>
-          <div class="mt-2 space-y-3 text-justify text-base text-navy"><%- project.description %></div>
+          <div
+            class="
+      mt-8 text-base leading-7 text-navy
+
+      [&_h2]:mb-3
+      [&_h2]:mt-8
+      [&_h2]:font-display
+      [&_h2]:text-h3
+      [&_h2]:font-normal
+      [&_h2]:text-navy
+
+      [&_h3]:mb-3
+      [&_h3]:mt-6
+      [&_h3]:font-display
+      [&_h3]:text-xl
+      [&_h3]:font-normal
+      [&_h3]:text-navy
+
+      [&_p]:mb-4
+      [&_p]:text-justify
+
+      [&_ul]:mb-4
+      [&_ul]:list-disc
+      [&_ul]:space-y-2
+      [&_ul]:pl-6
+
+      [&_ol]:mb-4
+      [&_ol]:list-decimal
+      [&_ol]:space-y-2
+      [&_ol]:pl-6
+
+      [&_strong]:font-bold
+    "
+          >
+            <%- project.description %>
+          </div>
         <% } %>
 
         <% if (completed && before.length) { %>
@@ -60,35 +108,379 @@ function statusSvg(completed) {
         <% } %>
 
         <details id="stages-details" open class="<%= (mainPhoto && completed) ? 'mt-7' : '' %> rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
-          <summary class="flex items-center justify-between gap-3">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
             <span class="font-display text-h3 font-normal text-navy">Етапи роботи</span>
             <svg class="stages-chevron h-5 w-5 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
 
-          <ol class="mt-5">
-            <% timeline.forEach(function (st) { %>
-              <li class="flex gap-4">
-                <div class="flex w-4 shrink-0 flex-col items-center self-stretch">
-                  <span class="mt-1 block h-4 w-4 shrink-0 rounded-full <%= st.done ? 'bg-[#012A4A]' : 'bg-[#527B8D]' %>"></span>
-                  <% if (!st.isLast) { %>
-                    <span class="w-0.5 flex-1 <%= st.done ? 'bg-[#012A4A]' : 'bg-[#527B8D]' %>"></span>
-                  <% } %>
-                </div>
-                <div class="<%= st.isLast ? '' : 'pb-6' %> <%= st.done ? '' : 'opacity-45' %>">
-                  <p class="text-base text-navy"><%= st.label %></p>
-                  <% if (st.done && st.note) { %>
-                    <p class="mt-1 text-base text-navy/70"><%= st.note %></p>
-                  <% } %>
-                  <% if (st.done && st.date) { %>
-                    <p class="mt-1 text-base text-steel"><%= st.date %></p>
-                  <% } %>
-                </div>
-              </li>
-            <% }); %>
-          </ol>
+          <div
+            data-stages-content
+            class="overflow-hidden"
+          >
+            <ol class="pt-6">
+              <% timeline.forEach(function (stage) { %>
+                <%
+                  const isFuture = !stage.reached;
+
+                  const isCurrentActive =
+                    stage.isCurrent &&
+                    !completed;
+
+                  const isFinished =
+                    stage.done;
+                %>
+
+                <li class="flex gap-4">
+                  <div
+                    class="flex w-5 shrink-0 flex-col items-center self-stretch"
+                  >
+          <span
+            class="<%=
+              isFinished
+                ? 'bg-navy'
+                : isCurrentActive
+                  ? 'border-[4px] border-navy bg-white ring-4 ring-navy/10'
+                  : 'bg-steel/30'
+            %> mt-1 block h-4 w-4 shrink-0 rounded-full"
+            aria-hidden="true"
+          ></span>
+
+                    <% if (!stage.isLast) { %>
+                      <span
+                        class="<%=
+                          isFinished
+                            ? 'bg-navy'
+                            : 'bg-steel/30'
+                        %> w-0.5 flex-1"
+                        aria-hidden="true"
+                      ></span>
+                    <% } %>
+                  </div>
+
+                  <div
+                    class="<%= stage.isLast ? '' : 'pb-7' %> min-w-0 <%= isFuture ? 'opacity-45' : '' %>"
+                  >
+                    <div class="flex flex-wrap items-center gap-2">
+                      <p class="text-base font-medium text-navy">
+                        <%= stage.label %>
+                      </p>
+
+                      <% if (stage.isCurrent && !completed) { %>
+                        <span
+                          class="rounded-full bg-sky px-2.5 py-0.5 text-xs font-bold text-navy"
+                        >
+                Поточний етап
+              </span>
+                      <% } %>
+
+                      <% if (stage.isCurrent && completed) { %>
+                        <span
+                          class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700"
+                        >
+                Завершено
+              </span>
+                      <% } %>
+                    </div>
+
+                    <% if (stage.reached && stage.note) { %>
+                      <p class="mt-1.5 text-base leading-6 text-navy/70">
+                        <%= stage.note %>
+                      </p>
+                    <% } %>
+
+                    <% if (stage.reached && stage.date) { %>
+                      <p class="mt-1.5 text-sm text-steel">
+                        <%= stage.date %>
+                      </p>
+                    <% } %>
+                  </div>
+                </li>
+              <% }); %>
+            </ol>
+          </div>
         </details>
       </div>
 
     </div>
   </main>
 </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const details =
+      document.querySelector('#stages-details');
+
+    if (!details) {
+      return;
+    }
+
+    const summary =
+      details.querySelector('summary');
+
+    const content =
+      details.querySelector('[data-stages-content]');
+
+    if (!summary || !content) {
+      return;
+    }
+
+    const reduceMotion =
+      window.matchMedia &&
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+    /*
+     * Відкриття зроблено трохи довшим,
+     * оскільки розгортання великого блоку
+     * візуально сприймається різкіше.
+     */
+    const openDuration = 420;
+    const closeDuration = 320;
+
+    const easing =
+      'cubic-bezier(0.22, 1, 0.36, 1)';
+
+    let isAnimating = false;
+    let detailsAnimation = null;
+    let contentAnimation = null;
+
+    details.classList.toggle(
+      'is-expanded',
+      details.open
+    );
+
+    summary.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (isAnimating) {
+        return;
+      }
+
+      if (reduceMotion) {
+        details.open = !details.open;
+
+        details.classList.toggle(
+          'is-expanded',
+          details.open
+        );
+
+        return;
+      }
+
+      if (details.open) {
+        closeDetails();
+      } else {
+        openDetails();
+      }
+    });
+
+    /**
+     * Висота details у закритому стані:
+     *
+     * summary
+     * + вертикальні padding
+     * + вертикальні border.
+     */
+    function getCollapsedHeight() {
+      const styles =
+        window.getComputedStyle(details);
+
+      const paddingTop =
+        parseFloat(styles.paddingTop) || 0;
+
+      const paddingBottom =
+        parseFloat(styles.paddingBottom) || 0;
+
+      const borderTop =
+        parseFloat(styles.borderTopWidth) || 0;
+
+      const borderBottom =
+        parseFloat(styles.borderBottomWidth) || 0;
+
+      return (
+        summary.offsetHeight +
+        paddingTop +
+        paddingBottom +
+        borderTop +
+        borderBottom
+      );
+    }
+
+    function cancelAnimations() {
+      if (detailsAnimation) {
+        detailsAnimation.cancel();
+        detailsAnimation = null;
+      }
+
+      if (contentAnimation) {
+        contentAnimation.cancel();
+        contentAnimation = null;
+      }
+    }
+
+    function openDetails() {
+      isAnimating = true;
+      cancelAnimations();
+
+      const collapsedHeight =
+        getCollapsedHeight();
+
+      /*
+       * Спочатку фіксуємо details у закритій висоті.
+       * Тому після details.open = true контент
+       * не з'явиться різко.
+       */
+      details.style.height =
+        `${collapsedHeight}px`;
+
+      details.style.overflow =
+        'hidden';
+
+      content.style.opacity =
+        '0';
+
+      content.style.transform =
+        'translateY(-6px)';
+
+      details.open = true;
+
+      details.classList.add(
+        'is-expanded'
+      );
+
+      /*
+       * Чекаємо кадр, щоб браузер застосував
+       * початкову закриту висоту.
+       */
+      window.requestAnimationFrame(function () {
+        const expandedHeight =
+          collapsedHeight +
+          content.offsetHeight;
+
+        detailsAnimation = details.animate(
+          [
+            {
+              height: `${collapsedHeight}px`
+            },
+            {
+              height: `${expandedHeight}px`
+            }
+          ],
+          {
+            duration: openDuration,
+            easing,
+            fill: 'forwards'
+          }
+        );
+
+        contentAnimation = content.animate(
+          [
+            {
+              opacity: 0,
+              transform: 'translateY(-6px)'
+            },
+            {
+              opacity: 1,
+              transform: 'translateY(0)'
+            }
+          ],
+          {
+            duration: 300,
+            delay: 70,
+            easing,
+            fill: 'forwards'
+          }
+        );
+
+        detailsAnimation.onfinish = function () {
+          finishAnimation(true);
+        };
+
+        detailsAnimation.oncancel = function () {
+          resetStyles();
+        };
+      });
+    }
+
+    function closeDetails() {
+      isAnimating = true;
+      cancelAnimations();
+
+      const expandedHeight =
+        details.offsetHeight;
+
+      const collapsedHeight =
+        getCollapsedHeight();
+
+      details.style.overflow =
+        'hidden';
+
+      details.classList.remove(
+        'is-expanded'
+      );
+
+      detailsAnimation = details.animate(
+        [
+          {
+            height: `${expandedHeight}px`
+          },
+          {
+            height: `${collapsedHeight}px`
+          }
+        ],
+        {
+          duration: closeDuration,
+          easing,
+          fill: 'forwards'
+        }
+      );
+
+      contentAnimation = content.animate(
+        [
+          {
+            opacity: 1,
+            transform: 'translateY(0)'
+          },
+          {
+            opacity: 0,
+            transform: 'translateY(-4px)'
+          }
+        ],
+        {
+          duration: 220,
+          easing,
+          fill: 'forwards'
+        }
+      );
+
+      detailsAnimation.onfinish = function () {
+        finishAnimation(false);
+      };
+
+      detailsAnimation.oncancel = function () {
+        resetStyles();
+      };
+    }
+
+    function finishAnimation(open) {
+      details.open = open;
+
+      detailsAnimation = null;
+      contentAnimation = null;
+
+      resetStyles();
+    }
+
+    function resetStyles() {
+      details.style.height = '';
+      details.style.overflow = '';
+
+      content.style.opacity = '';
+      content.style.transform = '';
+
+      isAnimating = false;
+    }
+  });
+</script>

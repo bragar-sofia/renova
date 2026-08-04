@@ -1,11 +1,52 @@
 <%
-var SUB_ACTIVE = 'Тут ви можете відслідковувати статуси заявок з якими ми працюємо';
-var SUB_COMPLETED = 'Тут ви можете переглянути наше портфоліо із завершених проектів';
-function cardStatus(p) { return p.completed ? 'completed' : 'active'; }
-function matchInit(p) { return cardStatus(p) === status && (!q || p.requestNumber.indexOf(q) !== -1); }
-var matchTotal = projects.filter(matchInit).length;
+var SUB_ACTIVE =
+  'Тут ви можете відстежувати статуси заявок, з якими ми працюємо';
+
+var SUB_COMPLETED =
+  'Тут ви можете переглянути наше портфоліо із завершених проєктів';
+
+var normalizedQ = String(q || '')
+  .trim()
+  .toLocaleLowerCase('uk-UA');
+
+function cardStatus(project) {
+  return project.completed
+    ? 'completed'
+    : 'active';
+}
+
+function matchInit(project) {
+  var searchText = String(
+    project.searchText || ''
+  );
+
+  return (
+    cardStatus(project) === status &&
+    (
+      !normalizedQ ||
+      searchText.indexOf(normalizedQ) !== -1
+    )
+  );
+}
+
+var matchTotal =
+  projects.filter(matchInit).length;
+
 var shownInit = 0;
-function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) { shownInit++; } return v; }
+
+function visInit(project) {
+  var matched = matchInit(project);
+
+  var visible =
+    matched &&
+    shownInit < 6;
+
+  if (matched) {
+    shownInit += 1;
+  }
+
+  return visible;
+}
 %>
 <script>document.documentElement.classList.add('reveal-ready');</script>
 
@@ -25,7 +66,7 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
 
         <div class="flex flex-col gap-3 sm:flex-row">
           <div class="group relative">
-            <input type="text" data-search-input value="<%= q %>" placeholder="Пошук за номером заявки" class="h-12 w-full rounded-pill border-2 border-steel bg-white pl-4 pr-11 text-base text-steel placeholder:text-steel/70 outline-none transition focus:border-navy sm:w-72">
+            <input type="text" data-search-input value="<%= q %>" placeholder="Пошук за номером, назвою або обладнанням" class="h-12 w-full rounded-pill border-2 border-steel bg-white pl-4 pr-11 text-base text-steel placeholder:text-steel/70 outline-none transition focus:border-navy sm:w-72">
             <span class="pointer-events-none absolute right-4 top-1/2 flex -translate-y-1/2 items-center text-steel transition group-hover:text-navy group-focus-within:text-navy">
               <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
             </span>
@@ -49,7 +90,7 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
 
       <section data-empty class="rounded-card bg-white px-6 py-20 text-center <%= matchTotal > 0 ? 'hidden' : '' %>">
         <p class="font-display text-h3 font-normal text-navy/70" data-empty-text>
-          <%= q ? 'За вашим запитом заявок не знайдено.' : (status === 'completed' ? 'Поки що немає завершених проектів.' : 'Наразі немає активних заявок.') %>
+          <%= q ? 'За вашим запитом заявок не знайдено.' : (status === 'completed' ? 'Поки що немає завершених проєктів.' : 'Наразі немає активних заявок.') %>
         </p>
       </section>
 
@@ -66,8 +107,8 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
         <div class="divide-y-2 divide-[#527B8D] overflow-hidden rounded-card bg-white">
           <% activeRows.forEach(function (p, i) {
                var rnd = activeRows.length === 1 ? 'rounded-card' : (i === 0 ? 'rounded-t-card' : (i === activeRows.length - 1 ? 'rounded-b-card' : '')); %>
-            <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="active" data-number="<%= p.requestNumber %>" data-updated="<%= p.updatedAt %>" data-created="<%= p.createdAt %>"
-               class="project-row group relative grid grid-cols-1 gap-2 px-6 py-5 text-base transition lg:grid-cols-[160px_1fr_250px_175px] lg:items-stretch lg:gap-0 lg:px-0 lg:py-0 <%= visInit(p) ? '' : 'hidden' %>">
+            <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="active" data-number="<%= p.requestNumber %>" data-search="<%= p.searchText %>" data-sort-value="<%= p.sortTimestamp %>"
+                class="project-row group relative grid grid-cols-1 gap-2 px-6 py-5 text-base transition lg:grid-cols-[160px_1fr_250px_175px] lg:items-stretch lg:gap-0 lg:px-0 lg:py-0 <%= visInit(p) ? '' : 'hidden' %>">
               <div class="text-navy lg:flex lg:items-center lg:justify-center lg:px-6 lg:py-6">№<%= p.requestNumber %></div>
               <div class="text-navy lg:flex lg:items-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><div class="w-full"><span class="req-clamp"><%= p.requestText %></span></div></div>
               <div class="text-navy lg:flex lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><span class="text-navy lg:hidden">Статус: </span><%= p.statusText %></div>
@@ -82,8 +123,14 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
       <%/* ---------- Завершені: картки ---------- */%>
       <div data-view="completed" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>">
         <% projects.forEach(function (p) { if (!p.completed) { return; } %>
-          <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="completed" data-number="<%= p.requestNumber %>" data-updated="<%= p.updatedAt %>" data-created="<%= p.createdAt %>"
-             class="reveal-item project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] <%= visInit(p) ? '' : 'hidden' %>">
+          <a
+            href="/projects/<%= p.requestNumber %>"
+            data-project-item
+            data-status="completed"
+            data-number="<%= p.requestNumber %>"
+            data-search="<%= p.searchText %>"
+            data-sort-value="<%= p.sortTimestamp %>"
+              class="reveal-item project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] <%= visInit(p) ? '' : 'hidden' %>">
             <div class="card-photo relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-sky to-white">
               <% if (p.imageMain) { %>
                 <img class="absolute inset-0 h-full w-full object-cover" src="<%= p.imageMain %>" alt="<%= p.title %>" loading="lazy">
@@ -159,7 +206,7 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
     var emptyEl = document.querySelector('[data-empty]');
     var emptyText = document.querySelector('[data-empty-text]');
     var subtitle = document.querySelector('[data-subtitle]');
-    var SUB = { active: 'Тут ви можете відслідковувати статуси заявок з якими ми працюємо', completed: 'Тут ви можете переглянути наше портфоліо із завершених проектів' };
+    var SUB = { active: 'Тут ви можете відстежувати статуси заявок, з якими ми працюємо', completed: 'Тут ви можете переглянути наше портфоліо із завершених проектів' };
     var SORT_LABELS = { new: 'Спочатку новіші', old: 'Спочатку старіші' };
     var PER = 6;
 
@@ -195,20 +242,46 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
       var isActive = state.status === 'active';
       var current = items.filter(function (c) { return c.getAttribute('data-status') === state.status; });
       current.sort(function (a, b) {
-        return state.sort === 'old' ? num(a, 'created') - num(b, 'created') : num(b, 'updated') - num(a, 'updated');
+        var firstTimestamp =
+          num(a, 'sort-value');
+
+        var secondTimestamp =
+          num(b, 'sort-value');
+
+        return state.sort === 'old'
+          ? firstTimestamp - secondTimestamp
+          : secondTimestamp - firstTimestamp;
       });
       current.forEach(function (c) { c.parentNode.appendChild(c); });
 
+      var normalizedQuery =
+        state.q.toLocaleLowerCase('uk-UA');
+
       var matched = 0;
-      current.forEach(function (c) {
-        var ok = !state.q || c.getAttribute('data-number').indexOf(state.q) !== -1;
-        if (ok) { c.classList.toggle('hidden', matched >= state.shown); matched++; }
-        else { c.classList.add('hidden'); }
+
+      current.forEach(function (item) {
+        var searchText =
+          item.getAttribute('data-search') || '';
+
+        var matchedQuery =
+          !normalizedQuery ||
+          searchText.indexOf(normalizedQuery) !== -1;
+
+        if (matchedQuery) {
+          item.classList.toggle(
+            'hidden',
+            matched >= state.shown
+          );
+
+          matched += 1;
+        } else {
+          item.classList.add('hidden');
+        }
       });
 
       if (viewActive) { viewActive.classList.toggle('hidden', !(isActive && matched > 0)); }
       if (viewCompleted) { viewCompleted.classList.toggle('hidden', !(!isActive && matched > 0)); }
-      if (emptyText) { emptyText.textContent = state.q ? 'За вашим запитом заявок не знайдено.' : (isActive ? 'Наразі немає активних заявок.' : 'Поки що немає завершених проектів.'); }
+      if (emptyText) { emptyText.textContent = state.q ? 'За вашим запитом заявок не знайдено.' : (isActive ? 'Наразі немає активних заявок.' : 'Поки що немає завершених проєктів.'); }
       if (emptyEl) { emptyEl.classList.toggle('hidden', matched > 0); }
       if (loadWrap) { loadWrap.classList.toggle('hidden', matched <= state.shown); }
       if (subtitle) { subtitle.textContent = SUB[state.status]; }
@@ -267,51 +340,69 @@ function visInit(p) { var v = matchInit(p) && shownInit < 6; if (matchInit(p)) {
 
     if (loadBtn) { loadBtn.addEventListener('click', function () { state.shown += PER; apply(); }); }
 
-    if (window.matchMedia && window.matchMedia('(hover: none)').matches)
-    Array.prototype.forEach.call(document.querySelectorAll('[data-cp-slider]'), function (slider) {
-      var track = slider.querySelector('[data-cp-track]');
-      var handle = slider.querySelector('[data-cp-handle]');
-      var card = slider.closest('.project-card');
-      var after = card && card.querySelector('.cp-after');
-      if (!track || !handle || !card || !after) { return; }
-      var dragging = false;
+    if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+      Array.prototype.forEach.call(document.querySelectorAll('[data-cp-slider]'), function (slider) {
+        var track = slider.querySelector('[data-cp-track]');
+        var handle = slider.querySelector('[data-cp-handle]');
+        var card = slider.closest('.project-card');
+        var after = card && card.querySelector('.cp-after');
+        if (!track || !handle || !card || !after) {
+          return;
+        }
+        var dragging = false;
 
-      function pad() { return Math.max(0, (track.clientHeight - handle.offsetHeight) / 2); }
-      function setT(t) {
-        t = Math.max(0, Math.min(1, t));
-        var p = pad();
-        var usable = track.clientWidth - handle.offsetWidth - 2 * p;
-        handle.style.left = (p + t * usable) + 'px';
-        after.style.setProperty('--cp-x', (-25 + t * 155) + '%');
-      }
-      function tFromEvent(e) {
-        var rect = track.getBoundingClientRect();
-        var bl = parseFloat(getComputedStyle(track).borderLeftWidth) || 0;
-        var p = pad();
-        var usable = track.clientWidth - handle.offsetWidth - 2 * p;
-        return usable > 0 ? (e.clientX - rect.left - bl - p - handle.offsetWidth / 2) / usable : 0;
-      }
+        function pad() {
+          return Math.max(0, (track.clientHeight - handle.offsetHeight) / 2);
+        }
 
-      track.addEventListener('pointerdown', function (e) {
-        dragging = true;
-        card.classList.add('cp-dragging');
-        try { track.setPointerCapture(e.pointerId); } catch (err) {}
-        setT(tFromEvent(e));
-        e.preventDefault();
-        e.stopPropagation();
+        function setT(t) {
+          t = Math.max(0, Math.min(1, t));
+          var p = pad();
+          var usable = track.clientWidth - handle.offsetWidth - 2 * p;
+          handle.style.left = (p + t * usable) + 'px';
+          after.style.setProperty('--cp-x', (-25 + t * 155) + '%');
+        }
+
+        function tFromEvent(e) {
+          var rect = track.getBoundingClientRect();
+          var bl = parseFloat(getComputedStyle(track).borderLeftWidth) || 0;
+          var p = pad();
+          var usable = track.clientWidth - handle.offsetWidth - 2 * p;
+          return usable > 0 ? (e.clientX - rect.left - bl - p - handle.offsetWidth / 2) / usable : 0;
+        }
+
+        track.addEventListener('pointerdown', function (e) {
+          dragging = true;
+          card.classList.add('cp-dragging');
+          try {
+            track.setPointerCapture(e.pointerId);
+          } catch (err) {
+          }
+          setT(tFromEvent(e));
+          e.preventDefault();
+          e.stopPropagation();
+        });
+        track.addEventListener('pointermove', function (e) {
+          if (!dragging) {
+            return;
+          }
+          setT(tFromEvent(e));
+          e.preventDefault();
+        });
+        var stop = function () {
+          dragging = false;
+          card.classList.remove('cp-dragging');
+        };
+        track.addEventListener('pointerup', stop);
+        track.addEventListener('pointercancel', stop);
+        slider.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+
+        setT(0);
       });
-      track.addEventListener('pointermove', function (e) {
-        if (!dragging) { return; }
-        setT(tFromEvent(e));
-        e.preventDefault();
-      });
-      var stop = function () { dragging = false; card.classList.remove('cp-dragging'); };
-      track.addEventListener('pointerup', stop);
-      track.addEventListener('pointercancel', stop);
-      slider.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); });
-
-      setT(0);
-    });
+    }
 
     apply();
 

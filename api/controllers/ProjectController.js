@@ -1,78 +1,372 @@
-const PROJECT_STAGES = require('../../lib/projectStages');
-const STAGE_LABELS = require('../../lib/projectStageLabels');
+const {
+  keys: PROJECT_STAGES,
+  labels: STAGE_LABELS
+} = require('../../lib/projectStages');
 
+/**
+ * Видаляє HTML-теги та нормалізує пробіли.
+ */
 function stripHtml(html) {
   return typeof html === 'string'
-    ? html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+    ? html
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
     : '';
 }
 
+/**
+ * Нормалізує звичайний текст.
+ */
+function normalizeText(value) {
+  return typeof value === 'string'
+    ? value.trim()
+    : '';
+}
+
+/**
+ * Скорочує текст до заданої довжини.
+ */
 function truncate(text, max) {
-  if (!text) { return ''; }
-  return text.length > max ? text.slice(0, max - 1).trimEnd() + '…' : text;
+  if (!text) {
+    return '';
+  }
+
+  return text.length > max
+    ? `${text.slice(0, max - 1).trimEnd()}…`
+    : text;
 }
 
-function pad(n) { return n < 10 ? '0' + n : '' + n; }
-
-function formatDate(ts) {
-  if (typeof ts !== 'number') { return ''; }
-  const d = new Date(ts);
-  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}, ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function pad(number) {
+  return number < 10
+    ? `0${number}`
+    : String(number);
 }
 
-function formatDateShort(ts) {
-  if (typeof ts !== 'number') { return ''; }
-  const d = new Date(ts);
-  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${String(d.getFullYear()).slice(-2)}`;
+/**
+ * Формат:
+ * 04.08.2026, 15:10
+ */
+function formatDate(timestamp) {
+  if (typeof timestamp !== 'number') {
+    return '';
+  }
+
+  const date = new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return [
+    `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`,
+    `${pad(date.getHours())}:${pad(date.getMinutes())}`
+  ].join(', ');
 }
 
-function firstPhoto(photos) {
-  const p = photos && typeof photos === 'object' ? photos : {};
-  const after = Array.isArray(p.after) ? p.after : [];
-  const before = Array.isArray(p.before) ? p.before : [];
-  const pick = after[0] || before[0];
-  return pick && pick.path ? pick.path : null;
+/**
+ * Формат:
+ * 04.08.26
+ */
+function formatDateShort(timestamp) {
+  if (typeof timestamp !== 'number') {
+    return '';
+  }
+
+  const date = new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return [
+    pad(date.getDate()),
+    pad(date.getMonth() + 1),
+    String(date.getFullYear()).slice(-2)
+  ].join('.');
+}
+
+/**
+ * Нормалізує та сортує фотографії за order.
+ */
+function sortPhotos(photos) {
+  if (!Array.isArray(photos)) {
+    return [];
+  }
+
+  return photos
+    .filter((photo) => {
+      return (
+        photo &&
+        typeof photo === 'object' &&
+        typeof photo.path === 'string' &&
+        photo.path
+      );
+    })
+    .slice()
+    .sort((first, second) => {
+      const firstOrder = Number(first.order) || 0;
+      const secondOrder = Number(second.order) || 0;
+
+      return firstOrder - secondOrder;
+    });
+}
+
+/**
+ * Повертає нормалізовану структуру фотографій.
+ */
+function getProjectPhotos(photos) {
+  const source =
+    photos &&
+    typeof photos === 'object' &&
+    !Array.isArray(photos)
+      ? photos
+      : {};
+
+  return {
+    before: sortPhotos(source.before),
+    after: sortPhotos(source.after)
+  };
+}
+
+/**
+ * Повертає першу фотографію потрібного типу.
+ *
+ * Для активного проєкту зазвичай показуємо before.
+ * Для завершеного проєкту — after.
+ */
+function firstPhoto(photos, preferredType = 'before') {
+  const normalizedPhotos = getProjectPhotos(photos);
+
+  const primary =
+    preferredType === 'after'
+      ? normalizedPhotos.after
+      : normalizedPhotos.before;
+
+  const secondary =
+    preferredType === 'after'
+      ? normalizedPhotos.before
+      : normalizedPhotos.after;
+
+  const photo = primary[0] || secondary[0];
+
+  return photo
+    ? photo.path
+    : null;
+}
+
+/**
+ * Знаходить останній запис певного етапу.
+ *
+ * Ідемо з кінця масиву, щоб метод залишався
+ * коректним навіть у разі повторного етапу.
+ */
+function findStageEntry(stages, stageKey) {
+  if (!Array.isArray(stages)) {
+    return null;
+  }
+
+  for (let index = stages.length - 1; index >= 0; index -= 1) {
+    const stage = stages[index];
+
+    if (stage && stage.key === stageKey) {
+      return stage;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Повертає дату переходу на поточний етап.
+ */
+function getCurrentStageTimestamp(project) {
+  const stages = Array.isArray(project.stages)
+    ? project.stages
+    : [];
+
+  const currentEntry = findStageEntry(
+    stages,
+    project.currentStage
+  );
+
+  if (
+    currentEntry &&
+    typeof currentEntry.enteredAt === 'number'
+  ) {
+    return currentEntry.enteredAt;
+  }
+
+  const lastEntry = stages[stages.length - 1];
+
+  if (
+    lastEntry &&
+    typeof lastEntry.enteredAt === 'number'
+  ) {
+    return lastEntry.enteredAt;
+  }
+
+  if (typeof project.updatedAt === 'number') {
+    return project.updatedAt;
+  }
+
+  if (typeof project.createdAt === 'number') {
+    return project.createdAt;
+  }
+
+  return 0;
 }
 
 module.exports = {
+  /**
+   * Список публічних проєктів.
+   *
+   * Завантажуємо всі видимі записи, оскільки
+   * перемикання активних і завершених проєктів
+   * виконується на клієнті без перезавантаження.
+   */
   index: async function (req, res) {
     try {
-      const status = req.query.status === 'completed' ? 'completed' : 'active';
-      const q = typeof req.query.q === 'string' ? req.query.q.trim() : '';
-      const sort = req.query.sort === 'old' ? 'old' : 'new';
+      const status =
+        req.query.status === 'completed'
+          ? 'completed'
+          : 'active';
 
-      const found = await Project.find({ isVisible: true })
-        .sort(sort === 'old' ? 'createdAt ASC' : 'updatedAt DESC');
+      const q = normalizeText(req.query.q);
 
-      const projects = found.map(function (p) {
-        const photos = p.photos && typeof p.photos === 'object' ? p.photos : {};
-        const before = Array.isArray(photos.before) ? photos.before : [];
-        const after = Array.isArray(photos.after) ? photos.after : [];
-        const imageMain = (before[0] && before[0].path) || (after[0] && after[0].path) || null;
-        const afterPath = after[0] && after[0].path;
-        const imageHover = (afterPath && afterPath !== imageMain) ? afterPath : null;
+      const sort =
+        req.query.sort === 'old'
+          ? 'old'
+          : 'new';
 
-        const stages = Array.isArray(p.stages) ? p.stages : [];
-        const currentEntry = stages.filter(function (s) { return s && s.key === p.currentStage; }).pop();
-        const lastEntry = stages[stages.length - 1];
-        const stageTs = (currentEntry && typeof currentEntry.enteredAt === 'number') ? currentEntry.enteredAt
-          : (lastEntry && typeof lastEntry.enteredAt === 'number') ? lastEntry.enteredAt
-          : p.updatedAt;
+      /*
+       * Не фільтруємо тут currentStage і пошуковий запит.
+       *
+       * Сторінка повинна одразу отримати:
+       * - активні заявки;
+       * - завершені проєкти.
+       */
+      const found = await Project.find({
+        isVisible: true
+      });
+
+      const projects = found.map((project) => {
+        const photos = getProjectPhotos(
+          project.photos
+        );
+
+        /*
+         * Для завершених карток:
+         *
+         * before — початкове зображення;
+         * after — зображення після ремонту.
+         */
+        const imageMain =
+          photos.before[0]?.path ||
+          photos.after[0]?.path ||
+          null;
+
+        const afterPath =
+          photos.after[0]?.path || null;
+
+        const imageHover =
+          afterPath && afterPath !== imageMain
+            ? afterPath
+            : null;
+
+        const stageTimestamp =
+          getCurrentStageTimestamp(project);
+
+        const descriptionText =
+          stripHtml(project.description);
+
+        const currentStageNote =
+          normalizeText(project.currentStageNote);
+
+        /*
+         * Підготовлений текст для клієнтського пошуку.
+         *
+         * У data-search не передаємо HTML,
+         * а лише звичайний нормалізований текст.
+         */
+        const searchText = [
+          project.requestNumber,
+          project.title,
+          project.equipment,
+          project.repairType,
+          currentStageNote,
+          descriptionText
+        ]
+          .map(normalizeText)
+          .filter(Boolean)
+          .join(' ')
+          .toLocaleLowerCase('uk-UA');
 
         return {
-          requestNumber: p.requestNumber,
-          title: p.title,
-          equipment: p.equipment,
-          excerpt: truncate(stripHtml(p.description), 120) || p.repairType || '',
-          requestText: truncate(stripHtml(p.description), 200) || p.repairType || '',
-          statusText: STAGE_LABELS[p.currentStage] || '',
-          updatedDate: formatDateShort(stageTs),
+          requestNumber:
+          project.requestNumber,
+
+          title:
+          project.title,
+
+          equipment:
+          project.equipment,
+
+          repairType:
+          project.repairType,
+
+          excerpt:
+            truncate(descriptionText, 120) ||
+            project.repairType ||
+            '',
+
+          requestText:
+            truncate(currentStageNote, 200) ||
+            truncate(descriptionText, 200) ||
+            project.repairType ||
+            '',
+
+          statusText:
+            STAGE_LABELS[project.currentStage] ||
+            project.currentStage ||
+            '',
+
+          updatedDate:
+            formatDateShort(stageTimestamp),
+
           imageMain,
+
           imageHover,
-          completed: p.currentStage === 'completed',
-          createdAt: typeof p.createdAt === 'number' ? p.createdAt : 0,
-          updatedAt: typeof p.updatedAt === 'number' ? p.updatedAt : 0
+
+          completed:
+            project.currentStage === 'completed',
+
+          /*
+           * Використовуємо для пошуку у браузері.
+           */
+          searchText,
+
+          /*
+           * Використовуємо і для нового,
+           * і для старого сортування.
+           *
+           * Це дата переходу на поточний етап,
+           * а не дата імпорту seed-запису.
+           */
+          sortTimestamp:
+          stageTimestamp
         };
+      });
+
+      /*
+       * Початкове серверне сортування потрібне,
+       * щоб сторінка одразу відобразилася правильно
+       * ще до виконання клієнтського JavaScript.
+       */
+      projects.sort((first, second) => {
+        return sort === 'old'
+          ? first.sortTimestamp - second.sortTimestamp
+          : second.sortTimestamp - first.sortTimestamp;
       });
 
       return res.view('pages/projects', {
@@ -84,11 +378,18 @@ module.exports = {
         projects
       });
     } catch (error) {
-      sails.log.error('ProjectController.index error:', error);
+      sails.log.error(
+        'ProjectController.index error:',
+        error
+      );
+
       return res.serverError(error);
     }
   },
 
+  /**
+   * Сторінка окремого проєкту.
+   */
   show: async function (req, res) {
     try {
       const project = await Project.findOne({
@@ -96,42 +397,140 @@ module.exports = {
         isVisible: true
       });
 
-      if (!project) { return res.notFound(); }
+      if (!project) {
+        return res.notFound();
+      }
 
-      const completed = project.currentStage === 'completed';
+      const completed =
+        project.currentStage === 'completed';
 
+      const currentStageIndex =
+        PROJECT_STAGES.indexOf(
+          project.currentStage
+        );
+
+      /**
+       * Останній запис кожного етапу.
+       */
       const stagesByKey = {};
-      (Array.isArray(project.stages) ? project.stages : []).forEach(function (s) {
-        if (s && s.key) { stagesByKey[s.key] = s; }
+
+      const projectStages = Array.isArray(project.stages)
+        ? project.stages
+        : [];
+
+      projectStages.forEach((stage) => {
+        if (stage && stage.key) {
+          stagesByKey[stage.key] = stage;
+        }
       });
 
-      const timeline = PROJECT_STAGES.map(function (key, i) {
-        const entry = stagesByKey[key];
-        return {
-          label: STAGE_LABELS[key] || key,
-          done: !!entry,
-          note: entry ? (entry.note || '') : '',
-          date: entry ? formatDate(entry.enteredAt) : '',
-          isCurrent: key === project.currentStage,
-          isLast: i === PROJECT_STAGES.length - 1
-        };
-      });
+      const timeline = PROJECT_STAGES.map(
+        (key, index) => {
+          const entry = stagesByKey[key];
 
-      const photos = project.photos && typeof project.photos === 'object' ? project.photos : {};
+          const isCurrent =
+            key === project.currentStage;
+
+          const reached =
+            currentStageIndex >= 0 &&
+            index <= currentStageIndex;
+
+          /**
+           * Для активного проєкту поточний етап
+           * ще не вважається завершеним.
+           *
+           * Для completed останній етап також завершений.
+           */
+          const done =
+            index < currentStageIndex ||
+            (
+              completed &&
+              index === currentStageIndex
+            );
+
+          /**
+           * Актуальний коментар поточного етапу
+           * зберігається в currentStageNote.
+           *
+           * stages містить коментар, який був записаний
+           * під час переходу на цей етап, і він може бути
+           * неактуальним після редагування.
+           */
+          const note = isCurrent
+            ? (
+              normalizeText(
+                project.currentStageNote
+              ) ||
+              normalizeText(entry?.note)
+            )
+            : normalizeText(entry?.note);
+
+          return {
+            key,
+
+            label:
+              STAGE_LABELS[key] || key,
+
+            reached,
+
+            done,
+
+            note,
+
+            date:
+              entry &&
+              typeof entry.enteredAt === 'number'
+                ? formatDate(entry.enteredAt)
+                : '',
+
+            isCurrent,
+
+            isLast:
+              index === PROJECT_STAGES.length - 1
+          };
+        }
+      );
+
+      const photos = getProjectPhotos(
+        project.photos
+      );
 
       return res.view('pages/project', {
-        pageTitle: `Заявка №${project.requestNumber}`,
+        pageTitle:
+          `Заявка №${project.requestNumber}`,
+
         activePage: 'projects',
+
         project,
+
         completed,
-        statusLabel: completed ? 'Завершено' : 'Активно',
+
+        statusLabel:
+          STAGE_LABELS[project.currentStage] ||
+          project.currentStage ||
+          'Активно',
+
         timeline,
-        before: Array.isArray(photos.before) ? photos.before : [],
-        after: Array.isArray(photos.after) ? photos.after : [],
-        mainPhoto: firstPhoto(project.photos)
+
+        before: photos.before,
+
+        after: photos.after,
+
+        /**
+         * Для завершеного кейсу основним робимо after,
+         * для активного — before.
+         */
+        mainPhoto: firstPhoto(
+          project.photos,
+          completed ? 'after' : 'before'
+        )
       });
     } catch (error) {
-      sails.log.error('ProjectController.show error:', error);
+      sails.log.error(
+        'ProjectController.show error:',
+        error
+      );
+
       return res.serverError(error);
     }
   }
