@@ -1,3 +1,7 @@
+<%
+var activeProjects = (typeof activeProjects !== 'undefined' && activeProjects) ? activeProjects : [];
+var completedProjects = (typeof completedProjects !== 'undefined' && completedProjects) ? completedProjects : [];
+%>
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main id="home">
     <section
@@ -352,6 +356,76 @@
             </div>
           </div>
         </article>
+      </div>
+    </section>
+
+    <section id="projects-preview" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+      <h2 class="font-display text-h1 font-normal text-navy">Наші проекти</h2>
+
+      <div class="mt-8 grid gap-8 md:grid-cols-2 md:gap-0">
+        <div class="md:pr-8 lg:pr-12">
+          <h3 class="font-display text-h2 font-normal text-navy">Активні</h3>
+          <ul class="mt-5 space-y-3">
+            <% activeProjects.forEach(function (p) { %>
+              <li>
+                <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex items-center justify-between gap-4 rounded-card bg-white p-4 shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
+                  <span class="min-w-0">
+                    <span class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></span>
+                    <span class="mt-1 block text-base text-steel">№<%= p.requestNumber %> · Статус: <%= p.statusText %></span>
+                  </span>
+                  <img class="h-3 w-auto shrink-0 -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+                  <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
+                </a>
+              </li>
+            <% }); %>
+            <% if (!activeProjects.length) { %>
+              <li class="rounded-card border border-steel/30 bg-white p-4 text-base text-steel">Наразі немає активних заявок.</li>
+            <% } %>
+          </ul>
+        </div>
+
+        <div class="md:border-l-2 md:border-steel/30 md:pl-8 lg:pl-12">
+          <h3 class="font-display text-h2 font-normal text-navy">Завершені</h3>
+          <ul class="mt-5 grid grid-cols-2 gap-3">
+            <% completedProjects.forEach(function (p) { %>
+              <li>
+                <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
+                  <div class="card-photo relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-sky to-white">
+                    <% if (p.imageMain) { %>
+                      <img class="absolute inset-0 h-full w-full object-cover" src="<%= p.imageMain %>" alt="<%= p.title %>" loading="lazy">
+                      <% if (p.imageHover) { %>
+                        <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= p.imageHover %>" alt="<%= p.title %> — після ремонту" loading="lazy">
+                        <span class="cp-beam" aria-hidden="true"></span>
+                      <% } %>
+                    <% } else { %>
+                      <div class="flex h-full items-center justify-center text-steel/40">
+                        <svg viewBox="0 0 24 24" class="h-10 w-10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
+                      </div>
+                    <% } %>
+                  </div>
+                  <div class="p-4">
+                    <span class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></span>
+                    <span class="mt-1 block text-base text-steel">№<%= p.requestNumber %> · <%= p.equipment %></span>
+                  </div>
+                  <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
+                </a>
+              </li>
+            <% }); %>
+            <% if (!completedProjects.length) { %>
+              <li class="col-span-2 rounded-card border border-steel/30 bg-white p-4 text-base text-steel">Поки що немає завершених проектів.</li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 flex justify-center">
+        <a href="/projects" class="group inline-flex items-center gap-3 rounded-pill bg-navy px-8 py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]">
+          Перейти до всіх проектів
+          <svg class="h-4 w-4 transition group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="M13 5l7 7-7 7"></path>
+          </svg>
+        </a>
       </div>
     </section>
 
