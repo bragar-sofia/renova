@@ -277,6 +277,14 @@ module.exports = {
         const stageTimestamp =
           getCurrentStageTimestamp(project);
 
+        const currentStageIndex =
+          PROJECT_STAGES.indexOf(project.currentStage);
+
+        const progress =
+          currentStageIndex >= 0
+            ? Math.round(((currentStageIndex + 1) / PROJECT_STAGES.length) * 100)
+            : 0;
+
         const descriptionText =
           stripHtml(project.description);
 
@@ -321,8 +329,7 @@ module.exports = {
             '',
 
           requestText:
-            truncate(currentStageNote, 200) ||
-            truncate(descriptionText, 200) ||
+            truncate(descriptionText.replace(/^\s*Опис несправності\s*:?\s*/i, ''), 200) ||
             project.repairType ||
             '',
 
@@ -333,6 +340,11 @@ module.exports = {
 
           updatedDate:
             formatDateShort(stageTimestamp),
+
+          createdDate:
+            formatDateShort(project.createdAt),
+
+          progress,
 
           imageMain,
 

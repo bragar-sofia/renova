@@ -97,23 +97,41 @@ function visInit(project) {
       <%/* ---------- Активні: таблиця ---------- */%>
       <div data-view="active" class="<%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>">
         <div class="reveal-item">
-        <div class="hidden pb-4 font-display text-h3 font-normal text-navy lg:grid lg:grid-cols-[160px_1fr_250px_175px]">
-          <div class="text-center">Номер заявки</div>
-          <div class="text-center">Запит</div>
-          <div class="text-center">Статус</div>
-          <div class="whitespace-nowrap text-center">Дата оновлення</div>
+        <div class="hidden pb-4 font-display text-h2 font-normal text-navy lg:grid lg:grid-cols-[170px_1fr_230px_210px]">
+          <div class="text-center">Номер</div>
+          <div class="text-center">Проєкт</div>
+          <div class="text-center">Стан</div>
+          <div class="whitespace-nowrap text-center">Оновлено</div>
         </div>
         <% var activeRows = projects.filter(function (p) { return !p.completed; }); %>
-        <div class="divide-y-2 divide-[#527B8D] overflow-hidden rounded-card bg-white">
-          <% activeRows.forEach(function (p, i) {
-               var rnd = activeRows.length === 1 ? 'rounded-card' : (i === 0 ? 'rounded-t-card' : (i === activeRows.length - 1 ? 'rounded-b-card' : '')); %>
+        <div class="space-y-4">
+          <% activeRows.forEach(function (p) { %>
             <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="active" data-number="<%= p.requestNumber %>" data-search="<%= p.searchText %>" data-sort-value="<%= p.sortTimestamp %>"
-                class="project-row group relative grid grid-cols-1 gap-2 px-6 py-5 text-base transition lg:grid-cols-[160px_1fr_250px_175px] lg:items-stretch lg:gap-0 lg:px-0 lg:py-0 <%= visInit(p) ? '' : 'hidden' %>">
+                class="project-card group relative grid grid-cols-1 gap-3 overflow-hidden rounded-card bg-white px-6 py-5 text-base shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition lg:grid-cols-[170px_1fr_230px_210px] lg:items-stretch lg:gap-0 lg:px-0 lg:py-0 <%= visInit(p) ? '' : 'hidden' %>">
               <div class="text-navy lg:flex lg:items-center lg:justify-center lg:px-6 lg:py-6">№<%= p.requestNumber %></div>
-              <div class="text-navy lg:flex lg:items-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><div class="w-full"><span class="req-clamp"><%= p.requestText %></span></div></div>
-              <div class="text-navy lg:flex lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><span class="text-navy lg:hidden">Статус: </span><%= p.statusText %></div>
-              <div class="whitespace-nowrap text-navy lg:flex lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6"><span class="lg:hidden">Оновлено: </span><%= p.updatedDate %></div>
-              <span class="project-row-border pointer-events-none absolute inset-0 hidden lg:block <%= rnd %>" aria-hidden="true"></span>
+              <div class="text-navy lg:flex lg:flex-col lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6">
+                <p class="font-display text-h3 font-normal text-navy"><%= p.title %></p>
+                <p class="mt-2 text-base text-navy"><span class="font-display font-normal">Обладнання:</span> <%= p.equipment %></p>
+                <p class="mt-1 text-base text-navy"><span class="font-display font-normal">Вид ремонту:</span> <%= p.repairType %></p>
+              </div>
+              <div class="text-navy lg:flex lg:flex-col lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6">
+                <span class="font-bold lg:hidden">Стан: </span>
+                <div class="mt-2 w-full max-w-[180px] lg:mt-0">
+                  <div class="flex items-end justify-between gap-2">
+                    <p class="text-base text-navy"><%= p.statusText %></p>
+                    <p class="text-base text-navy"><%= p.progress %>%</p>
+                  </div>
+                  <div class="mt-1 h-2.5 w-full overflow-hidden rounded-full bg-steel/20">
+                    <div class="h-full rounded-full bg-navy" style="width: <%= p.progress %>%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-navy lg:flex lg:flex-col lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6">
+                <span class="font-bold lg:hidden">Оновлено: </span>
+                <p class="whitespace-nowrap text-base text-navy"><%= p.updatedDate %></p>
+                <p class="mt-1 whitespace-nowrap text-base text-steel">Створено: <%= p.createdDate %></p>
+              </div>
+              <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
             </a>
           <% }); %>
         </div>
@@ -151,8 +169,8 @@ function visInit(project) {
                     <span>До</span>
                     <span>Після</span>
                   </div>
-                  <div class="cp-track relative mt-2 h-9 rounded-full border-2 border-steel/40 bg-sky" data-cp-track>
-                    <span class="cp-handle absolute left-0 top-1/2 h-7 w-7 -translate-y-1/2 rounded-full bg-navy shadow-[0_2px_6px_rgba(7,49,78,0.3)]" data-cp-handle></span>
+                  <div class="cp-track relative mt-2 h-12 rounded-full border-2 border-steel/40 bg-sky" data-cp-track>
+                    <span class="cp-handle absolute left-0 top-1/2 h-9 w-9 -translate-y-1/2 rounded-full bg-navy shadow-[0_2px_6px_rgba(7,49,78,0.3)]" data-cp-handle></span>
                   </div>
                 </div>
               <% } %>
