@@ -362,7 +362,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     <section id="projects-preview" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
       <h2 class="font-display text-h1 font-normal text-navy">Наші проекти</h2>
 
-      <div class="mt-8 grid gap-8 md:grid-cols-2 md:gap-0">
+      <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-0">
         <div class="md:pr-8 lg:pr-12">
           <h3 class="font-display text-h2 font-normal text-navy">Активні</h3>
           <ul class="mt-5 space-y-3">
@@ -371,7 +371,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                 <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex items-center justify-between gap-4 rounded-card bg-white p-4 shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
                   <span class="min-w-0">
                     <span class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></span>
-                    <span class="mt-1 block text-base text-steel">№<%= p.requestNumber %> · Статус: <%= p.statusText %></span>
+                    <span class="mt-1 block text-base text-steel" data-status-line><span data-num>№<%= p.requestNumber %></span><span data-sep> · </span><span data-stat>Статус:&nbsp;<%= p.statusText %></span></span>
                   </span>
                   <img class="h-3 w-auto shrink-0 -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
                   <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
@@ -384,9 +384,9 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </ul>
         </div>
 
-        <div class="md:border-l-2 md:border-steel/30 md:pl-8 lg:pl-12">
+        <div class="border-t-2 border-steel/30 pt-8 md:border-t-0 md:border-l-2 md:pl-8 md:pt-0 lg:pl-12">
           <h3 class="font-display text-h2 font-normal text-navy">Завершені</h3>
-          <ul class="mt-5 grid grid-cols-2 gap-3">
+          <ul class="mt-5 grid grid-cols-1 gap-3 min-[680px]:grid-cols-2">
             <% completedProjects.forEach(function (p) { %>
               <li>
                 <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
@@ -403,9 +403,20 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                       </div>
                     <% } %>
                   </div>
-                  <div class="p-4">
-                    <span class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></span>
-                    <span class="mt-1 block text-base text-steel">№<%= p.requestNumber %> · <%= p.equipment %></span>
+                  <div class="p-3">
+                    <% if (p.imageHover) { %>
+                      <div class="cp-slider mb-3" data-cp-slider>
+                        <div class="flex items-center justify-between text-xs text-steel">
+                          <span>До</span>
+                          <span>Після</span>
+                        </div>
+                        <div class="cp-track relative mt-1.5 h-12 rounded-full border-2 border-steel/40 bg-sky" data-cp-track>
+                          <span class="cp-handle absolute left-0 top-1/2 h-9 w-9 -translate-y-1/2 rounded-full bg-navy shadow-[0_2px_6px_rgba(7,49,78,0.3)]" data-cp-handle></span>
+                        </div>
+                      </div>
+                    <% } %>
+                    <span class="block truncate font-display text-base font-normal text-navy"><%= p.title %></span>
+                    <span class="mt-1 block truncate text-sm text-steel">№<%= p.requestNumber %> · <%= p.equipment %></span>
                   </div>
                   <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
                 </a>
@@ -418,7 +429,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         </div>
       </div>
 
-      <div class="mt-10 flex justify-center">
+      <div class="mt-6 flex justify-center">
         <a href="/projects" class="group inline-flex items-center gap-3 rounded-pill bg-navy px-8 py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]">
           Перейти до всіх проектів
           <svg class="h-4 w-4 transition group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -427,6 +438,76 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </svg>
         </a>
       </div>
+
+      <script>
+        (function () {
+          var lines = document.querySelectorAll('#projects-preview [data-status-line]');
+          function refresh() {
+            lines.forEach(function (line) {
+              var num = line.querySelector('[data-num]');
+              var stat = line.querySelector('[data-stat]');
+              var sep = line.querySelector('[data-sep]');
+              if (!num || !stat || !sep) { return; }
+              num.style.display = '';
+              stat.style.display = '';
+              sep.style.display = '';
+              var lh = parseFloat(getComputedStyle(line).lineHeight) || 24;
+              if (line.getBoundingClientRect().height > lh * 1.5) {
+                sep.style.display = 'none';
+                num.style.display = 'block';
+                stat.style.display = 'block';
+              }
+            });
+          }
+          refresh();
+          window.addEventListener('resize', refresh);
+          window.addEventListener('load', refresh);
+
+          if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+            Array.prototype.forEach.call(document.querySelectorAll('#projects-preview [data-cp-slider]'), function (slider) {
+              var track = slider.querySelector('[data-cp-track]');
+              var handle = slider.querySelector('[data-cp-handle]');
+              var card = slider.closest('.project-card');
+              var after = card && card.querySelector('.cp-after');
+              if (!track || !handle || !card || !after) { return; }
+              var dragging = false;
+              function pad() { return Math.max(0, (track.clientHeight - handle.offsetHeight) / 2); }
+              function setT(t) {
+                t = Math.max(0, Math.min(1, t));
+                var p = pad();
+                var usable = track.clientWidth - handle.offsetWidth - 2 * p;
+                handle.style.left = (p + t * usable) + 'px';
+                after.style.setProperty('--cp-x', (-25 + t * 155) + '%');
+              }
+              function tFromEvent(e) {
+                var rect = track.getBoundingClientRect();
+                var bl = parseFloat(getComputedStyle(track).borderLeftWidth) || 0;
+                var p = pad();
+                var usable = track.clientWidth - handle.offsetWidth - 2 * p;
+                return usable > 0 ? (e.clientX - rect.left - bl - p - handle.offsetWidth / 2) / usable : 0;
+              }
+              track.addEventListener('pointerdown', function (e) {
+                dragging = true;
+                card.classList.add('cp-dragging');
+                try { track.setPointerCapture(e.pointerId); } catch (err) {}
+                setT(tFromEvent(e));
+                e.preventDefault();
+                e.stopPropagation();
+              });
+              track.addEventListener('pointermove', function (e) {
+                if (!dragging) { return; }
+                setT(tFromEvent(e));
+                e.preventDefault();
+              });
+              var stop = function () { dragging = false; card.classList.remove('cp-dragging'); };
+              track.addEventListener('pointerup', stop);
+              track.addEventListener('pointercancel', stop);
+              slider.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); });
+              setT(0);
+            });
+          }
+        })();
+      </script>
     </section>
 
     <section id="about">
@@ -572,7 +653,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     <section id="faq" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
       <h2 class="font-display text-h1 font-normal text-navy">Часті запитання</h2>
       <div class="mt-6 rounded-card bg-white px-6 py-6 text-navy">
-        <details class="group border-b border-steel py-4 last:border-b-0">
+        <details class="group border-b border-steel pt-2 pb-4 md:pt-0 last:border-b-0">
           <summary
             class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
             <span>Що потрібно для розрахунку вартості постачання обладнання?</span> <img
@@ -619,7 +700,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             фінальні випробування. Малий або середній ремонт вирішує конкретну локальну проблему без повного розбирання
             верстата.</p>
         </details>
-        <details class="group border-b border-steel py-4 last:border-b-0">
+        <details class="group border-b border-steel pt-4 pb-2 md:pb-0 last:border-b-0">
           <summary
             class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
             <span>Скільки коштує ремонт обладнання?</span> <img

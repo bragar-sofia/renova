@@ -26,8 +26,8 @@ module.exports = {
 
       return res.view('pages/homepage', {
         activePage: 'home',
-        activeProjects: mapped.filter(function (p) { return !p.completed; }).slice(0, 4),
-        completedProjects: mapped.filter(function (p) { return p.completed; }).slice(0, 4)
+        activeProjects: mapped.filter(function (p) { return !p.completed; }).slice(0, 3),
+        completedProjects: mapped.filter(function (p) { return p.completed; }).slice(0, 2)
       });
     } catch (error) {
       sails.log.error('HomeController.index error:', error);
