@@ -689,16 +689,6 @@
         overflow: hidden;
         border: 1px solid transparent;
         box-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
-        transition:
-          transform 0.3s ease,
-          border-color 0.3s ease,
-          box-shadow 0.3s ease;
-      }
-
-      .service-card:hover {
-        transform: translateY(-0.25rem);
-        border-color: #9cc4de;
-        box-shadow: 0 22px 52px rgba(7, 49, 78, 0.12);
       }
 
       .service-card::after {
@@ -750,20 +740,6 @@
       @media (max-width: 767px) {
         .service-image::after {
           opacity: 0.07;
-        }
-
-        .service-card:hover {
-          transform: none;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .service-card {
-          transition: none;
-        }
-
-        .service-card:hover {
-          transform: none;
         }
       }
 
