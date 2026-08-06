@@ -110,8 +110,9 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
 
       <!-- Головна послуга -->
-      <article
-        class="services-primary-card group relative overflow-hidden rounded-card border border-transparent bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-steel hover:shadow-2xl md:grid md:grid-cols-[250px_1fr] md:items-center md:gap-8 md:p-8 lg:grid-cols-[290px_1fr]"
+      <a
+        href="/services#restoration"
+        class="services-primary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:grid md:grid-cols-[250px_1fr] md:items-center md:gap-8 md:p-8 lg:grid-cols-[290px_1fr]"
       >
     <span
       class="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-base font-bold text-white shadow-md"
@@ -201,9 +202,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </div>
 
           <div class="mt-6 flex justify-start md:justify-end">
-            <a
-              href="/services#restoration"
-              class="inline-flex items-center gap-3 font-display text-base font-bold text-navy transition hover:text-steel"
+            <span
+              class="inline-flex items-center gap-3 font-display text-base font-bold text-navy transition group-hover:text-steel"
             >
               Детальніше
 
@@ -218,10 +218,12 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                 <path d="M5 12h14"></path>
                 <path d="M13 5l7 7-7 7"></path>
               </svg>
-            </a>
+            </span>
           </div>
         </div>
-      </article>
+
+        <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
+      </a>
 
       <!-- Додаткові послуги -->
       <div
@@ -229,8 +231,9 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         class="mt-5 grid gap-5 lg:grid-cols-2"
       >
         <!-- Сервісне обслуговування -->
-        <article
-          class="services-secondary-card group relative overflow-hidden rounded-card border border-transparent bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-steel hover:shadow-2xl md:p-7"
+        <a
+          href="/services#service"
+          class="services-secondary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:p-7"
         >
       <span
         class="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-base font-bold text-white shadow-md"
@@ -271,9 +274,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                 <li>Профілактика несправностей і продовження ресурсу</li>
               </ul>
 
-              <a
-                href="/services#service"
-                class="mt-6 inline-flex items-center justify-end gap-3 font-display text-base font-bold text-navy transition hover:text-steel"
+              <span
+                class="mt-6 inline-flex items-center justify-end gap-3 font-display text-base font-bold text-navy transition group-hover:text-steel"
               >
                 Детальніше
 
@@ -288,14 +290,17 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                   <path d="M5 12h14"></path>
                   <path d="M13 5l7 7-7 7"></path>
                 </svg>
-              </a>
+              </span>
             </div>
           </div>
-        </article>
+
+          <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
+        </a>
 
         <!-- Постачання обладнання -->
-        <article
-          class="services-secondary-card group relative overflow-hidden rounded-card border border-transparent bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-steel hover:shadow-2xl md:p-7"
+        <a
+          href="/services#supply"
+          class="services-secondary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:p-7"
         >
       <span
         class="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-base font-bold text-white shadow-md"
@@ -335,9 +340,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                 <li>Навчання персоналу та подальший супровід</li>
               </ul>
 
-              <a
-                href="/services#supply"
-                class="mt-6 inline-flex items-center justify-end gap-3 font-display text-base font-bold text-navy transition hover:text-steel"
+              <span
+                class="mt-6 inline-flex items-center justify-end gap-3 font-display text-base font-bold text-navy transition group-hover:text-steel"
               >
                 Детальніше
 
@@ -352,10 +356,12 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                   <path d="M5 12h14"></path>
                   <path d="M13 5l7 7-7 7"></path>
                 </svg>
-              </a>
+              </span>
             </div>
           </div>
-        </article>
+
+          <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
+        </a>
       </div>
     </section>
 
@@ -384,13 +390,13 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </ul>
         </div>
 
-        <div class="border-t-2 border-steel/30 pt-8 md:border-t-0 md:border-l-2 md:pl-8 md:pt-0 lg:pl-12">
+        <div class="border-t-2 border-steel/30 pt-8 md:flex md:flex-col md:border-t-0 md:border-l-2 md:pl-8 md:pt-0 lg:pl-12">
           <h3 class="font-display text-h2 font-normal text-navy">Завершені</h3>
-          <ul class="mt-5 grid grid-cols-1 gap-3 min-[680px]:grid-cols-2">
+          <ul class="mt-5 grid grid-cols-1 gap-3 min-[680px]:grid-cols-2 md:min-h-0 md:flex-1 md:[grid-auto-rows:1fr]">
             <% completedProjects.forEach(function (p) { %>
               <li>
-                <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
-                  <div class="card-photo relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-sky to-white">
+                <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
+                  <div class="card-photo relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-sky to-white md:aspect-auto md:min-h-0 md:flex-1">
                     <% if (p.imageMain) { %>
                       <img class="absolute inset-0 h-full w-full object-cover" src="<%= p.imageMain %>" alt="<%= p.title %>" loading="lazy">
                       <% if (p.imageHover) { %>
@@ -651,66 +657,106 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     </section>
 
     <section id="faq" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+      <style>
+        #faq .faq-answer {
+          display: grid;
+          grid-template-rows: 0fr;
+          opacity: 0;
+          transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                      opacity 0.34s ease;
+        }
+        #faq .faq-item.is-open .faq-answer {
+          grid-template-rows: 1fr;
+          opacity: 1;
+        }
+        #faq .faq-answer > .faq-answer-inner {
+          overflow: hidden;
+          min-height: 0;
+        }
+        #faq .faq-item.is-open .faq-chevron {
+          transform: rotate(180deg);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          #faq .faq-answer { transition: none; }
+        }
+      </style>
+
       <h2 class="font-display text-h1 font-normal text-navy">Часті запитання</h2>
       <div class="mt-6 rounded-card bg-white px-6 py-6 text-navy">
-        <details class="group border-b border-steel pt-2 pb-4 md:pt-0 last:border-b-0">
-          <summary
-            class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-            <span>Що потрібно для розрахунку вартості постачання обладнання?</span> <img
-              class="h-3 w-auto shrink-0 object-contain transition-transform group-open:rotate-180 group-hover:scale-125"
-              src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-          <p class="mt-3 text-base leading-7 text-navy">Технічне завдання та реквізити компанії — на основі цього
-            фахівці прорахують вартість поставки, монтажу та пусконалагодки.</p>
-        </details>
-        <details class="group border-b border-steel py-4 last:border-b-0">
-          <summary
-            class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-            <span>Чи навчаєте ви персонал роботі з новим обладнанням?</span> <img
-              class="h-3 w-auto shrink-0 object-contain transition-transform group-open:rotate-180 group-hover:scale-125"
-              src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-          <p class="mt-3 text-base leading-7 text-navy">Так, після поставки та монтажу проводиться базове навчання
-            представників Замовника роботі на даному типі обладнання.</p>
-        </details>
-        <details class="group border-b border-steel py-4 last:border-b-0">
-          <summary
-            class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-            <span>Чи надається гарантія на ремонт і поставку?</span> <img
-              class="h-3 w-auto shrink-0 object-contain transition-transform group-open:rotate-180 group-hover:scale-125"
-              src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-          <p class="mt-3 text-base leading-7 text-navy">Так, передбачено гарантійне обслуговування, а також супровід
-            обладнання в&nbsp;післягарантійний період.</p>
-        </details>
-        <details class="group border-b border-steel py-4 last:border-b-0">
-          <summary
-            class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-            <span>Які типи обладнання ви обслуговуєте?</span> <img
-              class="h-3 w-auto shrink-0 object-contain transition-transform group-open:rotate-180 group-hover:scale-125"
-              src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-          <p class="mt-3 text-base leading-7 text-navy">Ми працюємо зі станочним обладнанням різних типів — від типових
-            моделей до складних і&nbsp;застарілих верстатів, включно з&nbsp;тими, що вже знято з виробництва.</p>
-        </details>
-        <details class="group border-b border-steel py-4 last:border-b-0">
-          <summary
-            class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-            <span>Чим відрізняється капітальний ремонт від звичайного?</span> <img
-              class="h-3 w-auto shrink-0 object-contain transition-transform group-open:rotate-180 group-hover:scale-125"
-              src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-          <p class="mt-3 text-base leading-7 text-navy">Капітальний ремонт — це повний цикл: діагностика, розбирання,
-            заміна або відновлення вузлів, шліфовка базових поверхонь, ремонт гідравліки, пневматики та електрики,
-            фінальні випробування. Малий або середній ремонт вирішує конкретну локальну проблему без повного розбирання
-            верстата.</p>
-        </details>
-        <details class="group border-b border-steel pt-4 pb-2 md:pb-0 last:border-b-0">
-          <summary
-            class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-            <span>Скільки коштує ремонт обладнання?</span> <img
-              class="h-3 w-auto shrink-0 object-contain transition-transform group-open:rotate-180 group-hover:scale-125"
-              src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-          <p class="mt-3 text-base leading-7 text-navy">Вартість завжди розраховується індивідуально — залежить від
-            комплектності верстата, ступеня зношення, складності робіт і&nbsp;обсягу технічного завдання. Менеджер надає
-            розрахунок у вигляді комерційної пропозиції після оцінки.</p>
-        </details>
+        <%
+          var faqItems = [
+            { q: 'Що потрібно для розрахунку вартості постачання обладнання?', a: 'Технічне завдання та реквізити компанії — на основі цього фахівці прорахують вартість поставки, монтажу та пусконалагодки.' },
+            { q: 'Чи навчаєте ви персонал роботі з новим обладнанням?', a: 'Так, після поставки та монтажу проводиться базове навчання представників Замовника роботі на даному типі обладнання.' },
+            { q: 'Чи надається гарантія на ремонт і поставку?', a: 'Так, передбачено гарантійне обслуговування, а також супровід обладнання в&nbsp;післягарантійний період.' },
+            { q: 'Які типи обладнання ви обслуговуєте?', a: 'Ми працюємо зі станочним обладнанням різних типів — від типових моделей до складних і&nbsp;застарілих верстатів, включно з&nbsp;тими, що вже знято з виробництва.' },
+            { q: 'Чим відрізняється капітальний ремонт від звичайного?', a: 'Капітальний ремонт — це повний цикл: діагностика, розбирання, заміна або відновлення вузлів, шліфовка базових поверхонь, ремонт гідравліки, пневматики та електрики, фінальні випробування. Малий або середній ремонт вирішує конкретну локальну проблему без повного розбирання верстата.' },
+            { q: 'Скільки коштує ремонт обладнання?', a: 'Вартість завжди розраховується індивідуально — залежить від комплектності верстата, ступеня зношення, складності робіт і&nbsp;обсягу технічного завдання. Менеджер надає розрахунок у вигляді комерційної пропозиції після оцінки.' }
+          ];
+        %>
+        <% faqItems.forEach(function (item) { %>
+          <details class="faq-item group border-b border-steel py-4 first:pt-2 last:border-b-0 last:pb-2 md:first:pt-0 md:last:pb-0">
+            <summary
+              class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
+              <span><%= item.q %></span> <img
+                class="faq-chevron h-3 w-auto shrink-0 object-contain transition-transform group-hover:scale-125"
+                src="/images/icons/icon-chevron-down.svg" alt=""></summary>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <p class="mt-3 text-base leading-7 text-navy"><%- item.a %></p>
+              </div>
+            </div>
+          </details>
+        <% }); %>
       </div>
+
+      <script>
+        (function () {
+          var items = document.querySelectorAll('#faq .faq-item');
+          if (!items.length) { return; }
+          var reduce = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          items.forEach(function (details) {
+            var summary = details.querySelector('summary');
+            var answer = details.querySelector('.faq-answer');
+            if (!summary || !answer) { return; }
+            var animating = false;
+
+            summary.addEventListener('click', function (e) {
+              e.preventDefault();
+              if (animating) { return; }
+
+              if (reduce) {
+                details.open = !details.open;
+                details.classList.toggle('is-open', details.open);
+                return;
+              }
+
+              if (details.open) {
+                animating = true;
+                details.classList.remove('is-open');
+                var done = false;
+                var finish = function () {
+                  if (done) { return; }
+                  done = true;
+                  answer.removeEventListener('transitionend', onEnd);
+                  details.open = false;
+                  animating = false;
+                };
+                var onEnd = function (ev) {
+                  if (ev.target === answer && ev.propertyName === 'grid-template-rows') { finish(); }
+                };
+                answer.addEventListener('transitionend', onEnd);
+                setTimeout(finish, 550);
+              } else {
+                details.open = true;
+                void answer.offsetHeight;
+                details.classList.add('is-open');
+              }
+            });
+          });
+        })();
+      </script>
     </section>
   </main>
 </div>
