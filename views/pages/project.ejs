@@ -1,3 +1,10 @@
+<script>
+  /* Вмикаємо reveal одразу, ще до першого рендеру контенту сторінки —
+     інакше контент встигає промайнути видимим (поки вантажиться зовнішній
+     скрипт у кінці body), а reveal здається таким, що «починається двічі». */
+  document.documentElement.classList.add('reveal-ready');
+</script>
+
 <style>
     #stages-details .stages-chevron {
         transform: rotate(0deg);
@@ -7,8 +14,33 @@
         transform: rotate(180deg);
     }
 
-    #stages-details[open] .stages-chevron {
-        transform: rotate(180deg);
+    /* Плавне відкриття / закриття етапів роботи */
+    #stages-details [data-stages-content] {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.4s ease;
+        will-change: grid-template-rows;
+    }
+    #stages-details.is-expanded [data-stages-content] {
+        grid-template-rows: 1fr;
+        opacity: 1;
+    }
+    #stages-details [data-stages-content] > .stages-inner {
+        overflow: hidden;
+        min-height: 0;
+        transform: translateY(-8px);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #stages-details.is-expanded [data-stages-content] > .stages-inner {
+        transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        #stages-details [data-stages-content],
+        #stages-details [data-stages-content] > .stages-inner {
+            transition: none;
+        }
     }
 
     /* Повноекранне порівняння До / Після */
@@ -93,6 +125,8 @@ function statusSvg(completed) {
 
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+
+    <section>
 
     <a href="/projects<%= completed ? '?status=completed' : '' %>" class="inline-flex items-center gap-2 text-base font-display font-bold text-navy transition hover:text-steel">
       <img class="h-3 w-auto rotate-90 object-contain" src="/images/icons/icon-chevron-inactive.svg" alt="">
@@ -192,16 +226,14 @@ function statusSvg(completed) {
           <% } %>
         <% } %>
 
-        <details id="stages-details" open class="<%= (mainPhoto && completed) ? 'mt-7' : '' %> rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
+        <details id="stages-details" open class="is-expanded <%= (mainPhoto && completed) ? 'mt-7' : '' %> rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
             <span class="font-display text-h3 font-normal text-navy">Етапи роботи</span>
             <svg class="stages-chevron h-5 w-5 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
 
-          <div
-            data-stages-content
-            class="overflow-hidden"
-          >
+          <div data-stages-content>
+            <div class="stages-inner">
             <ol class="pt-6">
               <% timeline.forEach(function (stage) { %>
                 <%
@@ -282,11 +314,14 @@ function statusSvg(completed) {
                 </li>
               <% }); %>
             </ol>
+            </div>
           </div>
         </details>
       </div>
 
     </div>
+
+    </section>
   </main>
 
   <% if (completed) {
@@ -340,280 +375,56 @@ function statusSvg(completed) {
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const details =
-      document.querySelector('#stages-details');
+    var details = document.querySelector('#stages-details');
+    if (!details) { return; }
 
-    if (!details) {
-      return;
-    }
+    var summary = details.querySelector('summary');
+    var content = details.querySelector('[data-stages-content]');
+    if (!summary || !content) { return; }
 
-    const summary =
-      details.querySelector('summary');
+    var reduceMotion = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const content =
-      details.querySelector('[data-stages-content]');
-
-    if (!summary || !content) {
-      return;
-    }
-
-    const reduceMotion =
-      window.matchMedia &&
-      window.matchMedia(
-        '(prefers-reduced-motion: reduce)'
-      ).matches;
-
-    /*
-     * Відкриття зроблено трохи довшим,
-     * оскільки розгортання великого блоку
-     * візуально сприймається різкіше.
-     */
-    const openDuration = 420;
-    const closeDuration = 320;
-
-    const easing =
-      'cubic-bezier(0.22, 1, 0.36, 1)';
-
-    let isAnimating = false;
-    let detailsAnimation = null;
-    let contentAnimation = null;
-
-    details.classList.toggle(
-      'is-expanded',
-      details.open
-    );
+    var animating = false;
 
     summary.addEventListener('click', function (event) {
       event.preventDefault();
-
-      if (isAnimating) {
-        return;
-      }
+      if (animating) { return; }
 
       if (reduceMotion) {
         details.open = !details.open;
-
-        details.classList.toggle(
-          'is-expanded',
-          details.open
-        );
-
+        details.classList.toggle('is-expanded', details.open);
         return;
       }
 
       if (details.open) {
-        closeDetails();
+        // Закриття: анімуємо згортання, потім прибираємо open
+        animating = true;
+        details.classList.remove('is-expanded');
+
+        var done = false;
+        var finish = function () {
+          if (done) { return; }
+          done = true;
+          content.removeEventListener('transitionend', onEnd);
+          details.open = false;
+          animating = false;
+        };
+        var onEnd = function (e) {
+          if (e.target === content && e.propertyName === 'grid-template-rows') {
+            finish();
+          }
+        };
+        content.addEventListener('transitionend', onEnd);
+        setTimeout(finish, 650);
       } else {
-        openDetails();
+        // Відкриття: показуємо контент у згорнутому стані, фіксуємо його
+        // синхронним reflow, потім запускаємо перехід до розгорнутого.
+        details.open = true;
+        void content.offsetHeight;
+        details.classList.add('is-expanded');
       }
     });
-
-    /**
-     * Висота details у закритому стані:
-     *
-     * summary
-     * + вертикальні padding
-     * + вертикальні border.
-     */
-    function getCollapsedHeight() {
-      const styles =
-        window.getComputedStyle(details);
-
-      const paddingTop =
-        parseFloat(styles.paddingTop) || 0;
-
-      const paddingBottom =
-        parseFloat(styles.paddingBottom) || 0;
-
-      const borderTop =
-        parseFloat(styles.borderTopWidth) || 0;
-
-      const borderBottom =
-        parseFloat(styles.borderBottomWidth) || 0;
-
-      return (
-        summary.offsetHeight +
-        paddingTop +
-        paddingBottom +
-        borderTop +
-        borderBottom
-      );
-    }
-
-    function cancelAnimations() {
-      if (detailsAnimation) {
-        detailsAnimation.cancel();
-        detailsAnimation = null;
-      }
-
-      if (contentAnimation) {
-        contentAnimation.cancel();
-        contentAnimation = null;
-      }
-    }
-
-    function openDetails() {
-      isAnimating = true;
-      cancelAnimations();
-
-      const collapsedHeight =
-        getCollapsedHeight();
-
-      /*
-       * Спочатку фіксуємо details у закритій висоті.
-       * Тому після details.open = true контент
-       * не з'явиться різко.
-       */
-      details.style.height =
-        `${collapsedHeight}px`;
-
-      details.style.overflow =
-        'hidden';
-
-      content.style.opacity =
-        '0';
-
-      content.style.transform =
-        'translateY(-6px)';
-
-      details.open = true;
-
-      details.classList.add(
-        'is-expanded'
-      );
-
-      /*
-       * Чекаємо кадр, щоб браузер застосував
-       * початкову закриту висоту.
-       */
-      window.requestAnimationFrame(function () {
-        const expandedHeight =
-          collapsedHeight +
-          content.offsetHeight;
-
-        detailsAnimation = details.animate(
-          [
-            {
-              height: `${collapsedHeight}px`
-            },
-            {
-              height: `${expandedHeight}px`
-            }
-          ],
-          {
-            duration: openDuration,
-            easing,
-            fill: 'forwards'
-          }
-        );
-
-        contentAnimation = content.animate(
-          [
-            {
-              opacity: 0,
-              transform: 'translateY(-6px)'
-            },
-            {
-              opacity: 1,
-              transform: 'translateY(0)'
-            }
-          ],
-          {
-            duration: 300,
-            delay: 70,
-            easing,
-            fill: 'forwards'
-          }
-        );
-
-        detailsAnimation.onfinish = function () {
-          finishAnimation(true);
-        };
-
-        detailsAnimation.oncancel = function () {
-          resetStyles();
-        };
-      });
-    }
-
-    function closeDetails() {
-      isAnimating = true;
-      cancelAnimations();
-
-      const expandedHeight =
-        details.offsetHeight;
-
-      const collapsedHeight =
-        getCollapsedHeight();
-
-      details.style.overflow =
-        'hidden';
-
-      details.classList.remove(
-        'is-expanded'
-      );
-
-      detailsAnimation = details.animate(
-        [
-          {
-            height: `${expandedHeight}px`
-          },
-          {
-            height: `${collapsedHeight}px`
-          }
-        ],
-        {
-          duration: closeDuration,
-          easing,
-          fill: 'forwards'
-        }
-      );
-
-      contentAnimation = content.animate(
-        [
-          {
-            opacity: 1,
-            transform: 'translateY(0)'
-          },
-          {
-            opacity: 0,
-            transform: 'translateY(-4px)'
-          }
-        ],
-        {
-          duration: 220,
-          easing,
-          fill: 'forwards'
-        }
-      );
-
-      detailsAnimation.onfinish = function () {
-        finishAnimation(false);
-      };
-
-      detailsAnimation.oncancel = function () {
-        resetStyles();
-      };
-    }
-
-    function finishAnimation(open) {
-      details.open = open;
-
-      detailsAnimation = null;
-      contentAnimation = null;
-
-      resetStyles();
-    }
-
-    function resetStyles() {
-      details.style.height = '';
-      details.style.overflow = '';
-
-      content.style.opacity = '';
-      content.style.transform = '';
-
-      isAnimating = false;
-    }
   });
 </script>
 
