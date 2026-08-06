@@ -57,17 +57,41 @@
       "before": [
         {
           "order": 1,
-          "path": "/images/lathe-broken.png",
-          "alt": "Токарний верстат до капітального ремонту",
-          "caption": "Загальний стан верстата до початку робіт"
+          "path": "https://picsum.photos/id/180/1200/800?grayscale&blur=3",
+          "alt": "Вузол верстата до ремонту (1)",
+          "caption": "Стан до ремонту (1)"
+        },
+        {
+          "order": 2,
+          "path": "https://picsum.photos/id/219/1200/800?grayscale&blur=3",
+          "alt": "Вузол верстата до ремонту (2)",
+          "caption": "Стан до ремонту (2)"
+        },
+        {
+          "order": 3,
+          "path": "https://picsum.photos/id/1005/1200/800?grayscale&blur=3",
+          "alt": "Вузол верстата до ремонту (3)",
+          "caption": "Стан до ремонту (3)"
         }
       ],
       "after": [
         {
           "order": 1,
-          "path": "/images/lathe-restored.png",
-          "alt": "Токарний верстат після капітального ремонту",
-          "caption": "Верстат після завершення відновлювальних робіт"
+          "path": "https://picsum.photos/id/180/1200/800",
+          "alt": "Вузол верстата після ремонту (1)",
+          "caption": "Стан після ремонту (1)"
+        },
+        {
+          "order": 2,
+          "path": "https://picsum.photos/id/219/1200/800",
+          "alt": "Вузол верстата після ремонту (2)",
+          "caption": "Стан після ремонту (2)"
+        },
+        {
+          "order": 3,
+          "path": "https://picsum.photos/id/1005/1200/800",
+          "alt": "Вузол верстата після ремонту (3)",
+          "caption": "Стан після ремонту (3)"
         }
       ]
     },

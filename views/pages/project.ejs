@@ -10,6 +10,77 @@
     #stages-details[open] .stages-chevron {
         transform: rotate(180deg);
     }
+
+    /* Повноекранне порівняння До / Після */
+    .ba-stage {
+        position: relative;
+        width: min(92vw, 1100px);
+        aspect-ratio: 3 / 2;
+        max-height: 82vh;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        background: #0b0b0b;
+        touch-action: none;
+    }
+    .ba-stage img {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        -webkit-user-drag: none;
+        user-select: none;
+    }
+    .ba-stage .ba-before {
+        clip-path: inset(0 calc(100% - var(--ba-pos, 50%)) 0 0);
+    }
+    .ba-divider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--ba-pos, 50%);
+        width: 3px;
+        background: #eff6f9;
+        transform: translateX(-1.5px);
+        pointer-events: none;
+        box-shadow: 0 0 0 1px rgba(7, 49, 78, 0.18);
+    }
+    .ba-handle {
+        position: absolute;
+        top: 50%;
+        left: var(--ba-pos, 50%);
+        transform: translate(-50%, -50%);
+        height: 44px;
+        width: 44px;
+        border-radius: 9999px;
+        background: #012a4a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 0 3px #eff6f9, 0 2px 10px rgba(7, 49, 78, 0.45);
+        cursor: ew-resize;
+    }
+    .ba-stage.ba-dragging .ba-handle { cursor: grabbing; }
+    .ba-tag {
+        position: absolute;
+        top: 14px;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        background: rgba(1, 42, 74, 0.72);
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        pointer-events: none;
+    }
+    .ba-tag-before { left: 14px; }
+    .ba-tag-after { right: 14px; }
+    .ba-stage.ba-view .ba-divider,
+    .ba-stage.ba-view .ba-handle,
+    .ba-stage.ba-view .ba-tag {
+        display: none;
+    }
+    .ba-stage.ba-view { cursor: default; }
 </style>
 
 <%
@@ -86,8 +157,8 @@ function statusSvg(completed) {
         <% if (completed && before.length) { %>
           <h3 class="mt-9 font-display text-h3 font-normal text-navy">До:</h3>
           <div class="mt-3 grid grid-cols-2 gap-4">
-            <% before.forEach(function (ph) { %>
-              <img class="aspect-[4/3] w-full rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото до ремонту' %>" loading="lazy">
+            <% before.forEach(function (ph, i) { %>
+              <img data-zoom data-pair="<%= i %>" data-side="before" class="aspect-[4/3] w-full cursor-pointer rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото до ремонту' %>" loading="lazy">
             <% }); %>
           </div>
         <% } %>
@@ -95,8 +166,8 @@ function statusSvg(completed) {
         <% if (completed && after.length) { %>
           <h3 class="mt-8 font-display text-h3 font-normal text-navy">Після:</h3>
           <div class="mt-3 grid grid-cols-2 gap-4">
-            <% after.forEach(function (ph) { %>
-              <img class="aspect-[4/3] w-full rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото після ремонту' %>" loading="lazy">
+            <% after.forEach(function (ph, i) { %>
+              <img data-zoom data-pair="<%= i %>" data-side="after" class="aspect-[4/3] w-full cursor-pointer rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото після ремонту' %>" loading="lazy">
             <% }); %>
           </div>
         <% } %>
@@ -106,14 +177,14 @@ function statusSvg(completed) {
         <%
           var afterFirst = (Array.isArray(after) && after[0] && after[0].path) ? after[0].path : null;
           var beforeFirst = (Array.isArray(before) && before[0] && before[0].path) ? before[0].path : null;
-          var heroBase = afterFirst || mainPhoto;
-          var heroSwap = (beforeFirst && beforeFirst !== heroBase) ? beforeFirst : null;
+          var heroBase = beforeFirst || mainPhoto;
+          var heroSwap = (afterFirst && afterFirst !== heroBase) ? afterFirst : null;
         %>
         <% if (mainPhoto && completed) { %>
           <% if (heroSwap) { %>
             <div class="card-photo relative aspect-[16/10] w-full overflow-hidden rounded-card bg-gradient-to-br from-sky to-white" data-cp-auto>
-              <img class="absolute inset-0 h-full w-full object-cover" src="<%= heroBase %>" alt="<%= project.title %>">
-              <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= heroSwap %>" alt="<%= project.title %> — до ремонту">
+              <img class="absolute inset-0 h-full w-full object-cover" src="<%= heroBase %>" alt="<%= project.title %> — до ремонту">
+              <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= heroSwap %>" alt="<%= project.title %> — після ремонту">
               <span class="cp-beam" aria-hidden="true"></span>
             </div>
           <% } else { %>
@@ -217,6 +288,54 @@ function statusSvg(completed) {
 
     </div>
   </main>
+
+  <% if (completed) {
+    var pairCount = Math.max(before.length, after.length);
+    var baPairs = [];
+    for (var pi = 0; pi < pairCount; pi++) {
+      baPairs.push({
+        before: before[pi] ? before[pi].path : null,
+        after: after[pi] ? after[pi].path : null,
+        beforeAlt: before[pi] ? (before[pi].alt || 'Фото до ремонту') : '',
+        afterAlt: after[pi] ? (after[pi].alt || 'Фото після ремонту') : ''
+      });
+    }
+  %>
+    <script>window.__baPairs = <%- JSON.stringify(baPairs) %>;</script>
+    <div id="photo-lightbox" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center gap-5 bg-black/85 p-4 opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-label="Перегляд до та після">
+      <button type="button" data-lightbox-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-navy text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60" aria-label="Закрити">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+
+      <div class="ba-stage" data-ba-stage>
+        <img class="ba-after" data-ba-after src="" alt="">
+        <img class="ba-before" data-ba-before src="" alt="">
+        <span class="ba-tag ba-tag-before">До</span>
+        <span class="ba-tag ba-tag-after">Після</span>
+        <div class="ba-divider" data-ba-divider></div>
+        <div class="ba-handle" data-ba-handle aria-hidden="true">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-4">
+        <button type="button" data-ba-toggle class="inline-flex items-center gap-2 rounded-pill bg-navy px-5 py-2.5 text-sm font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 8l-3 4 3 4M18 8l3 4-3 4"/></svg>
+          <span data-ba-toggle-label>Порівняти До / Після</span>
+        </button>
+
+        <div class="flex items-center gap-5 text-white" data-ba-nav>
+          <button type="button" data-ba-prev class="flex h-10 w-10 items-center justify-center rounded-full bg-navy transition hover:bg-[#0b527b]" aria-label="Попередня пара">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <span class="min-w-[3.5rem] text-center text-sm font-bold" data-ba-counter>1 / 1</span>
+          <button type="button" data-ba-next class="flex h-10 w-10 items-center justify-center rounded-full bg-navy transition hover:bg-[#0b527b]" aria-label="Наступна пара">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  <% } %>
 </div>
 
 <script>
@@ -506,5 +625,159 @@ function statusSvg(completed) {
     var on = false;
     function tick() { on = !on; photo.classList.toggle('cp-play', on); }
     setTimeout(function () { tick(); setInterval(tick, 4000); }, 3000);
+  })();
+</script>
+
+<script>
+  (function () {
+    var lb = document.getElementById('photo-lightbox');
+    if (!lb) { return; }
+
+    var pairs = Array.isArray(window.__baPairs) ? window.__baPairs : [];
+    if (!pairs.length) { return; }
+
+    var stage = lb.querySelector('[data-ba-stage]');
+    var beforeImg = lb.querySelector('[data-ba-before]');
+    var afterImg = lb.querySelector('[data-ba-after]');
+    var closeBtn = lb.querySelector('[data-lightbox-close]');
+    var nav = lb.querySelector('[data-ba-nav]');
+    var counter = lb.querySelector('[data-ba-counter]');
+    var prevBtn = lb.querySelector('[data-ba-prev]');
+    var nextBtn = lb.querySelector('[data-ba-next]');
+    var toggleBtn = lb.querySelector('[data-ba-toggle]');
+    var toggleLabel = lb.querySelector('[data-ba-toggle-label]');
+
+    var current = 0;
+    var viewSide = 'after';   // яке фото показуємо у звичайному режимі
+    var compare = false;      // увімкнено режим До/Після
+    var hideTimer = null;
+    var dragging = false;
+
+    function setPos(pct) {
+      pct = Math.max(0, Math.min(100, pct));
+      stage.style.setProperty('--ba-pos', pct + '%');
+    }
+
+    function render() {
+      var p = pairs[current];
+      if (!p) { return; }
+      var hasBoth = !!(p.before && p.after);
+      var comparing = compare && hasBoth;
+
+      stage.classList.toggle('ba-view', !comparing);
+
+      if (p.after) {
+        afterImg.setAttribute('src', p.after);
+        afterImg.setAttribute('alt', p.afterAlt || '');
+      } else {
+        afterImg.removeAttribute('src');
+      }
+      if (p.before) {
+        beforeImg.setAttribute('src', p.before);
+        beforeImg.setAttribute('alt', p.beforeAlt || '');
+      } else {
+        beforeImg.removeAttribute('src');
+      }
+
+      if (comparing) {
+        // Обидва видимі, before обрізається роздільником
+        afterImg.style.display = '';
+        beforeImg.style.display = '';
+        setPos(50);
+      } else {
+        // Звичайний перегляд: показуємо одне фото на всю площу
+        var showBefore = (viewSide === 'before' && p.before) || !p.after;
+        if (showBefore) {
+          beforeImg.style.display = '';
+          afterImg.style.display = p.after ? '' : 'none';
+          setPos(100); // before перекриває все
+        } else {
+          afterImg.style.display = '';
+          beforeImg.style.display = 'none';
+          setPos(100);
+        }
+      }
+
+      // Перемикач доступний лише коли є обидва фото
+      toggleBtn.style.display = hasBoth ? '' : 'none';
+      toggleLabel.textContent = comparing ? 'Звичайний перегляд' : 'Порівняти До / Після';
+
+      counter.textContent = (current + 1) + ' / ' + pairs.length;
+      nav.style.display = pairs.length > 1 ? '' : 'none';
+    }
+
+    function open(index, side) {
+      current = (index >= 0 && index < pairs.length) ? index : 0;
+      viewSide = (side === 'before') ? 'before' : 'after';
+      compare = false;
+      render();
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      lb.classList.remove('hidden');
+      lb.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      window.requestAnimationFrame(function () {
+        lb.classList.remove('opacity-0');
+      });
+    }
+
+    function close() {
+      lb.classList.add('opacity-0');
+      document.body.style.overflow = '';
+      hideTimer = setTimeout(function () {
+        lb.classList.add('hidden');
+        lb.classList.remove('flex');
+      }, 300);
+    }
+
+    function go(delta) {
+      current = (current + delta + pairs.length) % pairs.length;
+      render();
+    }
+
+    function moveTo(clientX) {
+      var r = stage.getBoundingClientRect();
+      setPos(((clientX - r.left) / r.width) * 100);
+    }
+
+    function stopDrag() {
+      dragging = false;
+      stage.classList.remove('ba-dragging');
+    }
+
+    stage.addEventListener('pointerdown', function (e) {
+      if (stage.classList.contains('ba-view')) { return; }
+      if (e.button !== 0) { return; }
+      e.preventDefault();
+      dragging = true;
+      stage.classList.add('ba-dragging');
+      try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+      moveTo(e.clientX);
+    });
+    stage.addEventListener('pointermove', function (e) {
+      if (dragging) { moveTo(e.clientX); }
+    });
+    stage.addEventListener('pointerup', stopDrag);
+    stage.addEventListener('pointercancel', stopDrag);
+    stage.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+    document.querySelectorAll('[data-zoom]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        open(parseInt(el.getAttribute('data-pair'), 10) || 0, el.getAttribute('data-side'));
+      });
+    });
+
+    closeBtn.addEventListener('click', close);
+    prevBtn.addEventListener('click', function () { go(-1); });
+    nextBtn.addEventListener('click', function () { go(1); });
+    toggleBtn.addEventListener('click', function () { compare = !compare; render(); });
+    lb.addEventListener('click', function (e) {
+      if (e.target === lb) { close(); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (lb.classList.contains('hidden')) { return; }
+      if (e.key === 'Escape') { close(); }
+      else if (e.key === 'ArrowLeft') { go(-1); }
+      else if (e.key === 'ArrowRight') { go(1); }
+    });
   })();
 </script>
