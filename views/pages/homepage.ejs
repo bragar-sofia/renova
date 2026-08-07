@@ -2,80 +2,141 @@
 var activeProjects = (typeof activeProjects !== 'undefined' && activeProjects) ? activeProjects : [];
 var completedProjects = (typeof completedProjects !== 'undefined' && completedProjects) ? completedProjects : [];
 %>
+<style>
+  .hero-slogan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: clamp(2rem, 0.4rem + 2.7vw, 3.4rem);
+    line-height: 1.08;
+  }
+  .hero-slogan-text {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+    transition: opacity 0.45s ease,
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.45s ease;
+  }
+  .hero-slogan-text.is-out {
+    opacity: 0;
+    transform: translateY(-22px);
+    filter: blur(6px);
+  }
+  .hero-slogan-text.is-pre {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slogan-text { transition: none; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-benefits-band .hero-benefit-item,
+    .hero-benefits-band .hero-benefit-sep {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero-benefits-band.is-in .hero-benefit-item,
+    .hero-benefits-band.is-in .hero-benefit-sep {
+      opacity: 1;
+      transform: none;
+    }
+    .hero-benefits-band .hero-benefits > *:nth-child(1) { transition-delay: 0.05s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(2) { transition-delay: 0.11s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(3) { transition-delay: 0.17s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(4) { transition-delay: 0.23s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(5) { transition-delay: 0.29s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(6) { transition-delay: 0.35s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(7) { transition-delay: 0.41s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(8) { transition-delay: 0.47s; }
+    .hero-benefits-band .hero-benefits > *:nth-child(9) { transition-delay: 0.53s; }
+  }
+
+  /* Текст кнопок хіро масштабується разом з рештою тексту */
+  .hero-cta-btn { font-size: clamp(0.85rem, 0.6rem + 1vw, 1rem); }
+
+  /* Hero не масштабуємо при появі — інакше фото не дистає краю (з'являється «зазор») */
+  #home > section { transform: none !important; }
+
+  /* Вузькі / мобільні екрани: фото — вузька смуга на всю висоту, текст ліворуч без накладання */
+  @media (max-width: 1200px) {
+    .hero-inner {
+      min-height: calc(100svh - 5.25rem);
+    }
+    .hero-text-col {
+      max-width: 58%;
+    }
+    .hero-text-col p {
+      max-width: none;
+    }
+    .hero-photo-fade {
+      width: 44%;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 58%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 58%);
+    }
+    .hero-photo-fade .machine-broken,
+    .hero-photo-fade .machine-restored {
+      top: auto;
+      bottom: -10%;
+      height: 130%;
+      object-position: 66% center;
+    }
+  }
+
+  /* Планшети / малі ноути: фото ширше і ближче до тексту (менша діра між текстом і верстатом) */
+  @media (min-width: 640px) and (max-width: 1200px) {
+    .hero-photo-fade {
+      width: 54%;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 56%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 56%);
+    }
+  }
+</style>
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main id="home">
-    <section
-      class="relative mx-auto flex w-full max-w-shell items-center overflow-hidden px-6 pb-10 pt-8 md:min-h-[36rem] md:flex-row md:items-center lg:px-8 lg:pb-14 xl:px-16 2xl:min-h-[42rem] 2xl:px-24">
-      <div class="relative z-10 w-full max-w-none md:max-w-[56%] 2xl:max-w-[52%]">
-        <h1 class="max-w-[14em] font-display text-h1 font-normal">
-          Ремонт та обслуговування<br>будь-якого металоріжучого<br>та пресового обладнання
+    <section class="relative w-full overflow-hidden">
+      <div class="hero-inner relative z-10 mx-auto flex w-full max-w-shell items-center px-6 pb-10 pt-8 md:min-h-[560px] md:flex-row md:items-center lg:px-8 lg:pb-14 xl:px-16 2xl:min-h-[700px] 2xl:px-24">
+        <div class="hero-text-col w-full max-w-none md:max-w-[56%] 2xl:max-w-[52%]">
+        <h1 class="hero-slogan min-h-[2.5em] font-display text-h1 font-normal">
+          <span class="hero-slogan-text" data-hero-slogan>Ремонт та обслуговування<br>металоріжучих верстатів</span>
         </h1>
-        <div class="hero-benefits mt-7">
-          <div class="hero-benefit-item">
-            <img src="/images/icons/icon-experience.svg" alt="" aria-hidden="true">
-            <span>Усі типи обладнання</span>
-          </div>
 
-          <div class="hero-benefit-item">
-            <img src="/images/icons/icon-ukraine.svg" alt="" aria-hidden="true">
-            <span>Працюємо по всій Україні</span>
-          </div>
+        <p class="mt-5 max-w-[32rem] font-sans text-base leading-7 text-navy md:text-[1.05rem] md:leading-8">Відновлюємо, обслуговуємо, модернізуємо та запускаємо металообробне і пресове обладнання по всій Україні</p>
 
-          <div class="hero-benefit-item">
-            <img src="/images/icons/icon-specialists.svg" alt="" aria-hidden="true">
-            <span>Кваліфіковані спеціалісти</span>
-          </div>
-
-          <div class="hero-benefit-item">
-            <img src="/images/icons/icon-fast-response.svg" alt="" aria-hidden="true">
-            <span>Швидко реагуємо</span>
-          </div>
-
-          <div class="hero-benefit-item">
-            <img src="/images/icons/icon-individual.svg" alt="" aria-hidden="true">
-            <span>Індивідуальний підхід</span>
-          </div>
-        </div>
-
-        <div class="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <div class="mt-7 grid w-full max-w-[440px] grid-cols-1 gap-3 sm:grid-cols-2">
           <a
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill border-2 border-navy px-6 py-3 text-base font-display font-bold text-navy transition hover:bg-white"
-            href="/services"
+            class="flex w-full items-center justify-center whitespace-nowrap rounded-pill bg-navy hero-cta-btn px-6 py-3 font-display font-bold text-white transition hover:bg-[#0b527b]"
+            href="#contacts"
           >
-            <svg class="hero-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M8 3h6l5 5v13H8z"></path>
-              <path d="M14 3v5h5"></path>
-              <path d="M10 13h6"></path>
-              <path d="M10 17h6"></path>
-            </svg>
-
-            <span>Деталі про послуги</span>
+            Замовити діагностику
           </a>
 
           <a
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]"
-            href="#contacts"
+            class="flex w-full items-center justify-center whitespace-nowrap rounded-pill border-2 border-navy hero-cta-btn px-6 py-3 font-display font-bold text-navy transition hover:bg-white"
+            href="/services"
           >
-            <svg class="hero-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M3 12h4l2-5 4 10 2-5h6"></path>
-            </svg>
-
-            <span>Замовити діагностику</span>
+            Деталі про послуги
           </a>
         </div>
       </div>
+      </div>
 
-      <div class="hero-photo-fade pointer-events-none absolute bottom-0 right-0 top-[-2rem] w-[56%] overflow-hidden md:inset-y-0 md:top-0 md:w-[58%] xl:w-[62%] 2xl:w-[44%]" role="img" aria-label="Пошкоджений верстат відновлюється до справного стану">
+      <div class="hero-photo-fade pointer-events-none absolute inset-y-0 right-0 z-0 w-[92%] overflow-hidden" role="img" aria-label="Пошкоджений верстат відновлюється до справного стану">
         <span class="hero-blueprint-grid" aria-hidden="true"></span>
 
         <img
-          class="machine-broken absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-contain md:object-right 2xl:object-cover 2xl:object-right"
+          class="machine-broken absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-cover md:object-[50%_100%] 2xl:object-[50%_85%]"
           src="/images/lathe-broken.png"
           alt="" aria-hidden="true"
         >
 
         <img
-          class="machine-restored absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-contain md:object-right 2xl:object-cover 2xl:object-right"
+          class="machine-restored absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-cover md:object-[50%_100%] 2xl:object-[50%_85%]"
           src="/images/lathe-restored.png"
           alt="" aria-hidden="true"
         >
@@ -92,207 +153,141 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
     </section>
 
+    <div class="hero-benefits-band w-full px-6 pb-10 md:mt-10 lg:px-8 lg:pb-14 2xl:mx-auto 2xl:max-w-[1500px]">
+      <div class="hero-benefits">
+        <div class="hero-benefit-item"><img src="/images/icons/icon-experience.svg" alt="" aria-hidden="true"><p>Усі типи обладнання</p></div>
+        <span class="hero-benefit-sep" aria-hidden="true"></span>
+        <div class="hero-benefit-item"><img src="/images/icons/icon-ukraine.svg" alt="" aria-hidden="true"><p>Працюємо по всій Україні</p></div>
+        <span class="hero-benefit-sep" aria-hidden="true"></span>
+        <div class="hero-benefit-item"><img src="/images/icons/icon-specialists.svg" alt="" aria-hidden="true"><p>Кваліфіковані спеціалісти</p></div>
+        <span class="hero-benefit-sep" aria-hidden="true"></span>
+        <div class="hero-benefit-item"><img src="/images/icons/icon-fast-response.svg" alt="" aria-hidden="true"><p>Швидко реагуємо</p></div>
+        <span class="hero-benefit-sep" aria-hidden="true"></span>
+        <div class="hero-benefit-item"><img src="/images/icons/icon-individual.svg" alt="" aria-hidden="true"><p>Індивідуальний підхід</p></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var el = document.querySelector('[data-hero-slogan]');
+        if (!el) { return; }
+        var h1 = el.closest('h1') || el.parentElement;
+        var slogans = [
+          'Ремонт та обслуговування<br>металоріжучих верстатів',
+          'Ремонт та обслуговування<br>пресового обладнання',
+          'Відновлення будь-яких<br>типів обладнання',
+          'Робота з технікою<br>незалежно від року випуску',
+          'Роботи будь-якого типу<br>та рівня складності',
+          'Проведення капітального<br>ремонту обладнання',
+          'Модернізація застарілих<br>вузлів або систем',
+          'Виїзд спеціалістів<br>по всій Україні'
+        ];
+
+        // Резервуємо висоту під найдовший слоган, щоб не було стрибків розмітки.
+        function lockHeight() {
+          var original = el.innerHTML;
+          var max = 0;
+          slogans.forEach(function (s) {
+            el.innerHTML = s;
+            if (el.offsetHeight > max) { max = el.offsetHeight; }
+          });
+          el.innerHTML = original;
+          h1.style.minHeight = max ? max + 'px' : '';
+        }
+        lockHeight();
+        window.addEventListener('load', lockHeight);
+        var rt;
+        window.addEventListener('resize', function () {
+          clearTimeout(rt);
+          rt = setTimeout(function () { h1.style.minHeight = ''; lockHeight(); }, 200);
+        });
+
+        // Послідовна (стагерна) поява пунктів переваг
+        var band = document.querySelector('.hero-benefits-band');
+        if (band) {
+          window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(function () { band.classList.add('is-in'); });
+          });
+          setTimeout(function () { band.classList.add('is-in'); }, 300);
+        }
+
+        var reduce = window.matchMedia &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) { return; }
+
+        var i = 0;
+        function next() {
+          el.classList.add('is-out');
+          setTimeout(function () {
+            i = (i + 1) % slogans.length;
+            el.innerHTML = slogans[i];
+            el.classList.add('is-pre');
+            el.classList.remove('is-out');
+            void el.offsetWidth;
+            el.classList.remove('is-pre');
+          }, 500);
+        }
+        setInterval(next, 4200);
+      })();
+    </script>
+
     <section
       id="services"
       class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
     >
       <!-- Заголовок розділу -->
-      <div class="mb-8 flex items-center justify-center gap-4">
-        <span class="hidden h-px w-12 bg-steel/50 sm:block"></span>
-
-        <h2
-          class="font-display text-sm font-bold uppercase tracking-[0.28em] text-navy"
-        >
-          Наші послуги
-        </h2>
-
-        <span class="hidden h-px w-12 bg-steel/50 sm:block"></span>
-      </div>
+      <h1 class="mb-8 font-display text-h1 font-normal text-navy">Наші послуги</h1>
 
       <!-- Головна послуга -->
       <a
         href="/services#restoration"
-        class="services-primary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:grid md:grid-cols-[250px_1fr] md:items-center md:gap-8 md:p-8 lg:grid-cols-[290px_1fr]"
+        class="services-primary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:grid md:grid-cols-[300px_1fr] md:items-center md:gap-8"
       >
-    <span
-      class="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-base font-bold text-white shadow-md"
-    >
-      1
-    </span>
+        <span class="absolute left-5 top-5 z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">1</span>
 
-        <!-- Ілюстрація -->
-        <div
-          class="relative z-10 flex min-h-48 items-center justify-center rounded-card bg-[#f6fafc] px-6 py-8 md:min-h-64"
-        >
-          <img
-            class="h-auto w-full max-w-56 object-contain"
-            src="/images/icons/illustration-restoration.svg"
-            alt=""
-          >
-        </div>
+        <img class="relative z-10 mx-auto block h-20 w-auto object-contain md:h-auto md:w-48" src="/images/icons/illustration-restoration.svg" alt="">
 
-        <!-- Контент -->
-        <div class="relative z-10 mt-6 md:mt-0">
-          <h3 class="font-display text-h1 font-normal text-navy">
-            Відновлення обладнання
-          </h3>
+        <div class="relative z-10">
+          <h2 class="font-display text-h2 font-normal text-navy">Відновлення обладнання</h2>
 
-          <p class="mt-3 max-w-[62rem] font-display text-h3 text-navy">
-            Комплексно відновлюємо металорізальне та пресове обладнання
-            незалежно від його типу, виробника та року випуску — від
-            діагностики й усунення несправностей до капітального ремонту
-            та модернізації.
-          </p>
+          <p class="mt-3 max-w-[62rem] text-left font-display text-h4 text-navy">Комплексно відновлюємо металорізальне та пресове обладнання незалежно від його типу, виробника та року випуску — від діагностики й усунення несправностей до капітального ремонту та модернізації.</p>
 
-          <div class="mt-5 flex flex-wrap gap-2 text-base text-navy">
-        <span
-          class="flex items-center gap-2 rounded-pill border border-steel bg-white/80 px-3 py-2"
-        >
-          <img
-            class="h-6 w-6 object-contain"
-            src="/images/icons/icon-diagnostics.svg"
-            alt=""
-          >
-          Діагностика
-        </span>
-
-            <span
-              class="flex items-center gap-2 rounded-pill border border-steel bg-white/80 px-3 py-2"
-            >
-          <img
-            class="h-6 w-6 object-contain"
-            src="/images/icons/icon-capital-repair.svg"
-            alt=""
-          >
-          Капітальний ремонт
-        </span>
-
-            <span
-              class="flex items-center gap-2 rounded-pill border border-steel bg-white/80 px-3 py-2"
-            >
-          <img
-            class="h-6 w-6 object-contain"
-            src="/images/icons/icon-emergency-repair.svg"
-            alt=""
-          >
-          Аварійний ремонт
-        </span>
-
-            <span
-              class="flex items-center gap-2 rounded-pill border border-steel bg-white/80 px-3 py-2"
-            >
-          <img
-            class="h-6 w-6 object-contain"
-            src="/images/icons/icon-modernization.svg"
-            alt=""
-          >
-          Модернізація
-        </span>
-
-            <span
-              class="flex items-center gap-2 rounded-pill border border-steel bg-white/80 px-3 py-2"
-            >
-          <img
-            class="h-6 w-6 object-contain"
-            src="/images/icons/icon-parts-replacement.svg"
-            alt=""
-          >
-          Заміна вузлів
-        </span>
+          <div class="mt-3 flex flex-wrap gap-2 text-base text-navy">
+            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-diagnostics.svg" alt="">Діагностика</span>
+            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-capital-repair.svg" alt="">Капітальний ремонт</span>
+            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-emergency-repair.svg" alt="">Аварійний ремонт</span>
+            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-modernization.svg" alt="">Модернізація</span>
+            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-parts-replacement.svg" alt="">Заміна вузлів</span>
           </div>
 
-          <div class="mt-6 flex justify-start md:justify-end">
-            <span
-              class="inline-flex items-center gap-3 font-display text-base font-bold text-navy transition group-hover:text-steel"
-            >
-              Детальніше
-
-              <svg
-                class="h-4 w-4 transition group-hover:translate-x-1"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14"></path>
-                <path d="M13 5l7 7-7 7"></path>
-              </svg>
-            </span>
-          </div>
+          <span class="mt-3 flex items-center justify-end gap-2 font-display text-base font-bold text-navy transition group-hover:text-steel">
+            Детальніше
+            <img class="h-3 w-auto -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+          </span>
         </div>
 
         <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
       </a>
 
       <!-- Додаткові послуги -->
-      <div
-        data-stagger
-        class="mt-5 grid gap-5 lg:grid-cols-2"
-      >
+      <div data-stagger class="mt-3 grid gap-4 md:grid-cols-2">
         <!-- Сервісне обслуговування -->
         <a
           href="/services#service"
-          class="services-secondary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:p-7"
+          class="services-secondary-card project-card group relative flex flex-col overflow-hidden rounded-card bg-white p-5 transition"
         >
-      <span
-        class="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-base font-bold text-white shadow-md"
-      >
-        2
-      </span>
+          <span class="absolute left-5 top-5 z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">2</span>
 
-          <div
-            class="relative z-10 flex w-full flex-col sm:grid sm:grid-cols-[150px_1fr] sm:gap-6"
-          >
-            <div
-              class="flex min-h-40 items-center justify-center rounded-card bg-[#f6fafc] p-5"
-            >
-              <img
-                class="h-auto w-full max-w-32 object-contain"
-                src="/images/icons/icon-service-maintenance.svg"
-                alt=""
-              >
-            </div>
+          <img class="relative z-10 mx-auto h-20 w-auto object-contain" src="/images/icons/icon-service-maintenance.svg" alt="">
 
-            <div class="mt-5 flex min-w-0 flex-col sm:mt-0">
-              <h3 class="font-display text-h2 font-normal text-navy">
-                Сервісне обслуговування
-              </h3>
+          <h3 class="relative z-10 mt-2 font-display text-h2 font-normal text-navy">Сервісне обслуговування</h3>
 
-              <p class="mt-3 font-display text-h3 text-navy">
-                Планове обслуговування, діагностика та профілактика
-                несправностей для стабільної роботи обладнання,
-                продовження його ресурсу й скорочення незапланованих
-                простоїв.
-              </p>
+          <p class="relative z-10 mt-2 text-left font-display text-h4 text-navy">Планове обслуговування, діагностика та профілактика несправностей для стабільної роботи обладнання, продовження його ресурсу й скорочення незапланованих простоїв.</p>
 
-              <div class="my-5 h-px bg-steel/25"></div>
-
-              <ul class="service-feature-list text-base text-navy">
-                <li>Регламентне та планове технічне обслуговування</li>
-                <li>Діагностика й контроль стану основних вузлів</li>
-                <li>Профілактика несправностей і продовження ресурсу</li>
-              </ul>
-
-              <span
-                class="mt-6 inline-flex items-center justify-end gap-3 font-display text-base font-bold text-navy transition group-hover:text-steel"
-              >
-                Детальніше
-
-                <svg
-                  class="h-4 w-4 transition group-hover:translate-x-1"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14"></path>
-                  <path d="M13 5l7 7-7 7"></path>
-                </svg>
-              </span>
-            </div>
-          </div>
+          <span class="relative z-10 mt-auto flex items-center justify-end gap-2 pt-3 font-display text-base font-bold text-navy transition group-hover:text-steel">
+            Детальніше
+            <img class="h-3 w-auto -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+          </span>
 
           <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
         </a>
@@ -300,65 +295,20 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         <!-- Постачання обладнання -->
         <a
           href="/services#supply"
-          class="services-secondary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:p-7"
+          class="services-secondary-card project-card group relative flex flex-col overflow-hidden rounded-card bg-white p-5 transition"
         >
-      <span
-        class="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-base font-bold text-white shadow-md"
-      >
-        3
-      </span>
+          <span class="absolute left-5 top-5 z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">3</span>
 
-          <div
-            class="relative z-10 flex w-full flex-col sm:grid sm:grid-cols-[150px_1fr] sm:gap-6"
-          >
-            <div
-              class="flex min-h-40 items-center justify-center rounded-card bg-[#f6fafc] p-5"
-            >
-              <img
-                class="h-auto w-full max-w-32 object-contain"
-                src="/images/icons/icon-equipment-supply.svg"
-                alt=""
-              >
-            </div>
+          <img class="relative z-10 mx-auto h-20 w-auto object-contain" src="/images/icons/icon-equipment-supply.svg" alt="">
 
-            <div class="mt-5 flex min-w-0 flex-col sm:mt-0">
-              <h3 class="font-display text-h2 font-normal text-navy">
-                Постачання обладнання
-              </h3>
+          <h3 class="relative z-10 mt-2 font-display text-h2 font-normal text-navy">Постачання обладнання</h3>
 
-              <p class="mt-3 font-display text-h3 text-navy">
-                Підбираємо нове обладнання відповідно до технологічних
-                завдань виробництва та супроводжуємо його впровадження —
-                від комерційної пропозиції до запуску.
-              </p>
+          <p class="relative z-10 mt-2 text-left font-display text-h4 text-navy">Підбираємо нове обладнання відповідно до технологічних завдань виробництва та супроводжуємо його впровадження — від комерційної пропозиції до запуску.</p>
 
-              <div class="my-5 h-px bg-steel/25"></div>
-
-              <ul class="service-feature-list text-base text-navy">
-                <li>Підбір обладнання під технічне завдання</li>
-                <li>Доставка, монтаж і пусконалагодження</li>
-                <li>Навчання персоналу та подальший супровід</li>
-              </ul>
-
-              <span
-                class="mt-6 inline-flex items-center justify-end gap-3 font-display text-base font-bold text-navy transition group-hover:text-steel"
-              >
-                Детальніше
-
-                <svg
-                  class="h-4 w-4 transition group-hover:translate-x-1"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14"></path>
-                  <path d="M13 5l7 7-7 7"></path>
-                </svg>
-              </span>
-            </div>
-          </div>
+          <span class="relative z-10 mt-auto flex items-center justify-end gap-2 pt-3 font-display text-base font-bold text-navy transition group-hover:text-steel">
+            Детальніше
+            <img class="h-3 w-auto -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+          </span>
 
           <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
         </a>
@@ -376,8 +326,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
               <li>
                 <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex items-center justify-between gap-4 rounded-card bg-white p-4 shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
                   <span class="min-w-0">
-                    <span class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></span>
-                    <span class="mt-1 block text-base text-steel" data-status-line><span data-num>№<%= p.requestNumber %></span><span data-sep> · </span><span data-stat>Статус:&nbsp;<%= p.statusText %></span></span>
+                    <h3 class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></h3>
+                    <p class="mt-1 block text-base text-steel" data-status-line><span data-num>№<%= p.requestNumber %></span><span data-sep> · </span><span data-stat>Статус:&nbsp;<%= p.statusText %></span></p>
                   </span>
                   <img class="h-3 w-auto shrink-0 -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
                   <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
@@ -421,8 +371,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                         </div>
                       </div>
                     <% } %>
-                    <span class="block truncate font-display text-base font-normal text-navy"><%= p.title %></span>
-                    <span class="mt-1 block truncate text-sm text-steel">№<%= p.requestNumber %> · <%= p.equipment %></span>
+                    <h3 class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></h3>
+                    <p class="mt-1 block truncate text-sm text-steel">№<%= p.requestNumber %> · <%= p.equipment %></p>
                   </div>
                   <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
                 </a>
@@ -518,105 +468,50 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
     <section id="about">
       <div class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-        <h2 class="font-display text-h1 font-normal text-navy">
-          Про нас
-        </h2>
-        <div class="mt-6 grid gap-1 md:grid-cols-[1.7fr_1fr] md:items-start">
-          <div
-            class="overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)]"
-          >
-            <div class="grid md:grid-cols-[220px_minmax(0,1fr)]">
-              <!-- Навігація -->
-              <nav
-                class="bg-[#f7fafc] font-display text-h3 font-normal text-navy md:border-r md:border-steel/30"
-                aria-label="Інформація про компанію"
-              >
-                <a
-                  class="flex items-center justify-between bg-navy px-4 py-4 text-white transition hover:bg-[#0b527b]"
-                  href="#about"
-                >
-                  <span>Хто ми?</span>
+        <div class="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
+          <div>
+            <h2 class="font-display text-h1 font-normal text-navy">Про нас</h2>
+            <div
+              class="mt-5 w-full overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] md:w-fit"
+            >
+            <!-- Таби -->
+            <nav
+              class="flex flex-wrap divide-x divide-steel/30 border-b border-steel/30 font-display text-h3 font-normal text-navy"
+              aria-label="Інформація про компанію"
+            >
+              <a class="flex-1 whitespace-nowrap bg-navy px-5 py-3 text-center text-white transition hover:bg-[#0b527b]" href="#about">Хто ми?</a>
+              <a class="flex-1 whitespace-nowrap bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Наш досвід</a>
+              <a class="flex-1 whitespace-nowrap bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Спеціалісти</a>
+              <a class="flex-1 whitespace-nowrap bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Інструменти</a>
+            </nav>
 
-                  <img
-                    class="h-3 w-auto -rotate-90 object-contain"
-                    src="/images/icons/icon-chevron-active.svg"
-                    alt=""
-                  >
-                </a>
+            <!-- Текст -->
+            <div class="p-5 md:p-7 lg:p-8">
+              <div class="max-w-[34rem] space-y-3 text-left text-base leading-7 text-navy xl:max-w-[44rem] 2xl:max-w-[52rem]">
+                <p>
+                  RENOVA — це команда професіоналів, фахівців у сфері
+                  постачання, ремонту й обслуговування складного обладнання.
+                </p>
 
-                <a
-                  class="flex items-center justify-between border-b border-steel/30 px-4 py-4 transition hover:bg-sky"
-                  href="#about"
-                >
-                  <span>Наш досвід</span>
+                <p>
+                  Ми працюємо безпосередньо з виробничими підприємствами,
+                  занурюючись у специфіку кожного проєкту: від технічного
+                  завдання до фінального результату. Такий підхід дозволяє
+                  пропонувати рішення, що відповідають реальним потребам
+                  виробництва, а не шаблонним схемам.
+                </p>
 
-                  <img
-                    class="h-3 w-auto -rotate-90 object-contain"
-                    src="/images/icons/icon-chevron-inactive.svg"
-                    alt=""
-                  >
-                </a>
-
-                <a
-                  class="flex items-center justify-between border-b border-steel/30 px-4 py-4 transition hover:bg-sky"
-                  href="#about"
-                >
-                  <span>Спеціалісти</span>
-
-                  <img
-                    class="h-3 w-auto -rotate-90 object-contain"
-                    src="/images/icons/icon-chevron-inactive.svg"
-                    alt=""
-                  >
-                </a>
-
-                <a
-                  class="flex items-center justify-between px-4 py-4 transition hover:bg-sky"
-                  href="#about"
-                >
-                  <span>Інструменти</span>
-
-                  <img
-                    class="h-3 w-auto -rotate-90 object-contain"
-                    src="/images/icons/icon-chevron-inactive.svg"
-                    alt=""
-                  >
-                </a>
-              </nav>
-
-              <!-- Текст -->
-              <div class="p-5 md:p-7 lg:p-8">
-                <h3 class="font-display text-h2 font-normal text-navy">
-                  Хто ми?
-                </h3>
-
-                <div
-                  class="mt-4 max-w-[50rem] space-y-3 text-left text-base leading-7 text-navy"
-                >
-                  <p>
-                    RENOVA — це команда професіоналів, фахівців у сфері
-                    постачання, ремонту й обслуговування складного обладнання.
-                  </p>
-
-                  <p>
-                    Ми працюємо безпосередньо з виробничими підприємствами,
-                    занурюючись у специфіку кожного проєкту: від технічного
-                    завдання до фінального результату. Такий підхід дозволяє
-                    пропонувати рішення, що відповідають реальним потребам
-                    виробництва, а не шаблонним схемам.
-                  </p>
-
-                  <p>
-                    Наша мета — бути надійним партнером для замовників на всіх
-                    етапах: від вибору обладнання до його подальшої експлуатації.
-                  </p>
-                </div>
+                <p>
+                  Наша мета — бути надійним партнером для замовників на всіх
+                  етапах: від вибору обладнання до його подальшої експлуатації.
+                </p>
               </div>
             </div>
           </div>
+          </div>
           <div
-            class="relative hidden -mr-6 overflow-hidden rounded-l-card rounded-r-none md:-mt-40 md:block md:h-[30rem] lg:h-[34rem] lg:-mr-8 xl:h-[38rem] xl:-mr-16 2xl:h-[42rem] 2xl:-mr-24">
-            <img class="absolute inset-0 h-full w-full object-cover" src="/images/machining-center.png"
+            class="relative hidden -mr-6 overflow-hidden rounded-l-card rounded-r-none md:block md:h-[30rem] lg:h-[34rem] lg:-mr-8 xl:h-[38rem] xl:-mr-16 2xl:h-[42rem] 2xl:-mr-24">
+            <img class="absolute inset-0 h-full w-full object-cover object-left" src="/images/machining-center-trimmed.png"
                  alt="Сучасний оброблювальний центр" loading="lazy" decoding="async">
           </div>
         </div>
@@ -632,10 +527,10 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           <h2 class="font-display text-h1 font-normal">Потрібна допомога?</h2>
           <p class="mt-4 font-display text-h3 font-normal">Зв'яжіться за номером, поштою або заповніть форму</p>
           <div class="mt-7 space-y-3 font-display text-h3">
-            <a class="flex items-center gap-3 transition hover:text-navy" href="tel:+380996380525"><img
-                class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">+38 (099) 638 05 25</a>
-            <a class="flex items-center gap-3 transition hover:text-navy" href="mailto:support@renova"><img
-                class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt="">support@renova</a>
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="tel:+380996380525" title="Натисніть, щоб скопіювати"><img
+                class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt=""><span class="copy-text">+38 (099) 638 05 25</span></a>
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="mailto:support@renova" title="Натисніть, щоб скопіювати"><img
+                class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt=""><span class="copy-text">support@renova</span></a>
           </div>
         </div>
         <form class="relative mt-7 space-y-3 lg:mt-0" action="#" method="post">
@@ -654,6 +549,42 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </button>
         </form>
       </div>
+      <script>
+        (function () {
+          var links = document.querySelectorAll('#contacts .copy-link');
+          if (!links.length) return;
+          function copyText(text, done) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(done, function () { legacy(text); done(); });
+            } else { legacy(text); done(); }
+            function legacy(t) {
+              var ta = document.createElement('textarea');
+              ta.value = t; ta.setAttribute('readonly', '');
+              ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+              document.body.appendChild(ta); ta.select();
+              try { document.execCommand('copy'); } catch (e) {}
+              document.body.removeChild(ta);
+            }
+          }
+          links.forEach(function (link) {
+            var span = link.querySelector('.copy-text');
+            if (!span) return;
+            var original = span.textContent;
+            link.addEventListener('click', function (e) {
+              e.preventDefault();
+              copyText(original.trim(), function () {
+                span.textContent = 'Скопійовано';
+                link.classList.add('is-copied');
+                clearTimeout(link._copyT);
+                link._copyT = setTimeout(function () {
+                  span.textContent = original;
+                  link.classList.remove('is-copied');
+                }, 1400);
+              });
+            });
+          });
+        })();
+      </script>
     </section>
 
     <section id="faq" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
