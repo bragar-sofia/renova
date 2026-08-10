@@ -181,8 +181,11 @@ var serviceNav = [
         #services h2.scroll-mt-28,
         #services h3 { white-space: nowrap; }
       }
-      /* Довгий підзаголовок-речення переноситься завжди */
-      #services #service-prevent { white-space: normal; }
+      /* Довгі підзаголовки в картці/реченні та заголовки карток типів ремонту
+         переносяться завжди (щоб не вилазили у вузьких колонках) */
+      #services #service-prevent,
+      #services #supply-catalog,
+      #services .svc-repair-title { white-space: normal; }
     </style>
 
     <nav class="svc-nav" aria-label="Розділи послуг">
@@ -216,7 +219,7 @@ var serviceNav = [
           <span
             class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">1</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Відновлення обладнання</h2>
-          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
             RENOVA спеціалізується на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання
             незалежно від його типу, виробника та року випуску. Ми виконуємо роботи різного рівня складності — від
             усунення окремих несправностей і&nbsp;відновлення вузлів до капітального ремонту та модернізації верстата.
@@ -241,10 +244,10 @@ var serviceNav = [
       <% /* ---------- Repair types ---------- */ %>
       <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
         <h2 id="restoration-types" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Типи ремонту</h2>
-        <div data-stagger class="mt-4 lg:mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
+        <div data-stagger class="mt-4 lg:mt-6 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
           <% repairTypes.forEach(function (card) { %>
             <article class="flex h-full flex-col rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
-              <h4 class="font-display text-h3 font-normal text-navy"><%= card.title %></h4>
+              <h3 class="svc-repair-title font-display text-h3 font-normal text-navy"><%= card.title %></h3>
               <p class="mt-2 flex-grow text-left text-base text-navy"><%= card.text %></p>
             </article>
           <% }); %>
@@ -264,7 +267,7 @@ var serviceNav = [
         class="mx-auto grid max-w-shell items-start gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[0.4fr_0.6fr]">
         <div>
           <h2 id="restoration-capital" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Капітальний ремонт</h2>
-          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
             Капітальний ремонт проводиться у&nbsp;разі значного зношення вузлів обладнання, втрати точності, системних
             несправностей або необхідності комплексного оновлення верстата.
           </p>
@@ -291,7 +294,7 @@ var serviceNav = [
              alt="" loading="lazy" decoding="async" aria-hidden="true">
         <div>
           <h2 id="restoration-cost" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Вартість і терміни</h2>
-          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
             Вартість і&nbsp;термін виконання ремонтних робіт визначається індивідуально після проведення діагностики
             обладнання, та залежить від його технічного стану, складності та обсягу необхідних робіт, потреб у&nbsp;відновленні
             або заміні вузлів, а&nbsp;також вимог описаних у&nbsp;технічному завданні замовника.
@@ -326,7 +329,7 @@ var serviceNav = [
           <span
             class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">2</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Сервісне обслуговування</h2>
-          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
             Найкращий ремонт – це той, якого вдалося уникнути. Тому RENOVA допомагає підтримувати металорізальне та
             пресове обладнання у&nbsp;стабільному робочому стані протягом усього періоду експлуатації. Ми проводимо
             планове технічне обслуговування, діагностику та профілактичні роботи, щоб своєчасно виявляти зношення,
@@ -347,7 +350,7 @@ var serviceNav = [
         <div>
           <h2 id="service-prevent" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Попередити несправність завжди краще ніж усувати
             її</h2>
-          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
             Аварійна поломка часто виникає в&nbsp;найбільш невідповідний момент і&nbsp;призводить не лише до витрат на
             ремонт, а&nbsp;й до простою обладнання та пов’язаних із ним виробничих процесів.
           </p>
@@ -388,7 +391,7 @@ var serviceNav = [
           <span
             class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">3</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Постачання нового обладнання</h2>
-          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
             Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове
             рішення відповідно до завдань вашого виробництва.
           </p>
@@ -412,7 +415,7 @@ var serviceNav = [
       <section
         class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
         <div class="service-card w-full max-w-2xl rounded-card bg-white p-6 md:p-8">
-          <h3 id="supply-catalog" class="scroll-mt-28 relative z-10 font-display text-h3 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
+          <h2 id="supply-catalog" class="scroll-mt-28 relative z-10 font-display text-h2 font-normal text-navy">Постачаємо широкий спектр обладнання</h2>
           <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
             <% supplyCatalog.forEach(function (item) { %>
               <li><%= item %></li>

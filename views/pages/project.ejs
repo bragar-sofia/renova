@@ -143,10 +143,10 @@ function statusSvg(completed) {
       <div>
         <h1 class="font-display text-h1 font-normal text-navy"><%= project.title %></h1>
 
-        <h2 class="mt-7 font-display text-h3 font-normal text-navy">Обладнання:</h2>
+        <h3 class="mt-6 font-display text-h3 font-normal text-navy">Обладнання:</h3>
         <p class="mt-1 text-base text-navy"><%= project.equipment %></p>
 
-        <h2 class="mt-5 font-display text-h3 font-normal text-navy">Тип робіт:</h2>
+        <h3 class="mt-6 font-display text-h3 font-normal text-navy">Тип робіт:</h3>
         <p class="mt-1 text-base text-navy"><%= project.repairType %></p>
 
         <% if (project.description && project.description.trim()) { %>
@@ -189,7 +189,7 @@ function statusSvg(completed) {
         <% } %>
 
         <% if (completed && before.length) { %>
-          <h3 class="mt-9 font-display text-h3 font-normal text-navy">До:</h3>
+          <h3 class="mt-8 font-display text-h3 font-normal text-navy">До:</h3>
           <div class="mt-3 grid grid-cols-2 gap-4">
             <% before.forEach(function (ph, i) { %>
               <img data-zoom data-pair="<%= i %>" data-side="before" class="aspect-[4/3] w-full cursor-pointer rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото до ремонту' %>" loading="lazy">
