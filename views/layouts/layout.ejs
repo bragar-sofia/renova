@@ -26,7 +26,7 @@
               shell: '122rem'
             },
             fontSize: {
-              h1: ['clamp(2rem, 0.5rem + 3.125vw, 4rem)', { lineHeight: '0.9', letterSpacing: '-0.03em' }],
+              h1: ['clamp(2rem, 0.5rem + 3.125vw, 4rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
               h2: ['clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
               h3: ['clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
               h4: ['1rem', { lineHeight: '1.35' }]
@@ -669,9 +669,9 @@
       }
 
       .service-sticky-heading {
-        background: rgba(238, 246, 250, 0.92);
-        -webkit-backdrop-filter: blur(12px);
-        backdrop-filter: blur(12px);
+        /* Непрозорий фон без backdrop-filter — інакше position: sticky
+           не працює на мобільних/сенсорних браузерах (Chrome/Safari) */
+        background: #eff6f9;
       }
 
       .service-number {
@@ -1018,6 +1018,57 @@
       }, 1200);
     });
   });
+</script>
+
+<!-- Lottie-іконки: прогрес анімації прив'язаний до скролу -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+<script>
+  (function () {
+    function init() {
+      if (!window.lottie) return;
+      var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-lottie]'));
+      if (!nodes.length) return;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var items = nodes.map(function (el) {
+        var ready = false;
+        var anim = lottie.loadAnimation({
+          container: el,
+          renderer: 'svg',
+          loop: false,
+          autoplay: false,
+          path: el.getAttribute('data-lottie')
+        });
+        anim.addEventListener('DOMLoaded', function () { ready = true; update(); });
+        return { el: el, anim: anim, isReady: function () { return ready; } };
+      });
+      function progress(el) {
+        var r = el.getBoundingClientRect();
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        var center = r.top + r.height / 2;
+        // Скраб іде лише у видимій зоні: 0 коли центр іконки на ~80% висоти
+        // (щойно добре видно), 1 коли центр піднявся трохи вище середини (~45%).
+        var startC = vh * 0.80;
+        var endC = vh * 0.45;
+        var p = (startC - center) / (startC - endC);
+        return p < 0 ? 0 : (p > 1 ? 1 : p);
+      }
+      function update() {
+        items.forEach(function (it) {
+          if (!it.isReady()) return;
+          var total = it.anim.totalFrames || 1;
+          var p = reduce ? 1 : progress(it.el);
+          it.anim.goToAndStop(p * (total - 1), true);
+        });
+      }
+      if (!reduce) {
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+      }
+      update();
+    }
+    if (document.readyState === 'complete') init();
+    else window.addEventListener('load', init);
+  })();
 </script>
 
 </body>

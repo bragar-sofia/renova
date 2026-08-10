@@ -138,9 +138,30 @@ function statusSvg(completed) {
       <span>№<%= project.requestNumber %></span>
     </div>
 
-    <div class="mt-6 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+    <%
+      var afterFirst = (Array.isArray(after) && after[0] && after[0].path) ? after[0].path : null;
+      var beforeFirst = (Array.isArray(before) && before[0] && before[0].path) ? before[0].path : null;
+      var heroBase = beforeFirst || mainPhoto;
+      var heroSwap = (afterFirst && afterFirst !== heroBase) ? afterFirst : null;
+      var hasHero = mainPhoto && completed;
+    %>
+    <div class="mt-6 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-x-14 lg:gap-y-7">
 
-      <div>
+      <% if (hasHero) { %>
+        <div class="lg:col-start-2 lg:row-start-1">
+          <% if (heroSwap) { %>
+            <div class="card-photo relative aspect-[16/10] w-full overflow-hidden rounded-card bg-gradient-to-br from-sky to-white" data-cp-auto>
+              <img class="absolute inset-0 h-full w-full object-cover" src="<%= heroBase %>" alt="<%= project.title %> — до ремонту">
+              <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= heroSwap %>" alt="<%= project.title %> — після ремонту">
+              <span class="cp-beam" aria-hidden="true"></span>
+            </div>
+          <% } else { %>
+            <img class="aspect-[16/10] w-full rounded-card object-cover" src="<%= mainPhoto %>" alt="<%= project.title %>">
+          <% } %>
+        </div>
+      <% } %>
+
+      <div class="lg:col-start-1 lg:row-start-1 <%= hasHero ? 'lg:row-span-2' : '' %>">
         <h1 class="font-display text-h1 font-normal text-navy"><%= project.title %></h1>
 
         <h3 class="mt-6 font-display text-h3 font-normal text-navy">Обладнання:</h3>
@@ -207,26 +228,7 @@ function statusSvg(completed) {
         <% } %>
       </div>
 
-      <div>
-        <%
-          var afterFirst = (Array.isArray(after) && after[0] && after[0].path) ? after[0].path : null;
-          var beforeFirst = (Array.isArray(before) && before[0] && before[0].path) ? before[0].path : null;
-          var heroBase = beforeFirst || mainPhoto;
-          var heroSwap = (afterFirst && afterFirst !== heroBase) ? afterFirst : null;
-        %>
-        <% if (mainPhoto && completed) { %>
-          <% if (heroSwap) { %>
-            <div class="card-photo relative aspect-[16/10] w-full overflow-hidden rounded-card bg-gradient-to-br from-sky to-white" data-cp-auto>
-              <img class="absolute inset-0 h-full w-full object-cover" src="<%= heroBase %>" alt="<%= project.title %> — до ремонту">
-              <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= heroSwap %>" alt="<%= project.title %> — після ремонту">
-              <span class="cp-beam" aria-hidden="true"></span>
-            </div>
-          <% } else { %>
-            <img class="aspect-[16/10] w-full rounded-card object-cover" src="<%= mainPhoto %>" alt="<%= project.title %>">
-          <% } %>
-        <% } %>
-
-        <details id="stages-details" open class="is-expanded <%= (mainPhoto && completed) ? 'mt-7' : '' %> rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
+      <details id="stages-details" open class="is-expanded lg:col-start-2 <%= hasHero ? 'lg:row-start-2' : 'lg:row-start-1' %> rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
             <span class="font-display text-h3 font-normal text-navy">Етапи роботи</span>
             <svg class="stages-chevron h-5 w-5 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -317,7 +319,6 @@ function statusSvg(completed) {
             </div>
           </div>
         </details>
-      </div>
 
     </div>
 
