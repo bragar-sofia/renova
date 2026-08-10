@@ -86,65 +86,126 @@ var supplyCatalog = [
   'Обладнання для обробки листового металу',
   'Інше обладнання відповідно до завдань виробництва'
 ];
+
+var serviceNav = [
+  { id: 'restoration', title: 'Відновлення обладнання', subs: [
+    { id: 'restoration-types', title: 'Типи ремонту' },
+    { id: 'restoration-stages', title: 'Етапи ремонту' },
+    { id: 'restoration-capital', title: 'Капітальний ремонт' },
+    { id: 'restoration-cost', title: 'Вартість і терміни' }
+  ] },
+  { id: 'service', title: 'Сервісне обслуговування', subs: [
+    { id: 'service-prevent', title: 'Попередження несправностей' },
+    { id: 'service-stages', title: 'Етапи обслуговування' }
+  ] },
+  { id: 'supply', title: 'Постачання обладнання', subs: [
+    { id: 'supply-catalog', title: 'Спектр обладнання' },
+    { id: 'supply-stages', title: 'Етапи постачання' }
+  ] }
+];
 %>
 
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main id="services">
-    <header class="services-intro relative overflow-hidden border-b border-steel/30 bg-white">
-      <div class="services-intro-grid" aria-hidden="true"></div>
+    <style>
+      .svc-nav {
+        position: fixed;
+        right: 1rem;
+        left: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 40;
+        display: none;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        width: 4.25rem;
+        padding: 14px 12px;
+        background: #eff6f9;
+        border-radius: 1.25rem;
+      }
+      @media (min-width: 1280px) {
+        .svc-nav { display: flex; }
+      }
+      .svc-nav-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 15px;
+      }
+      .svc-dash {
+        display: block;
+        border-radius: 2px;
+        background: #9db6c2;
+        transition: width 0.28s cubic-bezier(.16, 1, .3, 1), background-color 0.24s ease;
+      }
+      .svc-nav-section .svc-dash { width: 1.75rem; height: 3px; background: #6c95a6; }
+      .svc-nav-sub .svc-dash { width: 1rem; height: 2px; }
+      .svc-nav-item:hover .svc-dash { width: 2.6rem; background: #012a4a; }
+      .svc-nav-item.is-active .svc-dash { background: #012a4a; }
+      .svc-nav-section.is-active .svc-dash { width: 2.25rem; }
+      .svc-nav-sub.is-active .svc-dash { width: 1.5rem; }
+      .svc-label {
+        position: absolute;
+        right: calc(100% + 0.75rem);
+        left: auto;
+        white-space: nowrap;
+        background: #eff6f9;
+        color: #012a4a;
+        font-family: inherit;
+        font-weight: 400;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.5rem;
+        opacity: 0;
+        transform: translateX(6px);
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        border: 1px solid rgba(82, 123, 141, 0.2);
+      }
+      .svc-nav-item:hover .svc-label { opacity: 1; transform: translateX(0); }
+      .svc-nav-section .svc-label {
+        font-family: 'Geologica', 'Arial', sans-serif;
+        font-size: 1rem;
+        line-height: 1.35;
+      }
+      .svc-nav-sub .svc-label { font-size: 0.85rem; }
+      @media (prefers-reduced-motion: reduce) {
+        .svc-dash, .svc-label { transition: none; }
+      }
 
-      <div class="relative z-10 mx-auto max-w-shell px-6 pt-10 pb-4 lg:px-8 lg:py-14 xl:px-16 2xl:px-24 2xl:py-16">
-        <div class="max-w-4xl">
-          <div class="mb-5 flex items-center gap-4">
-            <span class="h-px w-10 bg-steel/60"></span>
+      /* Підпункти й заголовки карток — в один рядок лише на десктопі;
+         на планшетах і мобілках переносяться, щоб не вилазити за екран */
+      @media (min-width: 1024px) {
+        #services h2.scroll-mt-28,
+        #services h3 { white-space: nowrap; }
+      }
+      /* Довгий підзаголовок-речення переноситься завжди */
+      #services #service-prevent { white-space: normal; }
+    </style>
 
-            <p class="font-display text-sm font-bold uppercase tracking-[0.28em] text-steel">
-              Ремонт · сервіс · постачання
-            </p>
-          </div>
-
-          <h1 class="max-w-[15em] font-display text-h1 font-normal text-navy">
-            Послуги RENOVA
-          </h1>
-
-          <p class="mt-5 max-w-3xl text-base leading-7 text-navy">
-            Відновлюємо та обслуговуємо металорізальне і пресове обладнання,
-            а коли ремонт недоцільний — підбираємо, постачаємо та запускаємо
-            нове рішення під завдання виробництва.
-          </p>
-
-          <nav class="mt-7 flex flex-wrap gap-2" aria-label="Напрями послуг">
-            <a
-              href="#restoration"
-              class="rounded-pill border border-steel bg-sky/60 px-4 py-2 text-sm font-semibold text-navy transition hover:border-navy hover:bg-sky"
-            >
-              Відновлення обладнання
-            </a>
-
-            <a
-              href="#service"
-              class="rounded-pill border border-steel bg-sky/60 px-4 py-2 text-sm font-semibold text-navy transition hover:border-navy hover:bg-sky"
-            >
-              Сервісне обслуговування
-            </a>
-
-            <a
-              href="#supply"
-              class="rounded-pill border border-steel bg-sky/60 px-4 py-2 text-sm font-semibold text-navy transition hover:border-navy hover:bg-sky"
-            >
-              Постачання обладнання
-            </a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <nav class="svc-nav" aria-label="Розділи послуг">
+      <% serviceNav.forEach(function (sec) { %>
+        <a class="svc-nav-item svc-nav-section" href="#<%= sec.id %>" data-target="<%= sec.id %>">
+          <span class="svc-dash"></span>
+          <span class="svc-label"><%= sec.title %></span>
+        </a>
+        <% sec.subs.forEach(function (sub) { %>
+          <a class="svc-nav-item svc-nav-sub" href="#<%= sub.id %>" data-target="<%= sub.id %>">
+            <span class="svc-dash"></span>
+            <span class="svc-label"><%= sub.title %></span>
+          </a>
+        <% }); %>
+      <% }); %>
+    </nav>
 
     <% /* ===================== Restoration ===================== */ %>
     <section id="restoration" class="service-section scroll-mt-24 space-y-8 pb-10 pt-4 lg:space-y-10 lg:pb-5 lg:pt-8">
 
       <div
-        class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 border-y border-steel/30 px-6 py-3 md:hidden">
-        <span class="service-number h-10 w-10 font-display text-base font-bold leading-none">1</span>
+        class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 px-6 py-3 md:hidden">
+        <span class="service-number h-10 w-10 font-display text-h2 font-normal leading-none">1</span>
         <span class="font-display text-h1 font-normal text-navy">Відновлення обладнання</span>
       </div>
 
@@ -153,9 +214,9 @@ var supplyCatalog = [
         class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
         <div>
           <span
-            class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-bold leading-none md:flex">1</span>
+            class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">1</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Відновлення обладнання</h2>
-          <p class="mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
             RENOVA спеціалізується на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання
             незалежно від його типу, виробника та року випуску. Ми виконуємо роботи різного рівня складності — від
             усунення окремих несправностей і&nbsp;відновлення вузлів до капітального ремонту та модернізації верстата.
@@ -167,14 +228,8 @@ var supplyCatalog = [
             технічного завдання та побажань замовника. Наші спеціалісти виїжджають на підприємства по всій Україні.
           </p>
           <a href="/#contacts"
-             class="mt-7 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити
-            відновлення
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                 aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M13 5l7 7-7 7"></path>
-            </svg>
-          </a>
+             class="mt-7 mb-8 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-left text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити
+            відновлення          </a>
         </div>
         <div
           class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
@@ -185,12 +240,12 @@ var supplyCatalog = [
 
       <% /* ---------- Repair types ---------- */ %>
       <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
-        <h3 class="font-display text-h2 font-normal text-navy">Типи ремонту</h3>
-        <div data-stagger class="mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
+        <h2 id="restoration-types" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Типи ремонту</h2>
+        <div data-stagger class="mt-4 lg:mt-7 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
           <% repairTypes.forEach(function (card) { %>
-            <article class="service-card flex h-full flex-col rounded-card bg-white p-6">
-              <h4 class="relative z-10 font-display text-h3 font-normal text-navy"><%= card.title %></h4>
-              <p class="relative z-10 mt-3 flex-grow text-left text-base leading-7 text-navy"><%= card.text %></p>
+            <article class="flex h-full flex-col rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
+              <h4 class="font-display text-h3 font-normal text-navy"><%= card.title %></h4>
+              <p class="mt-2 flex-grow text-left text-base text-navy"><%= card.text %></p>
             </article>
           <% }); %>
         </div>
@@ -198,8 +253,8 @@ var supplyCatalog = [
 
       <% /* ---------- Repair stages ---------- */ %>
       <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
-        <h3 class="font-display text-h2 font-normal text-navy">Етапи ремонту</h3>
-        <div class="mt-6">
+        <h2 id="restoration-stages" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Етапи ремонту</h2>
+        <div class="mt-4 lg:mt-6">
           <%- include('../partials/process-steps', { steps: repairSteps, captionLines: 3 }) %>
         </div>
       </section>
@@ -208,14 +263,14 @@ var supplyCatalog = [
       <section
         class="mx-auto grid max-w-shell items-start gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[0.4fr_0.6fr]">
         <div>
-          <h3 class="font-display text-h2 font-normal text-navy">Капітальний ремонт</h3>
-          <p class="mt-6 text-left text-base leading-7 text-navy">
+          <h2 id="restoration-capital" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Капітальний ремонт</h2>
+          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
             Капітальний ремонт проводиться у&nbsp;разі значного зношення вузлів обладнання, втрати точності, системних
             несправностей або необхідності комплексного оновлення верстата.
           </p>
           <div class="service-card mt-6 rounded-card bg-white p-6 md:p-8">
-            <h4 class="font-display text-h3 font-normal text-navy">Що може включати капітальний ремонт</h4>
-            <ul class="check-list relative z-10 mt-5 text-base text-navy">
+            <h3 class="font-display text-h3 font-normal text-navy">Що може включати капітальний ремонт</h3>
+            <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
               <% overhaulScope.forEach(function (item) { %>
                 <li><%= item %></li>
               <% }); %>
@@ -235,8 +290,8 @@ var supplyCatalog = [
         <img class="mx-auto h-56 w-auto object-contain lg:mx-0 lg:h-52" src="/images/icons/illustration-cost-terms.svg"
              alt="" loading="lazy" decoding="async" aria-hidden="true">
         <div>
-          <h3 class="font-display text-h2 font-normal text-navy">Вартість і терміни</h3>
-          <p class="mt-6 text-left text-base leading-7 text-navy">
+          <h2 id="restoration-cost" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Вартість і терміни</h2>
+          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
             Вартість і&nbsp;термін виконання ремонтних робіт визначається індивідуально після проведення діагностики
             обладнання, та залежить від його технічного стану, складності та обсягу необхідних робіт, потреб у&nbsp;відновленні
             або заміні вузлів, а&nbsp;також вимог описаних у&nbsp;технічному завданні замовника.
@@ -254,8 +309,8 @@ var supplyCatalog = [
     <section id="service" class="service-section scroll-mt-24 space-y-8 py-10 lg:space-y-10 lg:pt-5 lg:pb-5">
 
       <div
-        class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 border-y border-steel/30 px-6 py-3 md:hidden">
-        <span class="service-number h-10 w-10 font-display text-base font-bold leading-none">2</span>
+        class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 px-6 py-3 md:hidden">
+        <span class="service-number h-10 w-10 font-display text-h2 font-normal leading-none">2</span>
         <span class="font-display text-h1 font-normal text-navy">Сервісне обслуговування</span>
       </div>
 
@@ -269,9 +324,9 @@ var supplyCatalog = [
         </div>
         <div>
           <span
-            class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-bold leading-none md:flex">2</span>
+            class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">2</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Сервісне обслуговування</h2>
-          <p class="mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
             Найкращий ремонт – це той, якого вдалося уникнути. Тому RENOVA допомагає підтримувати металорізальне та
             пресове обладнання у&nbsp;стабільному робочому стані протягом усього періоду експлуатації. Ми проводимо
             планове технічне обслуговування, діагностику та профілактичні роботи, щоб своєчасно виявляти зношення,
@@ -282,14 +337,7 @@ var supplyCatalog = [
             обладнання, його поточного стану, навантаження та графіку роботи підприємства.
           </p>
           <a href="/#contacts"
-             class="mt-7 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити
-            сервісне обслуговування
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                 aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M13 5l7 7-7 7"></path>
-            </svg>
-          </a>
+             class="mt-7 mb-8 inline-flex max-[430px]:w-min items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-left text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити&nbsp;сервісне обслуговування</a>
         </div>
       </section>
 
@@ -297,9 +345,9 @@ var supplyCatalog = [
       <section
         class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
         <div>
-          <h3 class="font-display text-h2 font-normal text-navy">Попередити несправність завжди краще ніж усувати
-            її</h3>
-          <p class="mt-6 text-left text-base leading-7 text-navy">
+          <h2 id="service-prevent" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Попередити несправність завжди краще ніж усувати
+            її</h2>
+          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
             Аварійна поломка часто виникає в&nbsp;найбільш невідповідний момент і&nbsp;призводить не лише до витрат на
             ремонт, а&nbsp;й до простою обладнання та пов’язаних із ним виробничих процесів.
           </p>
@@ -316,8 +364,8 @@ var supplyCatalog = [
 
       <% /* ---------- Maintenance stages ---------- */ %>
       <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
-        <h3 class="font-display text-h2 font-normal text-navy">Етапи проведення сервісного обслуговування</h3>
-        <div class="mt-6">
+        <h2 id="service-stages" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Етапи проведення сервісного обслуговування</h2>
+        <div class="mt-4 lg:mt-6">
           <%- include('../partials/process-steps', { steps: serviceSteps, fullWidth: true }) %>
         </div>
       </section>
@@ -328,8 +376,8 @@ var supplyCatalog = [
     <section id="supply" class="service-section scroll-mt-24 space-y-8 py-10 lg:space-y-10 lg:pt-5 lg:pb-14">
 
       <div
-        class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 border-y border-steel/30 px-6 py-3 md:hidden">
-        <span class="service-number h-10 w-10 font-display text-base font-bold leading-none">3</span>
+        class="service-sticky-heading sticky top-[5.125rem] z-30 flex items-center gap-3 px-6 py-3 md:hidden">
+        <span class="service-number h-10 w-10 font-display text-h2 font-normal leading-none">3</span>
         <span class="font-display text-h1 font-normal text-navy">Постачання нового обладнання</span>
       </div>
 
@@ -338,9 +386,9 @@ var supplyCatalog = [
         class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 md:grid-cols-[1.2fr_0.8fr]">
         <div>
           <span
-            class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-bold leading-none md:flex">3</span>
+            class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">3</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Постачання нового обладнання</h2>
-          <p class="mt-6 text-left text-base leading-7 text-navy">
+          <p class="mt-3 lg:mt-6 text-left text-base leading-7 text-navy">
             Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове
             рішення відповідно до завдань вашого виробництва.
           </p>
@@ -350,14 +398,8 @@ var supplyCatalog = [
             виконуємо налаштування, проводимо перевірку роботи обладнання та базове навчання представників замовника.
           </p>
           <a href="/#contacts"
-             class="mt-7 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити
-            нове обладнання
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                 aria-hidden="true">
-              <path d="M5 12h14"></path>
-              <path d="M13 5l7 7-7 7"></path>
-            </svg>
-          </a>
+             class="mt-7 mb-8 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-left text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити
+            нове обладнання          </a>
         </div>
         <div
           class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
@@ -370,8 +412,8 @@ var supplyCatalog = [
       <section
         class="mx-auto grid max-w-shell items-center gap-8 px-6 lg:px-8 xl:px-16 2xl:px-24 lg:grid-cols-[1fr_auto] lg:gap-14">
         <div class="service-card w-full max-w-2xl rounded-card bg-white p-6 md:p-8">
-          <h3 class="relative z-10 font-display text-h3 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
-          <ul class="check-list relative z-10 mt-5 text-base text-navy">
+          <h3 id="supply-catalog" class="scroll-mt-28 relative z-10 font-display text-h3 font-normal text-navy">Постачаємо широкий спектр обладнання</h3>
+          <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
             <% supplyCatalog.forEach(function (item) { %>
               <li><%= item %></li>
             <% }); %>
@@ -384,12 +426,75 @@ var supplyCatalog = [
 
       <% /* ---------- Supply stages ---------- */ %>
       <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
-        <h3 class="font-display text-h2 font-normal text-navy">Етапи постачання обладнання</h3>
-        <div class="mt-6">
+        <h2 id="supply-stages" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Етапи постачання обладнання</h2>
+        <div class="mt-4 lg:mt-6">
           <%- include('../partials/process-steps', { steps: supplySteps, captionLines: 3 }) %>
         </div>
       </section>
 
     </section>
+
+    <script>
+      (function () {
+        var items = Array.prototype.slice.call(document.querySelectorAll('.svc-nav-item'));
+        if (!items.length) return;
+        var targets = items
+          .map(function (a) { return { item: a, el: document.getElementById(a.getAttribute('data-target')) }; })
+          .filter(function (t) { return t.el; });
+        if (!targets.length) return;
+        var current = null;
+        function onScroll() {
+          var line = window.innerHeight * 0.32;
+          var active = null;
+          targets.forEach(function (t) {
+            if (t.el.getBoundingClientRect().top <= line) active = t.item;
+          });
+          if (!active) active = targets[0].item;
+          if (active !== current) {
+            current = active;
+            items.forEach(function (a) { a.classList.toggle('is-active', a === active); });
+          }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        onScroll();
+
+        // Прищеплюємо панель і кожну риску до сітки device-пікселів,
+        // щоб тонкі лінії не розмивались субпікселями (масштаб 125%/150% тощо)
+        var nav = document.querySelector('.svc-nav');
+        if (nav) {
+          var dashes = Array.prototype.slice.call(nav.querySelectorAll('.svc-dash'));
+          var mq = window.matchMedia('(min-width: 1280px)');
+          var snapDashes = function () {
+            var dpr = window.devicePixelRatio || 1;
+            var toDevice = function (px) { return Math.round(px * dpr) / dpr; };
+            // 1) висоту — до цілого числа device-пікселів (щоб не розмивався край)
+            dashes.forEach(function (d) {
+              d.style.transform = 'none';
+              d.style.height = toDevice(d.closest('.svc-nav-section') ? 3 : 2) + 'px';
+            });
+            // 2) верх кожної риски — на сітку device-пікселів
+            dashes.forEach(function (d) {
+              var top = d.getBoundingClientRect().top;
+              var delta = Math.round(top * dpr) / dpr - top;
+              d.style.transform = delta ? 'translateY(' + delta + 'px)' : 'none';
+            });
+          };
+          var centerNav = function () {
+            if (mq.matches) {
+              nav.style.transform = 'none';
+              nav.style.top = Math.round((window.innerHeight - nav.offsetHeight) / 2) + 'px';
+              snapDashes();
+            } else {
+              nav.style.transform = '';
+              nav.style.top = '';
+              dashes.forEach(function (d) { d.style.transform = ''; d.style.height = ''; });
+            }
+          };
+          centerNav();
+          window.addEventListener('resize', centerNav);
+        }
+      })();
+    </script>
   </main>
 </div>

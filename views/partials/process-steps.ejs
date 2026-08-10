@@ -2,21 +2,27 @@
 var fullWidth = (typeof fullWidth !== 'undefined') && fullWidth;
 var captionLines = (typeof captionLines !== 'undefined') ? captionLines : 0;
 var captionStyle = captionLines ? ('min-height:' + (captionLines * 1.5) + 'rem;') : '';
-var connectorCls = 'lg:w-[3.125rem]';
-var itemCls = fullWidth ? 'lg:flex-1' : 'lg:w-[12.5rem]';
-var rowAlign = 'lg:justify-center';
+// Багатокрокові схеми не вміщаються рядком на планшеті (~1024px),
+// тож для них перемикаємось на горизонтальний ряд лише з xl (1280px);
+// коротші схеми лишають ряд з lg.
+var manySteps = steps.length > 5;
+var bp = manySteps ? 'xl' : 'lg';
+// вужчі конектори для довгих схем, щоб ряд вмістився на xl
+var connectorCls = manySteps ? (bp + ':w-6') : (bp + ':w-[3.125rem]');
+var itemCls = fullWidth ? (bp + ':flex-1') : (bp + ':w-[12.5rem]');
+var rowAlign = bp + ':justify-center';
 %>
-<ol data-stagger class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:flex lg:items-start lg:gap-0 <%= rowAlign %>">
+<ol data-stagger class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 <%= bp %>:flex <%= bp %>:items-start <%= bp %>:gap-0 <%= rowAlign %>">
   <% steps.forEach(function (step, i) { %>
     <% if (i) { %>
-      <li class="hidden shrink-0 items-center pt-5 lg:flex <%= connectorCls %>" aria-hidden="true">
+      <li class="hidden shrink-0 items-center pt-5 <%= bp %>:flex <%= connectorCls %>" aria-hidden="true">
         <span class="h-0.5 flex-1 bg-navy"></span>
         <span class="h-0 w-0 border-y-[5px] border-l-[9px] border-y-transparent border-l-navy"></span>
       </li>
     <% } %>
-    <li class="flex flex-col items-center text-center lg:shrink lg:px-2 <%= itemCls %>">
+    <li class="flex flex-col items-center text-center <%= bp %>:shrink <%= bp %>:px-2 <%= itemCls %>">
       <span class="flex items-center justify-center gap-3">
-        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-steel font-display text-2xl leading-none text-white lg:hidden"><%= i + 1 %></span>
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-steel font-display text-2xl leading-none text-white <%= bp %>:hidden"><%= i + 1 %></span>
         <span class="flex <%= step.height %> items-end justify-center">
           <img class="h-full w-auto object-contain" src="/images/icons/<%= step.icon %>" alt="">
         </span>

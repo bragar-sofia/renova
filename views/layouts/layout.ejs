@@ -668,21 +668,6 @@
         position: relative;
       }
 
-      .service-section + .service-section::before {
-        content: "";
-        display: block;
-        width: min(100% - 3rem, 96rem);
-        height: 1px;
-        margin: 0 auto;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(82, 123, 141, 0.38) 16%,
-          rgba(82, 123, 141, 0.38) 84%,
-          transparent
-        );
-      }
-
       .service-sticky-heading {
         background: rgba(238, 246, 250, 0.92);
         -webkit-backdrop-filter: blur(12px);
@@ -694,10 +679,9 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        border-radius: 0.75rem;
-        background: #15324c;
+        border-radius: 9999px;
+        background: #012a4a;
         color: #fff;
-        box-shadow: 0 6px 18px rgba(21, 50, 76, 0.16);
       }
 
       .service-image {
@@ -769,25 +753,19 @@
 
       .check-list li {
         position: relative;
-        padding-left: 1.65rem;
+        padding-left: 1.1rem;
         line-height: 1.45;
       }
 
       .check-list li::before {
-        content: "✓";
+        content: "";
         position: absolute;
-        top: 0.12rem;
-        left: 0;
-        display: flex;
-        width: 1.05rem;
-        height: 1.05rem;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #527b8d;
+        top: 0.62rem;
+        left: 0.15rem;
+        width: 0.375rem;
+        height: 0.375rem;
         border-radius: 999px;
-        color: #527b8d;
-        font-size: 0.68rem;
-        font-weight: 700;
+        background: #527b8d;
       }
 
       @media (max-width: 767px) {
