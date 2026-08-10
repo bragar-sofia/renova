@@ -58,7 +58,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
   }
 
   /* Текст кнопок хіро масштабується разом з рештою тексту */
-  .hero-cta-btn { font-size: clamp(0.85rem, 0.6rem + 1vw, 1rem); }
+  .hero-cta-btn { font-size: 1rem; }
 
   /* Hero не масштабуємо при появі — інакше фото не дистає краю (з'являється «зазор») */
   #home > section { transform: none !important; }
@@ -73,6 +73,10 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     }
     .hero-text-col p {
       max-width: none;
+    }
+    /* Кнопки хіро — в один рядок навіть у вузькій колонці смугового макета */
+    .hero-cta-grid {
+      min-width: 15rem;
     }
     .hero-photo-fade {
       width: 44%;
@@ -108,16 +112,16 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
         <p class="mt-5 max-w-[32rem] font-sans text-base leading-7 text-navy md:text-[1.05rem] md:leading-8">Відновлюємо, обслуговуємо, модернізуємо та запускаємо металообробне і пресове обладнання по всій Україні</p>
 
-        <div class="mt-7 grid w-full max-w-[440px] grid-cols-1 gap-3 sm:grid-cols-2">
+        <div class="hero-cta-grid mt-7 grid w-full max-w-[480px] grid-cols-1 gap-3 min-[1201px]:grid-cols-2">
           <a
-            class="flex w-full items-center justify-center whitespace-nowrap rounded-pill bg-navy hero-cta-btn px-6 py-3 font-display font-bold text-white transition hover:bg-[#0b527b]"
+            class="flex w-full items-center justify-center text-center rounded-pill bg-navy hero-cta-btn px-6 py-3 font-display font-bold text-white transition hover:bg-[#0b527b]"
             href="#contacts"
           >
             Замовити діагностику
           </a>
 
           <a
-            class="flex w-full items-center justify-center whitespace-nowrap rounded-pill border-2 border-navy hero-cta-btn px-6 py-3 font-display font-bold text-navy transition hover:bg-white"
+            class="flex w-full items-center justify-center text-center rounded-pill border-2 border-navy hero-cta-btn px-6 py-3 font-display font-bold text-navy transition hover:bg-white"
             href="/services"
           >
             Деталі про послуги
@@ -210,6 +214,27 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           });
           setTimeout(function () { band.classList.add('is-in'); }, 300);
         }
+
+        // Роздільники переваг: вирівнюємо кожен по піксельній сітці пристрою,
+        // щоб усі виглядали однаково тонкими (без «товщого» останнього) при DPR 1.25/1.5
+        (function () {
+          var seps = document.querySelectorAll('.hero-benefit-sep');
+          if (!seps.length) { return; }
+          function snapSeps() {
+            var dpr = window.devicePixelRatio || 1;
+            seps.forEach(function (s) { s.style.transform = ''; s.style.width = ''; });
+            if (getComputedStyle(seps[0]).display === 'none') { return; }
+            var wCss = Math.max(1, Math.round(2 * dpr)) / dpr;
+            seps.forEach(function (s) { s.style.width = wCss + 'px'; });
+            seps.forEach(function (s) {
+              var leftDev = s.getBoundingClientRect().left * dpr;
+              s.style.transform = 'translateX(' + ((Math.round(leftDev) - leftDev) / dpr) + 'px)';
+            });
+          }
+          // після появи (стагер) і на ресайзі
+          setTimeout(snapSeps, 1100);
+          window.addEventListener('resize', snapSeps);
+        })();
 
         var reduce = window.matchMedia &&
           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -388,10 +413,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       <div class="mt-6 flex justify-center">
         <a href="/projects" class="group inline-flex items-center gap-3 rounded-pill bg-navy px-8 py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]">
           Перейти до всіх проектів
-          <svg class="h-4 w-4 transition group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M5 12h14"></path>
-            <path d="M13 5l7 7-7 7"></path>
-          </svg>
         </a>
       </div>
 
@@ -476,13 +497,13 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             >
             <!-- Таби -->
             <nav
-              class="flex flex-wrap divide-x divide-steel/30 border-b border-steel/30 font-display text-h3 font-normal text-navy"
+              class="-ml-px -mt-px flex flex-wrap border-b border-steel/30 font-display text-h3 font-normal text-navy"
               aria-label="Інформація про компанію"
             >
-              <a class="flex-1 whitespace-nowrap bg-navy px-5 py-3 text-center text-white transition hover:bg-[#0b527b]" href="#about">Хто ми?</a>
-              <a class="flex-1 whitespace-nowrap bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Наш досвід</a>
-              <a class="flex-1 whitespace-nowrap bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Спеціалісти</a>
-              <a class="flex-1 whitespace-nowrap bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Інструменти</a>
+              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-navy px-5 py-3 text-center text-white transition hover:bg-[#0b527b]" href="#about">Хто ми?</a>
+              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Наш досвід</a>
+              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Спеціалісти</a>
+              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Інструменти</a>
             </nav>
 
             <!-- Текст -->
