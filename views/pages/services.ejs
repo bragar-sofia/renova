@@ -13,24 +13,16 @@ var repairTypes = [
     text: 'Повне розбирання, виявлення дефектів, відновлення основних вузлів, складання, налаштування та випробування обладнання.'
   },
   {
-    title: 'Косметичний ремонт',
-    text: 'Очищення, усунення корозії, підготовка поверхонь, відновлення вигляду обладнання із захистом від подальшого впливу корозії.'
-  },
-  {
     title: 'Відновлення точності',
-    text: 'Шліфування базових поверхонь, відновлення напрямних, регулювання геометрії та перевірка відповідності нормам.'
+    text: 'Шліфування базових поверхонь, відновлення напрямних, регулювання геометрії та перевірка відповідності нормам згідно ДСТУ або паспорта заводу-виробника на даний тип обладнання.'
   },
   {
-    title: 'Відновлення та заміна вузлів',
-    text: 'Ремонт шпиндельних вузлів, приводів, коробок передач, супортів, напрямних, подач та інших механічних компонентів.'
-  },
-  {
-    title: 'Ремонт інженерних систем',
-    text: 'Відновлення гідравліки, пневматики, електрообладнання, систем змащування, охолодження та подачі МОР.'
+    title: 'Відновлення вузлів і систем',
+    text: 'Ремонтуємо та замінюємо зношені механічні вузли — від шпинделя до напрямних і механізмів подач, а також відновлюємо гідравліку, пневматику, електрообладнання та системи змащування й охолодження.'
   },
   {
     title: 'Модернізація обладнання',
-    text: 'Модернізація обладнання шляхом заміни систем ЧПК, приводів, електроніки та інших застарілих компонентів на сучасні рішення.'
+    text: 'Модернізація обладнання шляхом заміни систем ЧПК, приводів, електроніки та інших морально або фізично застарілих компонентів на сучасні рішення.'
   }
 ];
 
@@ -46,7 +38,7 @@ var overhaulScope = [
   'складання та фарбування;',
   'перевірку геометрії та точності;',
   'випробування обладнання під навантаженням;',
-  'гарантійне та післягарантійне обслуговування.'
+  'гарантійне та післягарантійне обслуговування (за додатковим договором).'
 ];
 
 var repairSteps = [
@@ -56,7 +48,8 @@ var repairSteps = [
   {icon: 'icon-stage-quote.svg', height: 'h-10', text: 'Формуємо комерційну пропозицію, терміни і вартість'},
   {icon: 'icon-stage-repair-works.svg', height: 'h-10', text: 'Проведення ремонтних робіт'},
   {icon: 'icon-svc-inspection.svg', height: 'h-10', text: 'Перевірка та випробування обладнання'},
-  {icon: 'icon-stage-handover.svg', height: 'h-10', text: 'Передача обладнання замовнику'}
+  {icon: 'icon-stage-handover.svg', height: 'h-10', text: 'Передача обладнання замовнику'},
+  {icon: 'icon-stage-commissioning.svg', height: 'h-12', captionMt: 'mt-2', text: 'Монтажні та пусконалагоджувальні роботи на території Замовника'}
 ];
 
 var serviceSteps = [
@@ -121,7 +114,7 @@ var serviceNav = [
         gap: 8px;
         width: 4.25rem;
         padding: 14px 12px;
-        background: #eff6f9;
+        background: rgba(239, 246, 249, 0.8);
         border-radius: 1.25rem;
       }
       @media (min-width: 1280px) {
@@ -220,15 +213,23 @@ var serviceNav = [
             class="service-number mb-4 hidden h-14 w-14 font-display text-h2 font-normal leading-none md:flex">1</span>
           <h2 class="hidden font-display text-h1 font-normal text-navy md:block">Відновлення обладнання</h2>
           <p class="mt-4 lg:mt-6 text-left text-base leading-7 text-navy">
-            RENOVA спеціалізується на ремонті та комплексному відновленні металорізального і&nbsp;пресового обладнання
-            незалежно від його типу, виробника та року випуску. Ми виконуємо роботи різного рівня складності — від
-            усунення окремих несправностей і&nbsp;відновлення вузлів до капітального ремонту та модернізації верстата.
+            ТОВ «RENOVA» спеціалізується на проведенні робіт з&nbsp;ремонту та модернізації металорізального
+            і&nbsp;пресового обладнання незалежно від його типу, виробника та року випуску.
           </p>
           <p class="mt-4 text-left text-base leading-7 text-navy">
+            Ми пропонуємо наступні послуги:
+          </p>
+          <ul class="check-list mt-3 text-base text-navy">
+            <li>Частковий ремонт обладнання (поточний ремонт);</li>
+            <li>Капітальний ремонт обладнання;</li>
+            <li>Модернізацію обладнання згідно наданого Замовником технічного завдання;</li>
+            <li>Складання графіка планово-попереджувальних ремонтів (ППР) обладнання вашого підприємства з&nbsp;подальшим його супроводом (сервісне обслуговування).</li>
+          </ul>
+          <p class="mt-4 text-left text-base leading-7 text-navy">
             Перед початком робіт наші спеціалісти проводять діагностику, визначають причини несправності, оцінюють
-            загальний технічний стан обладнання та залишковий ресурс його основних вузлів. На основі отриманих
-            результатів ми пропонуємо технічно й&nbsp;економічно обґрунтований варіант відновлення з&nbsp;урахуванням
-            технічного завдання та побажань замовника. Наші спеціалісти виїжджають на підприємства по всій Україні.
+            загальний технічний стан обладнання та його основних вузлів. На основі отриманих результатів ми пропонуємо
+            технічно й&nbsp;економічно обґрунтований варіант відновлення з&nbsp;урахуванням технічного завдання
+            та побажань замовника.
           </p>
           <a href="/#contacts"
              class="mt-7 mb-8 inline-flex items-center justify-center gap-2 rounded-pill bg-navy px-6 py-3 text-left text-base font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel focus-visible:ring-offset-2">Замовити
@@ -244,7 +245,7 @@ var serviceNav = [
       <% /* ---------- Repair types ---------- */ %>
       <section class="mx-auto max-w-shell px-6 lg:px-8 xl:px-16 2xl:px-24">
         <h2 id="restoration-types" class="scroll-mt-28 font-display text-h2 font-normal text-navy">Типи ремонту</h2>
-        <div data-stagger class="mt-4 lg:mt-6 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 xl:grid-cols-4">
+        <div data-stagger class="mt-4 lg:mt-6 grid gap-6 [grid-auto-rows:1fr] sm:grid-cols-2 lg:grid-cols-3">
           <% repairTypes.forEach(function (card) { %>
             <article class="flex h-full flex-col rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
               <h3 class="svc-repair-title font-display text-h3 font-normal text-navy"><%= card.title %></h3>
@@ -272,7 +273,7 @@ var serviceNav = [
             несправностей або необхідності комплексного оновлення верстата.
           </p>
           <div class="service-card mt-6 rounded-card bg-white p-6 md:p-8">
-            <h3 class="font-display text-h3 font-normal text-navy">Що може включати капітальний ремонт</h3>
+            <h3 class="font-display text-h3 font-normal text-navy">Що включає капітальний ремонт</h3>
             <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
               <% overhaulScope.forEach(function (item) { %>
                 <li><%= item %></li>

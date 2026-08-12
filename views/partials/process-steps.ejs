@@ -27,7 +27,7 @@ var rowAlign = bp + ':justify-center';
           <img class="h-full w-auto object-contain" src="/images/icons/<%= step.icon %>" alt="">
         </span>
       </span>
-      <p class="mt-3 text-base text-navy" style="<%= captionStyle %>"><%= step.text %></p>
+      <p class="<%= step.captionMt || 'mt-3' %> text-base text-navy" style="<%= captionStyle %>"><%= step.text %></p>
     </li>
   <% }); %>
 </ol>

@@ -1020,7 +1020,7 @@
   });
 </script>
 
-<!-- Lottie-іконки: прогрес анімації прив'язаний до скролу -->
+<!-- Lottie-іконки: програються один раз, коли блок з'являється, і лишаються намальованими -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
 <script>
   (function () {
@@ -1029,8 +1029,7 @@
       var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-lottie]'));
       if (!nodes.length) return;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var items = nodes.map(function (el) {
-        var ready = false;
+      nodes.forEach(function (el) {
         var anim = lottie.loadAnimation({
           container: el,
           renderer: 'svg',
@@ -1038,33 +1037,35 @@
           autoplay: false,
           path: el.getAttribute('data-lottie')
         });
-        anim.addEventListener('DOMLoaded', function () { ready = true; update(); });
-        return { el: el, anim: anim, isReady: function () { return ready; } };
+        var loaded = false, triggered = false, done = false;
+        anim.addEventListener('DOMLoaded', function () { loaded = true; if (triggered) run(); });
+        function run() {
+          if (done || !loaded) return;
+          done = true;
+          if (reduce) {
+            // без анімації — одразу показуємо готову іконку (останній кадр)
+            anim.goToAndStop(Math.max(0, anim.totalFrames - 1), true);
+          } else {
+            anim.goToAndPlay(0, true); // програти раз уперед; loop:false зупинить на останньому кадрі
+          }
+        }
+        function onVisible() {
+          if (triggered) return;
+          triggered = true;
+          run();
+        }
+        // Запускаємо, коли блок з'являється у полі зору; після цього не скидаємо
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+              if (entries[i].isIntersecting) { onVisible(); io.disconnect(); break; }
+            }
+          }, { threshold: 0.35 });
+          io.observe(el);
+        } else {
+          onVisible();
+        }
       });
-      function progress(el) {
-        var r = el.getBoundingClientRect();
-        var vh = window.innerHeight || document.documentElement.clientHeight;
-        var center = r.top + r.height / 2;
-        // Скраб іде лише у видимій зоні: 0 коли центр іконки на ~80% висоти
-        // (щойно добре видно), 1 коли центр піднявся трохи вище середини (~45%).
-        var startC = vh * 0.80;
-        var endC = vh * 0.45;
-        var p = (startC - center) / (startC - endC);
-        return p < 0 ? 0 : (p > 1 ? 1 : p);
-      }
-      function update() {
-        items.forEach(function (it) {
-          if (!it.isReady()) return;
-          var total = it.anim.totalFrames || 1;
-          var p = reduce ? 1 : progress(it.el);
-          it.anim.goToAndStop(p * (total - 1), true);
-        });
-      }
-      if (!reduce) {
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
-      }
-      update();
     }
     if (document.readyState === 'complete') init();
     else window.addEventListener('load', init);
