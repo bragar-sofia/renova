@@ -50,6 +50,83 @@ function normalizePhotos(photos) {
   };
 }
 
+/**
+ * Перевіряє, чи значення є валідним timestamp.
+ *
+ * 0 не вважаємо валідною бізнес-датою,
+ * оскільки це 01.01.1970.
+ */
+function isValidTimestamp(value) {
+  return (
+    Number.isFinite(value) &&
+    value > 0
+  );
+}
+
+/**
+ * Повертає фактичну дату створення заявки
+ * за хронологією етапів.
+ *
+ * Насамперед шукаємо request-received.
+ * Якщо його немає, використовуємо перший
+ * валідний запис stages.
+ */
+function getRequestCreatedAtFromStages(stages) {
+  if (!Array.isArray(stages)) {
+    return null;
+  }
+
+  const requestEntry = stages.find((stage) => {
+    return (
+      stage &&
+      stage.key === PROJECT_STAGES[0] &&
+      isValidTimestamp(stage.enteredAt)
+    );
+  });
+
+  if (requestEntry) {
+    return requestEntry.enteredAt;
+  }
+
+  const firstEntry = stages.find((stage) => {
+    return (
+      stage &&
+      isValidTimestamp(stage.enteredAt)
+    );
+  });
+
+  return firstEntry
+    ? firstEntry.enteredAt
+    : null;
+}
+
+/**
+ * Повертає дату останньої активності
+ * за наявною хронологією етапів.
+ */
+function getLastActivityAtFromStages(stages) {
+  if (!Array.isArray(stages)) {
+    return null;
+  }
+
+  for (
+    let index = stages.length - 1;
+    index >= 0;
+    index -= 1
+  ) {
+    const stage = stages[index];
+
+    if (
+      stage &&
+      isValidTimestamp(stage.enteredAt)
+    ) {
+      return stage.enteredAt;
+    }
+  }
+
+  return null;
+}
+
 module.exports = {
   attributes: {
     /**
@@ -62,6 +139,35 @@ module.exports = {
      */
     requestNumber: {
       type: 'string'
+    },
+
+    /**
+     * Фактична дата створення заявки.
+     *
+     * Відповідає enteredAt першого етапу
+     * request-received.
+     *
+     * Не плутати з createdAt:
+     * createdAt — технічна дата створення
+     * запису в базі даних.
+     */
+    requestCreatedAt: {
+      type: 'number'
+    },
+
+    /**
+     * Дата останньої бізнес-активності
+     * по проєкту.
+     *
+     * Оновлюється при редагуванні даних,
+     * переході між етапами, роботі з фото
+     * та інших змінах Project.
+     *
+     * Не плутати з updatedAt:
+     * updatedAt — технічний timestamp Waterline.
+     */
+    lastActivityAt: {
+      type: 'number'
     },
 
     /**
@@ -259,11 +365,20 @@ module.exports = {
    */
   beforeCreate: async function (valuesToSet, proceed) {
     try {
+      const now = Date.now();
+
+      /*
+       * Генеруємо номер заявки,
+       * якщо його не передано явно.
+       */
       if (!valuesToSet.requestNumber) {
         valuesToSet.requestNumber =
           await generateUniqueRequestNumber();
       }
 
+      /*
+       * Нормалізуємо поточний етап.
+       */
       if (
         !valuesToSet.currentStage ||
         !PROJECT_STAGES.includes(valuesToSet.currentStage)
@@ -271,6 +386,10 @@ module.exports = {
         valuesToSet.currentStage = PROJECT_STAGES[0];
       }
 
+      /*
+       * Нормалізуємо коментар
+       * поточного етапу.
+       */
       if (typeof valuesToSet.currentStageNote !== 'string') {
         valuesToSet.currentStageNote = '';
       } else {
@@ -278,6 +397,12 @@ module.exports = {
           valuesToSet.currentStageNote.trim();
       }
 
+      /*
+       * Якщо stages не передано,
+       * це звичайне створення нової заявки.
+       *
+       * Перший етап і дата створюються зараз.
+       */
       if (
         !Array.isArray(valuesToSet.stages) ||
         valuesToSet.stages.length === 0
@@ -285,10 +410,51 @@ module.exports = {
         valuesToSet.stages = [
           {
             key: valuesToSet.currentStage,
-            enteredAt: Date.now(),
+            enteredAt: now,
             note: valuesToSet.currentStageNote
           }
         ];
+      }
+
+      /*
+       * Фактична дата створення заявки.
+       *
+       * Для seed-даних беремо enteredAt
+       * етапу request-received.
+       *
+       * Для нової заявки stages щойно
+       * було створено з enteredAt = now.
+       */
+      if (
+        !isValidTimestamp(
+          valuesToSet.requestCreatedAt
+        )
+      ) {
+        valuesToSet.requestCreatedAt =
+          getRequestCreatedAtFromStages(
+            valuesToSet.stages
+          ) || now;
+      }
+
+      /*
+       * Початкова дата останньої активності.
+       *
+       * Для seed-а:
+       * enteredAt останнього етапу.
+       *
+       * Для нової заявки:
+       * requestCreatedAt / now.
+       */
+      if (
+        !isValidTimestamp(
+          valuesToSet.lastActivityAt
+        )
+      ) {
+        valuesToSet.lastActivityAt =
+          getLastActivityAtFromStages(
+            valuesToSet.stages
+          ) ||
+          valuesToSet.requestCreatedAt;
       }
 
       valuesToSet.photos = normalizePhotos(
@@ -346,6 +512,25 @@ module.exports = {
         valuesToSet.photos = normalizePhotos(
           valuesToSet.photos
         );
+      }
+
+      /*
+       * Будь-яке оновлення Project
+       * вважаємо новою бізнес-активністю.
+       *
+       * Якщо lastActivityAt уже передано явно,
+       * не перезаписуємо його.
+       *
+       * Це потрібно, зокрема, для advanceStage,
+       * де використовуватимемо той самий timestamp,
+       * що й enteredAt нового етапу.
+       */
+      if (
+        !isValidTimestamp(
+          valuesToSet.lastActivityAt
+        )
+      ) {
+        valuesToSet.lastActivityAt = Date.now();
       }
 
       return proceed();
@@ -446,27 +631,18 @@ module.exports = {
      * в його записі хронології.
      */
     if (
-      lastStage &&
-      lastStage.key === project.currentStage
+      !lastStage ||
+      lastStage.key !== project.currentStage
     ) {
-      stages[lastStageIndex] = {
-        ...lastStage,
-        note: currentNote
-      };
-    } else {
-      /*
-       * Резервна логіка для старих або пошкоджених записів,
-       * де поточного етапу немає в stages.
-       */
-      stages.push({
-        key: project.currentStage,
-        enteredAt:
-          typeof project.createdAt === 'number'
-            ? project.createdAt
-            : transitionDate,
-        note: currentNote
-      });
+      throw new Error(
+        'Хронологія проєкту не відповідає поточному етапу.'
+      );
     }
+
+    stages[lastStageIndex] = {
+      ...lastStage,
+      note: currentNote
+    };
 
     /*
      * Додаємо новий етап одразу в момент переходу на нього.
@@ -487,7 +663,8 @@ module.exports = {
     }).set({
       currentStage: nextStage,
       currentStageNote: normalizedNextStageNote,
-      stages
+      stages,
+      lastActivityAt: transitionDate
     });
 
     if (!updatedProject) {

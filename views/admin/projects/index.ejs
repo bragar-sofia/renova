@@ -330,13 +330,13 @@ const successMessage = successMessages[success] || '';
                 <td class="whitespace-nowrap px-5 py-5 align-top">
                   <time
                     class="text-sm text-slate-700"
-                    datetime="<%= project.updatedAt ? new Date(project.updatedAt).toISOString() : '' %>"
+                    datetime="<%= project.lastActivityAt ? new Date(project.lastActivityAt).toISOString() : '' %>"
                   >
-                    <%= formatDate(project.updatedAt) %>
+                    <%= formatDate(project.lastActivityAt) %>
                   </time>
 
                   <p class="mt-1 text-xs text-slate-500">
-                    Створено: <%= formatDate(project.createdAt) %>
+                    Створено: <%= formatDate(project.requestCreatedAt) %>
                   </p>
                 </td>
 

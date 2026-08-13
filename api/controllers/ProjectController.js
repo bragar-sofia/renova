@@ -48,7 +48,10 @@ function pad(number) {
  * 04.08.2026, 15:10
  */
 function formatDate(timestamp) {
-  if (typeof timestamp !== 'number') {
+  if (
+    !Number.isFinite(timestamp) ||
+    timestamp <= 0
+  ) {
     return '';
   }
 
@@ -69,7 +72,10 @@ function formatDate(timestamp) {
  * 04.08.26
  */
 function formatDateShort(timestamp) {
-  if (typeof timestamp !== 'number') {
+  if (
+    !Number.isFinite(timestamp) ||
+    timestamp <= 0
+  ) {
     return '';
   }
 
@@ -155,68 +161,6 @@ function firstPhoto(photos, preferredType = 'before') {
     : null;
 }
 
-/**
- * Знаходить останній запис певного етапу.
- *
- * Ідемо з кінця масиву, щоб метод залишався
- * коректним навіть у разі повторного етапу.
- */
-function findStageEntry(stages, stageKey) {
-  if (!Array.isArray(stages)) {
-    return null;
-  }
-
-  for (let index = stages.length - 1; index >= 0; index -= 1) {
-    const stage = stages[index];
-
-    if (stage && stage.key === stageKey) {
-      return stage;
-    }
-  }
-
-  return null;
-}
-
-/**
- * Повертає дату переходу на поточний етап.
- */
-function getCurrentStageTimestamp(project) {
-  const stages = Array.isArray(project.stages)
-    ? project.stages
-    : [];
-
-  const currentEntry = findStageEntry(
-    stages,
-    project.currentStage
-  );
-
-  if (
-    currentEntry &&
-    typeof currentEntry.enteredAt === 'number'
-  ) {
-    return currentEntry.enteredAt;
-  }
-
-  const lastEntry = stages[stages.length - 1];
-
-  if (
-    lastEntry &&
-    typeof lastEntry.enteredAt === 'number'
-  ) {
-    return lastEntry.enteredAt;
-  }
-
-  if (typeof project.updatedAt === 'number') {
-    return project.updatedAt;
-  }
-
-  if (typeof project.createdAt === 'number') {
-    return project.createdAt;
-  }
-
-  return 0;
-}
-
 module.exports = {
   /**
    * Список публічних проєктів.
@@ -273,9 +217,6 @@ module.exports = {
           afterPath && afterPath !== imageMain
             ? afterPath
             : null;
-
-        const stageTimestamp =
-          getCurrentStageTimestamp(project);
 
         const currentStageIndex =
           PROJECT_STAGES.indexOf(project.currentStage);
@@ -339,10 +280,10 @@ module.exports = {
             '',
 
           updatedDate:
-            formatDateShort(stageTimestamp),
+            formatDateShort(project.lastActivityAt),
 
           createdDate:
-            formatDateShort(project.createdAt),
+            formatDateShort(project.requestCreatedAt),
 
           progress,
 
@@ -359,14 +300,14 @@ module.exports = {
           searchText,
 
           /*
-           * Використовуємо і для нового,
-           * і для старого сортування.
+           * Використовуємо для клієнтського
+           * і початкового серверного сортування.
            *
-           * Це дата переходу на поточний етап,
-           * а не дата імпорту seed-запису.
+           * Сортуємо за останньою бізнес-активністю:
+           * редагуванням даних, переходом етапу,
+           * зміною фото тощо.
            */
-          sortTimestamp:
-          stageTimestamp
+          sortTimestamp: project.lastActivityAt
         };
       });
 

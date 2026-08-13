@@ -110,7 +110,7 @@ module.exports = {
       const currentPage = Math.min(page, totalPages);
 
       const projects = await Project.find()
-        .sort('updatedAt DESC')
+        .sort('lastActivityAt DESC')
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
 
@@ -380,7 +380,7 @@ module.exports = {
    */
   exportJson: async function (req, res) {
     try {
-      const projects = await Project.find().sort('createdAt ASC');
+      const projects = await Project.find().sort('requestCreatedAt ASC');
 
       const json = JSON.stringify(projects, null, 2);
 
