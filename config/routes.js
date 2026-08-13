@@ -27,6 +27,9 @@ module.exports.routes = {
   'GET /projects': 'ProjectController.index',
   'GET /projects/:requestNumber': 'ProjectController.show',
 
+  // Форма зворотнього зв'язку
+  'POST /contact': 'ContactsController.sendMessage',
+
   // Проєкти та заявки — адмінпанель
   'GET /admin/projects': 'AdminProjectController.index',
   'GET /admin/projects/export-json': 'AdminProjectController.exportJson',

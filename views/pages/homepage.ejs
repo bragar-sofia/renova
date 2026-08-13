@@ -605,11 +605,22 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         <form
           id="contact-form"
           class="relative mt-7 space-y-3 lg:mt-0"
-          action="#"
+          action="/contact"
           method="post"
         >
+          <% if (typeof _csrf !== 'undefined' && _csrf) { %>
+            <input
+              type="hidden"
+              name="_csrf"
+              value="<%= _csrf %>"
+            >
+          <% } %>
+
           <div class="grid gap-3 sm:grid-cols-2">
-            <label class="sr-only" for="contact-name">
+            <label
+              class="sr-only"
+              for="contact-name"
+            >
               Ім'я
             </label>
 
@@ -624,7 +635,10 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
               required
             >
 
-            <label class="sr-only" for="contact-phone">
+            <label
+              class="sr-only"
+              for="contact-phone"
+            >
               Номер телефону
             </label>
 
@@ -641,7 +655,10 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             >
           </div>
 
-          <label class="sr-only" for="contact-email">
+          <label
+            class="sr-only"
+            for="contact-email"
+          >
             Електронна пошта
           </label>
 
@@ -656,7 +673,10 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             required
           >
 
-          <label class="sr-only" for="contact-message">
+          <label
+            class="sr-only"
+            for="contact-message"
+          >
             Опишіть ваш запит
           </label>
 
@@ -670,16 +690,27 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           ></textarea>
 
           <button
-            class="w-full rounded-pill bg-navy py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]"
+            class="w-full rounded-pill bg-navy py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b] disabled:cursor-not-allowed disabled:opacity-60"
             type="submit"
+            data-contact-submit
           >
             Надіслати форму
           </button>
+
+          <div
+            class="hidden rounded-pill px-4 py-3 text-center text-sm font-medium"
+            data-contact-status
+            role="status"
+            aria-live="polite"
+          ></div>
         </form>
       </div>
 
       <script>
         (function () {
+          /*
+           * Копіювання телефону та пошти.
+           */
           var links =
             document.querySelectorAll(
               '#contacts .copy-link'
@@ -691,6 +722,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                 document.createElement('textarea');
 
               textarea.value = text;
+
               textarea.setAttribute(
                 'readonly',
                 ''
@@ -788,8 +820,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           }
 
           /*
-           * Тимчасово блокуємо реальне надсилання,
-           * поки не буде підключено backend.
+           * Надсилання форми без перезавантаження.
            */
           var form =
             document.querySelector(
@@ -800,10 +831,108 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             return;
           }
 
+          var submitButton =
+            form.querySelector(
+              '[data-contact-submit]'
+            );
+
+          var statusElement =
+            form.querySelector(
+              '[data-contact-status]'
+            );
+
+          var defaultButtonText =
+            submitButton.textContent.trim();
+
+          function showStatus(type, message) {
+            statusElement.textContent =
+              message;
+
+            statusElement.className =
+              'rounded-pill px-4 py-3 text-center text-sm font-medium';
+
+            if (type === 'success') {
+              statusElement.classList.add(
+                'bg-emerald-50',
+                'text-emerald-800'
+              );
+            } else {
+              statusElement.classList.add(
+                'bg-red-50',
+                'text-red-800'
+              );
+            }
+          }
+
           form.addEventListener(
             'submit',
-            function (event) {
+            async function (event) {
               event.preventDefault();
+
+              submitButton.disabled = true;
+              submitButton.textContent =
+                'Надсилаємо...';
+
+              statusElement.classList.add(
+                'hidden'
+              );
+
+              try {
+                var formData =
+                  new FormData(form);
+
+                var response =
+                  await fetch(
+                    form.action,
+                    {
+                      method: 'POST',
+
+                      headers: {
+                        Accept:
+                          'application/json'
+                      },
+
+                      body:
+                        new URLSearchParams(
+                          formData
+                        )
+                    }
+                  );
+
+                var data = {};
+
+                try {
+                  data =
+                    await response.json();
+                } catch (error) {
+                }
+
+                if (!response.ok) {
+                  throw new Error(
+                    data.error ||
+                    'Не вдалося надіслати повідомлення.'
+                  );
+                }
+
+                form.reset();
+
+                showStatus(
+                  'success',
+                  data.message ||
+                  'Дякуємо! Ваше повідомлення надіслано.'
+                );
+              } catch (error) {
+                showStatus(
+                  'error',
+                  error.message ||
+                  'Не вдалося надіслати повідомлення. Спробуйте ще раз.'
+                );
+              } finally {
+                submitButton.disabled = false;
+
+                submitButton.textContent =
+                  defaultButtonText;
+              }
             }
           );
         })();
