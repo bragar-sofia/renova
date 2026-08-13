@@ -543,71 +543,269 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
     </section>
 
-    <section id="contacts" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-      <div class="relative overflow-hidden rounded-hero bg-steel p-14 text-white lg:grid lg:grid-cols-2 lg:gap-12">
+    <section
+      id="contacts"
+      class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
+    >
+      <div
+        class="relative overflow-hidden rounded-hero bg-steel p-14 text-white lg:grid lg:grid-cols-2 lg:gap-12"
+      >
         <img
           class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100"
-          src="/images/tools.png" alt="" loading="lazy" decoding="async">
+          src="/images/tools.png"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        >
+
         <div class="relative">
-          <h2 class="font-display text-h1 font-normal">Потрібна допомога?</h2>
-          <p class="mt-4 font-display text-h3 font-normal">Зв'яжіться за номером, поштою або заповніть форму</p>
+          <h2 class="font-display text-h1 font-normal">
+            Потрібна допомога?
+          </h2>
+
+          <p class="mt-4 font-display text-h3 font-normal">
+            Зв'яжіться з нами за номером, поштою або заповніть форму
+          </p>
+
           <div class="mt-7 space-y-3 font-display text-h3">
-            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="tel:+380996380525" title="Натисніть, щоб скопіювати"><img
-                class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt=""><span class="copy-text">+38 (099) 638 05 25</span></a>
-            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="mailto:support@renova" title="Натисніть, щоб скопіювати"><img
-                class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt=""><span class="copy-text">support@renova</span></a>
+            <a
+              class="copy-link flex items-center gap-3 transition hover:text-navy"
+              href="tel:+380756787784"
+              title="Натисніть, щоб скопіювати"
+            >
+              <img
+                class="h-8 w-8 object-contain"
+                src="/images/icons/icon-phone-contact.svg"
+                alt=""
+              >
+
+              <span class="copy-text">
+            075 678 77 84
+          </span>
+            </a>
+
+            <a
+              class="copy-link flex items-center gap-3 transition hover:text-navy"
+              href="mailto:commerce.renova@gmail.com"
+              title="Натисніть, щоб скопіювати"
+            >
+              <img
+                class="h-8 w-8 object-contain"
+                src="/images/icons/icon-email-contact.svg"
+                alt=""
+              >
+
+              <span class="copy-text">
+            commerce.renova@gmail.com
+          </span>
+            </a>
           </div>
         </div>
-        <form class="relative mt-7 space-y-3 lg:mt-0" action="#" method="post">
-          <label class="block text-base">Ім'я<input
-              class="mt-1 block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition focus:ring-2 focus:ring-navy/40"
-              type="text" name="name" autocomplete="name" required></label>
-          <label class="block text-base">Електронна пошта<input
-              class="mt-1 block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition focus:ring-2 focus:ring-navy/40"
-              type="email" name="email" autocomplete="email" required></label>
-          <label class="block text-base">Опишіть ваш запит<textarea
-              class="mt-1 block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none transition focus:ring-2 focus:ring-navy/40"
-              name="message" required></textarea></label>
+
+        <form
+          id="contact-form"
+          class="relative mt-7 space-y-3 lg:mt-0"
+          action="#"
+          method="post"
+        >
+          <div class="grid gap-3 sm:grid-cols-2">
+            <label class="sr-only" for="contact-name">
+              Ім'я
+            </label>
+
+            <input
+              id="contact-name"
+              class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
+              type="text"
+              name="name"
+              autocomplete="name"
+              placeholder="Ваше ім'я"
+              maxlength="80"
+              required
+            >
+
+            <label class="sr-only" for="contact-phone">
+              Номер телефону
+            </label>
+
+            <input
+              id="contact-phone"
+              class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
+              type="tel"
+              name="phone"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="Номер телефону"
+              maxlength="30"
+              required
+            >
+          </div>
+
+          <label class="sr-only" for="contact-email">
+            Електронна пошта
+          </label>
+
+          <input
+            id="contact-email"
+            class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
+            type="email"
+            name="email"
+            autocomplete="email"
+            placeholder="Електронна пошта"
+            maxlength="254"
+            required
+          >
+
+          <label class="sr-only" for="contact-message">
+            Опишіть ваш запит
+          </label>
+
+          <textarea
+            id="contact-message"
+            class="block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
+            name="message"
+            placeholder="Опишіть ваш запит"
+            maxlength="3000"
+            required
+          ></textarea>
+
           <button
-            class="w-full rounded-pill bg-navy py-3 text-base font-display font-bold text-white transition hover:bg-[#0b527b]"
-            type="submit">Надіслати форму
+            class="w-full rounded-pill bg-navy py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]"
+            type="submit"
+          >
+            Надіслати форму
           </button>
         </form>
       </div>
+
       <script>
         (function () {
-          var links = document.querySelectorAll('#contacts .copy-link');
-          if (!links.length) return;
-          function copyText(text, done) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(text).then(done, function () { legacy(text); done(); });
-            } else { legacy(text); done(); }
-            function legacy(t) {
-              var ta = document.createElement('textarea');
-              ta.value = t; ta.setAttribute('readonly', '');
-              ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
-              document.body.appendChild(ta); ta.select();
-              try { document.execCommand('copy'); } catch (e) {}
-              document.body.removeChild(ta);
+          var links =
+            document.querySelectorAll(
+              '#contacts .copy-link'
+            );
+
+          if (links.length) {
+            function legacyCopy(text) {
+              var textarea =
+                document.createElement('textarea');
+
+              textarea.value = text;
+              textarea.setAttribute(
+                'readonly',
+                ''
+              );
+
+              textarea.style.position = 'fixed';
+              textarea.style.top = '-1000px';
+              textarea.style.opacity = '0';
+
+              document.body.appendChild(
+                textarea
+              );
+
+              textarea.select();
+
+              try {
+                document.execCommand('copy');
+              } catch (error) {
+              }
+
+              document.body.removeChild(
+                textarea
+              );
             }
-          }
-          links.forEach(function (link) {
-            var span = link.querySelector('.copy-text');
-            if (!span) return;
-            var original = span.textContent;
-            link.addEventListener('click', function (e) {
-              e.preventDefault();
-              copyText(original.trim(), function () {
-                span.textContent = 'Скопійовано';
-                link.classList.add('is-copied');
-                clearTimeout(link._copyT);
-                link._copyT = setTimeout(function () {
-                  span.textContent = original;
-                  link.classList.remove('is-copied');
-                }, 1400);
-              });
+
+            function copyText(text, done) {
+              if (
+                navigator.clipboard &&
+                navigator.clipboard.writeText
+              ) {
+                navigator.clipboard
+                  .writeText(text)
+                  .then(done)
+                  .catch(function () {
+                    legacyCopy(text);
+                    done();
+                  });
+
+                return;
+              }
+
+              legacyCopy(text);
+              done();
+            }
+
+            links.forEach(function (link) {
+              var textElement =
+                link.querySelector(
+                  '.copy-text'
+                );
+
+              if (!textElement) {
+                return;
+              }
+
+              var originalText =
+                textElement.textContent.trim();
+
+              link.addEventListener(
+                'click',
+                function (event) {
+                  event.preventDefault();
+
+                  copyText(
+                    originalText,
+                    function () {
+                      textElement.textContent =
+                        'Скопійовано';
+
+                      link.classList.add(
+                        'is-copied'
+                      );
+
+                      clearTimeout(
+                        link._copyTimeout
+                      );
+
+                      link._copyTimeout =
+                        setTimeout(
+                          function () {
+                            textElement.textContent =
+                              originalText;
+
+                            link.classList.remove(
+                              'is-copied'
+                            );
+                          },
+                          1400
+                        );
+                    }
+                  );
+                }
+              );
             });
-          });
+          }
+
+          /*
+           * Тимчасово блокуємо реальне надсилання,
+           * поки не буде підключено backend.
+           */
+          var form =
+            document.querySelector(
+              '#contact-form'
+            );
+
+          if (!form) {
+            return;
+          }
+
+          form.addEventListener(
+            'submit',
+            function (event) {
+              event.preventDefault();
+            }
+          );
         })();
       </script>
     </section>
