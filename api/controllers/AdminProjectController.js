@@ -1,70 +1,10 @@
-const {
-  keys: PROJECT_STAGES,
-  labels: PROJECT_STAGE_LABELS
-} = require('../../lib/projectStages');
+// api/controllers/AdminProjectController.js
 
-// ===== Helpers =====
-function normalizeText(value) {
-  return typeof value === 'string'
-    ? value.trim()
-    : '';
-}
+const { keys: PROJECT_STAGES, labels: PROJECT_STAGE_LABELS } = require('../../lib/projectStages');
+const { normalizeText, normalizeBoolean, validateProjectPayload, buildProjectPayload } = require('../../lib/utils');
 
-function normalizeBoolean(value) {
-  const values = Array.isArray(value) ? value : [value];
-
-  return values.some((item) => {
-    return (
-      item === true ||
-      item === 1 ||
-      item === '1' ||
-      item === 'true' ||
-      item === 'on'
-    );
-  });
-}
-
-function validateProjectPayload(payload) {
-  const errors = [];
-
-  if (!payload.title) {
-    errors.push('Вкажіть заголовок проєкту.');
-  }
-
-  if (!payload.equipment) {
-    errors.push('Вкажіть тип і назву обладнання.');
-  }
-
-  if (!payload.repairType) {
-    errors.push('Вкажіть вид ремонту.');
-  }
-
-  return errors;
-}
-
-function buildProjectPayload(body = {}) {
-  return {
-    title: normalizeText(body.title),
-
-    equipment: normalizeText(body.equipment),
-
-    repairType: normalizeText(body.repairType),
-
-    currentStageNote: normalizeText(
-      body.currentStageNote
-    ),
-
-    description:
-      typeof body.description === 'string'
-        ? body.description.trim()
-        : '',
-
-    isVisible: normalizeBoolean(body.isVisible)
-  };
-}
-
-// ===== Actions =====
 module.exports = {
+  /** GET /admin/projects */
   index: async function (req, res) {
     try {
       const requestedPage = Number.parseInt(req.query.page, 10);
@@ -100,6 +40,7 @@ module.exports = {
     }
   },
 
+  /** GET /admin/projects/new */
   createPage: function (req, res) {
     return res.view('admin/projects/create', {
       pageTitle: 'Нова заявка',
@@ -117,6 +58,7 @@ module.exports = {
     });
   },
 
+  /** POST /admin/projects */
   create: async function (req, res) {
     const payload = buildProjectPayload(req.body);
     const errors = validateProjectPayload(payload);
@@ -152,10 +94,10 @@ module.exports = {
     }
   },
 
+  /** GET /admin/projects/:id/edit */
   edit: async function (req, res) {
     try {
       const project = await Project.findOne({id: req.params.id});
-
       if (!project) {
         return res.notFound();
       }
@@ -179,6 +121,7 @@ module.exports = {
     }
   },
 
+  /** POST /admin/projects/:id */
   update: async function (req, res) {
     const payload = buildProjectPayload(req.body);
     const errors = validateProjectPayload(payload);
@@ -216,62 +159,34 @@ module.exports = {
     }
   },
 
-  // ===== Stage transitions =====
+  /** POST /admin/projects/:id/advance-stage */
   advanceStage: async function (req, res) {
     const projectId = req.params.id;
 
     try {
-      const project = await Project.findOne({
-        id: projectId
-      });
-
+      const project = await Project.findOne({ id: projectId });
       if (!project) {
         return res.notFound();
       }
 
       if (project.currentStage === 'completed') {
-        return res.redirect(
-          `/admin/projects/${project.id}/edit`
-        );
+        return res.redirect(`/admin/projects/${project.id}/edit`);
       }
 
-      const nextStageNote = normalizeText(
-        req.body && req.body.nextStageNote
-      );
+      const nextStageNote = normalizeText(req.body && req.body.nextStageNote);
+      await Project.advanceStage(project.id, nextStageNote);
 
-      await Project.advanceStage(
-        project.id,
-        nextStageNote
-      );
-
-      return res.redirect(
-        `/admin/projects/${project.id}/edit?success=stage-advanced`
-      );
+      return res.redirect(`/admin/projects/${project.id}/edit?success=stage-advanced`);
     } catch (error) {
-      sails.log.error(
-        'AdminProjectController.advanceStage error:',
-        error
-      );
+      sails.log.error('AdminProjectController.advanceStage error:', error);
 
-      const project = await Project.findOne({
-        id: projectId
-      });
-
+      const project = await Project.findOne({id: projectId});
       if (!project) {
         return res.notFound();
       }
 
-      const currentStageIndex =
-        PROJECT_STAGES.indexOf(
-          project.currentStage
-        );
-
-      const nextStage =
-        currentStageIndex >= 0
-          ? PROJECT_STAGES[
-        currentStageIndex + 1
-          ] || null
-          : null;
+      const currentStageIndex = PROJECT_STAGES.indexOf(project.currentStage);
+      const nextStage = currentStageIndex >= 0 ? PROJECT_STAGES[currentStageIndex + 1] || null : null;
 
       res.status(409);
 
@@ -288,7 +203,11 @@ module.exports = {
     }
   },
 
-  // ===== Export =====
+  /**
+   * GET /admin/projects/export-json
+   * For downloading:
+   * /admin/projects/export-json?download=1
+   */
   exportJson: async function (req, res) {
     try {
       const projects = await Project.find().sort('requestCreatedAt ASC');
@@ -298,14 +217,8 @@ module.exports = {
       res.type('application/json');
 
       if (req.query.download === '1') {
-        const date = new Date()
-          .toISOString()
-          .slice(0, 10);
-
-        res.set(
-          'Content-Disposition',
-          `attachment; filename="projects-${date}.json"`
-        );
+        const date = new Date().toISOString().slice(0, 10);
+        res.set('Content-Disposition', `attachment; filename="projects-${date}.json"`);
       }
 
       return res.send(json);

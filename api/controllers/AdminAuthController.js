@@ -1,55 +1,14 @@
+// api/controllers/AdminAuthController.js
+
+const { normalizeText, normalizeNextUrl, regenerateSession, destroySession } = require('../../lib/utils');
 const bcrypt = require('bcryptjs');
 
-function normalizeText(value) {
-  return typeof value === 'string' ? value.trim() : '';
-}
-
-function normalizeNextUrl(value) {
-  const nextUrl = normalizeText(value);
-
-  if (!nextUrl || !nextUrl.startsWith('/admin') || nextUrl.startsWith('//') || nextUrl === '/admin/login') {
-    return '/admin/projects';
-  }
-
-  return nextUrl;
-}
-
-function regenerateSession(req) {
-  return new Promise((resolve, reject) => {
-    if (!req.session || typeof req.session.regenerate !== 'function') {
-      return resolve();
-    }
-
-    req.session.regenerate((error) => {
-      if (error) {
-        return reject(error);
-      }
-
-      return resolve();
-    });
-  });
-}
-
-function destroySession(req) {
-  return new Promise((resolve, reject) => {
-    if (!req.session || typeof req.session.destroy !== 'function') {
-      return resolve();
-    }
-
-    req.session.destroy((error) => {
-      if (error) {
-        return reject(error);
-      }
-
-      return resolve();
-    });
-  });
-}
-
 module.exports = {
+  /** GET /admin/login */
   loginPage: function (req, res) {
     const nextUrl = normalizeNextUrl(req.query.next);
 
+    // if already authorized
     if (req.session && req.session.isAdmin === true) {
       return res.redirect(nextUrl);
     }
@@ -63,6 +22,7 @@ module.exports = {
     });
   },
 
+  /** POST /admin/login */
   login: async function (req, res) {
     const password = normalizeText(req.body && req.body.password);
     const nextUrl = normalizeNextUrl(req.body && req.body.next);
@@ -89,6 +49,7 @@ module.exports = {
       const isPasswordValid = await bcrypt.compare(password, passwordHash);
 
       if (!isPasswordValid) {
+        // timeout to prevent fast brute forcing
         await new Promise((resolve) => {
           setTimeout(resolve, 350);
         });
@@ -104,6 +65,7 @@ module.exports = {
         });
       }
 
+      // generate new session ID
       await regenerateSession(req);
       req.session.isAdmin = true;
       req.session.adminAuthenticatedAt = Date.now();
@@ -115,6 +77,7 @@ module.exports = {
     }
   },
 
+  /** POST /admin/logout */
   logout: async function (req, res) {
     try {
       await destroySession(req);

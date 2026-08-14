@@ -1,3 +1,5 @@
+// api/controllers/HomeController.js
+
 const STAGE_LABELS = require('../../lib/projectStages').labels;
 
 module.exports = {
