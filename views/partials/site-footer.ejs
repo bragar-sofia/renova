@@ -1,20 +1,30 @@
 <footer class="border-t-2 border-steel bg-white">
-  <div class="mx-auto flex max-w-shell flex-col items-center justify-center gap-8 px-6 py-14 font-display text-base text-navy lg:flex-row lg:gap-40 lg:px-8 xl:px-16 2xl:px-24">
-    <img class="h-[15.125rem] w-[15.125rem] object-contain" src="/images/renova-brand.png" alt="RENOVA">
-    <div class="flex gap-x-10 whitespace-nowrap sm:gap-x-16">
-      <div class="flex flex-col gap-3">
+  <div class="mx-auto flex w-fit max-w-shell flex-col items-start gap-10 px-6 py-12 font-display text-[clamp(0.85rem,0.6rem+0.4vw,1rem)] text-navy sm:w-auto sm:grid sm:grid-cols-[auto_auto] sm:items-center sm:justify-center sm:gap-x-[clamp(2.5rem,8vw,6rem)] sm:gap-y-[clamp(1.5rem,4vw,3rem)] md:flex md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-14 lg:gap-8 xl:px-16 2xl:px-24">
+    <div class="flex flex-col items-start sm:justify-self-start">
+      <img class="h-auto w-[clamp(7rem,3rem+11vw,12rem)] object-contain" src="/images/renova-brand.png" alt="RENOVA">
+      <p class="-mt-2 max-w-[13rem] text-left text-xs leading-snug text-[#6c95a6] lg:text-sm">Повертаємо промислове обладнання до роботи</p>
+    </div>
+    <nav class="flex flex-col items-start gap-3 whitespace-nowrap sm:flex-row sm:justify-self-start sm:gap-x-6 lg:gap-x-16" aria-label="Навігація у футері">
+      <div class="flex flex-col items-start gap-y-3">
+        <a class="transition-colors hover:text-steel" href="<%= base %>">Головна</a>
         <a class="transition-colors hover:text-steel" href="/services">Послуги</a>
         <a class="transition-colors hover:text-steel" href="/projects">Наші проекти</a>
       </div>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col items-start gap-y-3">
         <a class="transition-colors hover:text-steel" href="<%= base %>#about">Про нас</a>
         <a class="transition-colors hover:text-steel" href="<%= base %>#faq">Часті запитання</a>
-        <a class="transition-colors hover:text-steel" href="<%= base %>#contacts">Зв'язатися</a>
+        <a class="transition-colors hover:text-steel" href="<%= base %>#contacts">Зв'язатись</a>
       </div>
+    </nav>
+    <div class="flex flex-col items-start gap-y-4 sm:justify-self-start lg:gap-y-6">
+      <p class="flex items-center gap-3 whitespace-nowrap"><span class="relative flex h-10 w-10 shrink-0 items-center justify-center"><img class="absolute inset-0 h-full w-full object-contain" src="/images/icons/icon-circle-bg.svg" alt=""><img class="relative h-6 w-6 object-contain" src="/images/icons/icon-phone-footer.png" alt=""></span>+38 (075) 678 77 84</p>
+      <p class="flex items-center gap-3 whitespace-nowrap"><span class="relative flex h-10 w-10 shrink-0 items-center justify-center"><img class="absolute inset-0 h-full w-full object-contain" src="/images/icons/icon-circle-bg.svg" alt=""><img class="relative h-6 w-6 object-contain" src="/images/icons/icon-at-sign-footer.png" alt=""></span>commerce.renova@gmail.com</p>
     </div>
-    <div class="space-y-3">
-      <p class="flex items-center gap-3"><span class="relative flex h-10 w-10 shrink-0 items-center justify-center"><img class="absolute inset-0 h-full w-full object-contain" src="/images/icons/icon-circle-bg.svg" alt=""><img class="relative h-4 w-4 object-contain" src="/images/icons/icon-phone-footer.png" alt=""></span>+38 (099) 638 05 25</p>
-      <p class="flex items-center gap-3"><span class="relative flex h-10 w-10 shrink-0 items-center justify-center"><img class="absolute inset-0 h-full w-full object-contain" src="/images/icons/icon-circle-bg.svg" alt=""><img class="relative h-4 w-4 object-contain" src="/images/icons/icon-at-sign-footer.png" alt=""></span>support@renova</p>
+    <div class="grid grid-cols-4 gap-4 justify-self-center sm:justify-self-start md:grid-cols-2 md:justify-self-auto">
+      <a class="transition-opacity hover:opacity-80" href="#" aria-label="Instagram"><img class="h-10 w-10" src="/images/icons/icon-social-instagram.svg" alt="Instagram"></a>
+      <a class="transition-opacity hover:opacity-80" href="#" aria-label="Telegram"><img class="h-10 w-10" src="/images/icons/icon-social-telegram.svg" alt="Telegram"></a>
+      <a class="transition-opacity hover:opacity-80" href="#" aria-label="Viber"><img class="h-10 w-10" src="/images/icons/icon-social-viber.svg" alt="Viber"></a>
+      <a class="transition-opacity hover:opacity-80" href="#" aria-label="WhatsApp"><img class="h-10 w-10" src="/images/icons/icon-social-whatsapp.svg" alt="WhatsApp"></a>
     </div>
   </div>
 </footer>
