@@ -53,6 +53,7 @@ function visInit(project) {
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
 
+    <% /* Header & filters */ %>
     <section>
       <h1 class="font-display text-h1 font-normal text-navy">Заявки</h1>
       <p data-subtitle class="mt-3 max-w-2xl text-base text-navy/70"><%= status === 'completed' ? SUB_COMPLETED : SUB_ACTIVE %></p>
@@ -94,7 +95,7 @@ function visInit(project) {
         </p>
       </section>
 
-      <%/* ---------- Активні: таблиця ---------- */%>
+      <% /* Active table */ %>
       <div data-view="active" class="<%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>">
         <div class="reveal-item">
         <div class="hidden pb-4 font-display text-h2 font-normal text-navy lg:grid lg:grid-cols-[170px_1fr_230px_210px]">
@@ -138,7 +139,7 @@ function visInit(project) {
         </div>
       </div>
 
-      <%/* ---------- Завершені: картки ---------- */%>
+      <% /* Completed cards */ %>
       <div data-view="completed" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>">
         <% projects.forEach(function (p) { if (!p.completed) { return; } %>
           <a

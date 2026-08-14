@@ -100,87 +100,6 @@ var serviceNav = [
 
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main id="services">
-    <style>
-      .svc-nav {
-        position: fixed;
-        right: 1rem;
-        left: auto;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 40;
-        display: none;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
-        width: 4.25rem;
-        padding: 14px 12px;
-        background: rgba(239, 246, 249, 0.8);
-        border-radius: 1.25rem;
-      }
-      @media (min-width: 1280px) {
-        .svc-nav { display: flex; }
-      }
-      .svc-nav-item {
-        position: relative;
-        display: flex;
-        align-items: center;
-        height: 15px;
-      }
-      .svc-dash {
-        display: block;
-        border-radius: 2px;
-        background: #9db6c2;
-        transition: width 0.28s cubic-bezier(.16, 1, .3, 1), background-color 0.24s ease;
-      }
-      .svc-nav-section .svc-dash { width: 1.75rem; height: 3px; background: #6c95a6; }
-      .svc-nav-sub .svc-dash { width: 1rem; height: 2px; }
-      .svc-nav-item:hover .svc-dash { width: 2.6rem; background: #012a4a; }
-      .svc-nav-item.is-active .svc-dash { background: #012a4a; }
-      .svc-nav-section.is-active .svc-dash { width: 2.25rem; }
-      .svc-nav-sub.is-active .svc-dash { width: 1.5rem; }
-      .svc-label {
-        position: absolute;
-        right: calc(100% + 0.75rem);
-        left: auto;
-        white-space: nowrap;
-        background: #eff6f9;
-        color: #012a4a;
-        font-family: inherit;
-        font-weight: 400;
-        font-size: 0.95rem;
-        line-height: 1.4;
-        padding: 0.4rem 0.75rem;
-        border-radius: 0.5rem;
-        opacity: 0;
-        transform: translateX(6px);
-        pointer-events: none;
-        transition: opacity 0.2s ease, transform 0.2s ease;
-        border: 1px solid rgba(82, 123, 141, 0.2);
-      }
-      .svc-nav-item:hover .svc-label { opacity: 1; transform: translateX(0); }
-      .svc-nav-section .svc-label {
-        font-family: 'Geologica', 'Arial', sans-serif;
-        font-size: 1rem;
-        line-height: 1.35;
-      }
-      .svc-nav-sub .svc-label { font-size: 0.85rem; }
-      @media (prefers-reduced-motion: reduce) {
-        .svc-dash, .svc-label { transition: none; }
-      }
-
-      /* Підпункти й заголовки карток — в один рядок лише на десктопі;
-         на планшетах і мобілках переносяться, щоб не вилазити за екран */
-      @media (min-width: 1024px) {
-        #services h2.scroll-mt-28,
-        #services h3 { white-space: nowrap; }
-      }
-      /* Довгі підзаголовки в картці/реченні та заголовки карток типів ремонту
-         переносяться завжди (щоб не вилазили у вузьких колонках) */
-      #services #service-prevent,
-      #services #supply-catalog,
-      #services .svc-repair-title { white-space: normal; }
-    </style>
-
     <nav class="svc-nav" aria-label="Розділи послуг">
       <% serviceNav.forEach(function (sec) { %>
         <a class="svc-nav-item svc-nav-section" href="#<%= sec.id %>" data-target="<%= sec.id %>">
@@ -458,8 +377,6 @@ var serviceNav = [
         window.addEventListener('resize', onScroll);
         onScroll();
 
-        // Прищеплюємо панель і кожну риску до сітки device-пікселів,
-        // щоб тонкі лінії не розмивались субпікселями (масштаб 125%/150% тощо)
         var nav = document.querySelector('.svc-nav');
         if (nav) {
           var dashes = Array.prototype.slice.call(nav.querySelectorAll('.svc-dash'));
@@ -467,12 +384,10 @@ var serviceNav = [
           var snapDashes = function () {
             var dpr = window.devicePixelRatio || 1;
             var toDevice = function (px) { return Math.round(px * dpr) / dpr; };
-            // 1) висоту — до цілого числа device-пікселів (щоб не розмивався край)
             dashes.forEach(function (d) {
               d.style.transform = 'none';
               d.style.height = toDevice(d.closest('.svc-nav-section') ? 3 : 2) + 'px';
             });
-            // 2) верх кожної риски — на сітку device-пікселів
             dashes.forEach(function (d) {
               var top = d.getBoundingClientRect().top;
               var delta = Math.round(top * dpr) / dpr - top;

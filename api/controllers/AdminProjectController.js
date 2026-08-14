@@ -1,25 +1,15 @@
-// api/controllers/AdminProjectController.js
-
 const {
   keys: PROJECT_STAGES,
   labels: PROJECT_STAGE_LABELS
 } = require('../../lib/projectStages');
 
-/**
- * Нормалізує звичайне текстове поле.
- */
+// ===== Helpers =====
 function normalizeText(value) {
   return typeof value === 'string'
     ? value.trim()
     : '';
 }
 
-/**
- * Нормалізує boolean, отриманий із HTML-форми.
- *
- * Також обробляє масив значень, який може виникнути,
- * якщо hidden input і checkbox мають однаковий name.
- */
 function normalizeBoolean(value) {
   const values = Array.isArray(value) ? value : [value];
 
@@ -34,9 +24,6 @@ function normalizeBoolean(value) {
   });
 }
 
-/**
- * Формує список простих помилок форми.
- */
 function validateProjectPayload(payload) {
   const errors = [];
 
@@ -55,17 +42,6 @@ function validateProjectPayload(payload) {
   return errors;
 }
 
-/**
- * Формує поля, які дозволено редагувати
- * через загальну форму проєкту.
- *
- * Навмисно не приймаємо:
- *
- * - requestNumber — генерується моделлю;
- * - currentStage — змінюється через advanceStage;
- * - stages — формується автоматично;
- * - photos — пізніше матимуть окрему логіку завантаження.
- */
 function buildProjectPayload(body = {}) {
   return {
     title: normalizeText(body.title),
@@ -78,12 +54,6 @@ function buildProjectPayload(body = {}) {
       body.currentStageNote
     ),
 
-    /**
-     * HTML із CKEditor не обрізаємо через trimHtml
-     * або інші перетворення.
-     *
-     * Оскільки це адмінпанель, зберігаємо сформований HTML.
-     */
     description:
       typeof body.description === 'string'
         ? body.description.trim()
@@ -93,12 +63,8 @@ function buildProjectPayload(body = {}) {
   };
 }
 
+// ===== Actions =====
 module.exports = {
-  /**
-   * Список усіх проєктів у вигляді таблиці.
-   *
-   * GET /admin/projects
-   */
   index: async function (req, res) {
     try {
       const requestedPage = Number.parseInt(req.query.page, 10);
@@ -134,11 +100,6 @@ module.exports = {
     }
   },
 
-  /**
-   * Сторінка створення нового проєкту.
-   *
-   * GET /admin/projects/new
-   */
   createPage: function (req, res) {
     return res.view('admin/projects/create', {
       pageTitle: 'Нова заявка',
@@ -156,14 +117,6 @@ module.exports = {
     });
   },
 
-  /**
-   * Створює новий проєкт.
-   *
-   * Номер заявки, перший етап і його дата
-   * будуть сформовані в beforeCreate моделі.
-   *
-   * POST /admin/projects
-   */
   create: async function (req, res) {
     const payload = buildProjectPayload(req.body);
     const errors = validateProjectPayload(payload);
@@ -199,11 +152,6 @@ module.exports = {
     }
   },
 
-  /**
-   * Сторінка редагування проєкту.
-   *
-   * GET /admin/projects/:id/edit
-   */
   edit: async function (req, res) {
     try {
       const project = await Project.findOne({id: req.params.id});
@@ -231,15 +179,6 @@ module.exports = {
     }
   },
 
-  /**
-   * Оновлює загальні дані проєкту.
-   *
-   * Цей екшен не змінює currentStage та stages.
-   * Перехід між етапами пізніше матиме окремий екшен,
-   * який викликатиме Project.advanceStage().
-   *
-   * POST /admin/projects/:id
-   */
   update: async function (req, res) {
     const payload = buildProjectPayload(req.body);
     const errors = validateProjectPayload(payload);
@@ -277,15 +216,7 @@ module.exports = {
     }
   },
 
-  /**
-   * Переводить проєкт на наступний етап.
-   *
-   * Саму логіку переходу, оновлення currentStage
-   * та формування stages виконує метод моделі
-   * Project.advanceStage().
-   *
-   * POST /admin/projects/:id/advance-stage
-   */
+  // ===== Stage transitions =====
   advanceStage: async function (req, res) {
     const projectId = req.params.id;
 
@@ -298,13 +229,6 @@ module.exports = {
         return res.notFound();
       }
 
-      /*
-       * Додаткова перевірка на рівні контролера.
-       *
-       * Аналогічна перевірка вже є в методі моделі,
-       * але тут ми уникаємо зайвого виклику та повертаємо
-       * адміністратора на сторінку проєкту.
-       */
       if (project.currentStage === 'completed') {
         return res.redirect(
           `/admin/projects/${project.id}/edit`
@@ -329,10 +253,6 @@ module.exports = {
         error
       );
 
-      /*
-       * Повторно отримуємо актуальний запис, оскільки
-       * етап міг бути змінений паралельним запитом.
-       */
       const project = await Project.findOne({
         id: projectId
       });
@@ -368,16 +288,7 @@ module.exports = {
     }
   },
 
-  /**
-   * Виводить усі проєкти у форматі JSON.
-   *
-   * GET /admin/projects/export-json
-   *
-   * За замовчуванням JSON відкривається у браузері.
-   *
-   * Для завантаження файлу:
-   * /admin/projects/export-json?download=1
-   */
+  // ===== Export =====
   exportJson: async function (req, res) {
     try {
       const projects = await Project.find().sort('requestCreatedAt ASC');

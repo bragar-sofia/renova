@@ -2,109 +2,9 @@
 var activeProjects = (typeof activeProjects !== 'undefined' && activeProjects) ? activeProjects : [];
 var completedProjects = (typeof completedProjects !== 'undefined' && completedProjects) ? completedProjects : [];
 %>
-<style>
-  .hero-slogan {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    font-size: clamp(2rem, 0.4rem + 2.7vw, 3.4rem);
-    line-height: 1.08;
-  }
-  .hero-slogan-text {
-    display: inline-block;
-    text-wrap: balance;
-    will-change: transform, opacity, filter;
-    transition: opacity 0.45s ease,
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.45s ease;
-  }
-  .hero-slogan-text.is-out {
-    opacity: 0;
-    transform: translateY(-22px);
-    filter: blur(6px);
-  }
-  .hero-slogan-text.is-pre {
-    opacity: 0;
-    transform: translateY(22px);
-    filter: blur(6px);
-    transition: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-slogan-text { transition: none; }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-benefits-band .hero-benefit-item,
-    .hero-benefits-band .hero-benefit-sep {
-      opacity: 0;
-      transform: translateY(26px);
-      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .hero-benefits-band.is-in .hero-benefit-item,
-    .hero-benefits-band.is-in .hero-benefit-sep {
-      opacity: 1;
-      transform: none;
-    }
-    .hero-benefits-band .hero-benefits > *:nth-child(1) { transition-delay: 0.05s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(2) { transition-delay: 0.11s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(3) { transition-delay: 0.17s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(4) { transition-delay: 0.23s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(5) { transition-delay: 0.29s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(6) { transition-delay: 0.35s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(7) { transition-delay: 0.41s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(8) { transition-delay: 0.47s; }
-    .hero-benefits-band .hero-benefits > *:nth-child(9) { transition-delay: 0.53s; }
-  }
-
-  /* Текст кнопок хіро масштабується разом з рештою тексту */
-  .hero-cta-btn { font-size: 1rem; }
-
-  /* Лише геро (перша секція) не масштабуємо при появі — інакше фото не дистає краю.
-     Решта секцій анімуються стандартно, як на інших сторінках. */
-  #home > section:first-child { transform: none !important; }
-
-  /* Вузькі / мобільні екрани: фото — вузька смуга на всю висоту, текст ліворуч без накладання */
-  @media (max-width: 1200px) {
-    .hero-inner {
-      min-height: calc(100svh - 5.25rem);
-    }
-    .hero-text-col {
-      max-width: 58%;
-    }
-    .hero-text-col p {
-      max-width: none;
-    }
-    /* Кнопки хіро — в один рядок навіть у вузькій колонці смугового макета */
-    .hero-cta-grid {
-      min-width: 15rem;
-    }
-    .hero-photo-fade {
-      width: 44%;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 58%);
-      mask-image: linear-gradient(90deg, transparent 0%, #000 58%);
-    }
-    .hero-photo-fade .machine-broken,
-    .hero-photo-fade .machine-restored {
-      top: auto;
-      bottom: -10%;
-      height: 130%;
-      object-position: 66% center;
-    }
-  }
-
-  /* Планшети / малі ноути: фото ширше і ближче до тексту (менша діра між текстом і верстатом) */
-  @media (min-width: 640px) and (max-width: 1200px) {
-    .hero-photo-fade {
-      width: 54%;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 56%);
-      mask-image: linear-gradient(90deg, transparent 0%, #000 56%);
-    }
-  }
-</style>
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main id="home">
+    <% /* Hero */ %>
     <section class="relative w-full overflow-hidden">
       <div class="hero-inner relative z-10 mx-auto flex w-full max-w-shell items-center px-6 pb-10 pt-8 md:min-h-[560px] md:flex-row md:items-center lg:px-8 lg:pb-14 xl:px-16 2xl:min-h-[700px] 2xl:px-24">
         <div class="hero-text-col w-full max-w-none md:max-w-[56%] 2xl:max-w-[52%]">
@@ -159,6 +59,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
     </section>
 
+    <% /* Benefits band */ %>
     <div class="hero-benefits-band w-full px-6 pb-10 md:mt-10 lg:px-8 lg:pb-14 2xl:mx-auto 2xl:max-w-[1500px]">
       <div class="hero-benefits">
         <div class="hero-benefit-item"><img src="/images/icons/icon-experience.svg" alt="" aria-hidden="true"><p>Усі типи обладнання</p></div>
@@ -191,7 +92,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           'Ремонт та обслуговування верстатів по Україні'
         ];
 
-        // Резервуємо висоту під найдовший слоган, щоб не було стрибків розмітки.
         function lockHeight() {
           var original = el.innerHTML;
           var max = 0;
@@ -210,7 +110,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           rt = setTimeout(function () { h1.style.minHeight = ''; lockHeight(); }, 200);
         });
 
-        // Послідовна (стагерна) поява пунктів переваг
         var band = document.querySelector('.hero-benefits-band');
         if (band) {
           window.requestAnimationFrame(function () {
@@ -219,8 +118,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           setTimeout(function () { band.classList.add('is-in'); }, 300);
         }
 
-        // Роздільники переваг: вирівнюємо кожен по піксельній сітці пристрою,
-        // щоб усі виглядали однаково тонкими (без «товщого» останнього) при DPR 1.25/1.5
         (function () {
           var seps = document.querySelectorAll('.hero-benefit-sep');
           if (!seps.length) { return; }
@@ -235,7 +132,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
               s.style.transform = 'translateX(' + ((Math.round(leftDev) - leftDev) / dpr) + 'px)';
             });
           }
-          // після появи (стагер) і на ресайзі
           setTimeout(snapSeps, 1100);
           window.addEventListener('resize', snapSeps);
         })();
@@ -260,14 +156,13 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       })();
     </script>
 
+    <% /* Services */ %>
     <section
       id="services"
       class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
     >
-      <!-- Заголовок розділу -->
       <h2 class="mb-8 font-display text-h1 font-normal text-navy">Наші послуги</h2>
 
-      <!-- Головна послуга -->
       <a
         href="/services#restoration"
         class="services-primary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:grid md:grid-cols-[300px_1fr] md:items-center md:gap-8"
@@ -298,9 +193,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
       </a>
 
-      <!-- Додаткові послуги -->
       <div data-stagger class="mt-3 grid gap-4 md:grid-cols-2">
-        <!-- Сервісне обслуговування -->
         <a
           href="/services#service"
           class="services-secondary-card project-card group relative flex flex-col overflow-hidden rounded-card bg-white p-5 transition"
@@ -321,7 +214,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
         </a>
 
-        <!-- Постачання обладнання -->
         <a
           href="/services#supply"
           class="services-secondary-card project-card group relative flex flex-col overflow-hidden rounded-card bg-white p-5 transition"
@@ -344,6 +236,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
     </section>
 
+    <% /* Projects */ %>
     <section id="projects-preview" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
       <h2 class="font-display text-h1 font-normal text-navy">Наші проекти</h2>
 
@@ -491,6 +384,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </script>
     </section>
 
+    <% /* About */ %>
     <section id="about">
       <div class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
         <div class="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
@@ -499,7 +393,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             <div
               class="mt-8 w-full overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] md:w-fit"
             >
-            <!-- Таби -->
             <nav
               class="-ml-px -mt-px flex flex-wrap border-b border-steel/30 font-display text-h3 font-normal text-navy"
               aria-label="Інформація про компанію"
@@ -510,7 +403,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
               <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Інструменти</a>
             </nav>
 
-            <!-- Текст -->
             <div class="p-5 md:p-7 lg:p-8">
               <div class="max-w-[34rem] space-y-3 text-left text-base leading-7 text-navy xl:max-w-[44rem] 2xl:max-w-[52rem]">
                 <p>
@@ -543,6 +435,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
     </section>
 
+    <% /* Contacts & form */ %>
     <section
       id="contacts"
       class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
@@ -708,9 +601,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
       <script>
         (function () {
-          /*
-           * Копіювання телефону та пошти.
-           */
           var links =
             document.querySelectorAll(
               '#contacts .copy-link'
@@ -819,9 +709,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             });
           }
 
-          /*
-           * Надсилання форми без перезавантаження.
-           */
           var form =
             document.querySelector(
               '#contact-form'
@@ -939,31 +826,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </script>
     </section>
 
+    <% /* FAQ */ %>
     <section id="faq" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-      <style>
-        #faq .faq-answer {
-          display: grid;
-          grid-template-rows: 0fr;
-          opacity: 0;
-          transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                      opacity 0.34s ease;
-        }
-        #faq .faq-item.is-open .faq-answer {
-          grid-template-rows: 1fr;
-          opacity: 1;
-        }
-        #faq .faq-answer > .faq-answer-inner {
-          overflow: hidden;
-          min-height: 0;
-        }
-        #faq .faq-item.is-open .faq-chevron {
-          transform: rotate(180deg);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          #faq .faq-answer { transition: none; }
-        }
-      </style>
-
       <h2 class="font-display text-h1 font-normal text-navy">Часті запитання</h2>
       <div class="mt-8 rounded-card bg-white px-6 py-6 text-navy">
         <%

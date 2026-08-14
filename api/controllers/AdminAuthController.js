@@ -1,21 +1,9 @@
-// api/controllers/AdminAuthController.js
-
 const bcrypt = require('bcryptjs');
 
-/**
- * Нормалізує текстове значення.
- */
 function normalizeText(value) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
-/**
- * Перевіряє URL, на який користувача
- * можна повернути після авторизації.
- *
- * Захищає від open redirect:
- * не дозволяємо перенаправляти на зовнішній сайт.
- */
 function normalizeNextUrl(value) {
   const nextUrl = normalizeText(value);
 
@@ -26,11 +14,6 @@ function normalizeNextUrl(value) {
   return nextUrl;
 }
 
-/**
- * Створює новий ідентифікатор сесії.
- *
- * Це зменшує ризик session fixation.
- */
 function regenerateSession(req) {
   return new Promise((resolve, reject) => {
     if (!req.session || typeof req.session.regenerate !== 'function') {
@@ -47,9 +30,6 @@ function regenerateSession(req) {
   });
 }
 
-/**
- * Повністю видаляє поточну сесію.
- */
 function destroySession(req) {
   return new Promise((resolve, reject) => {
     if (!req.session || typeof req.session.destroy !== 'function') {
@@ -67,18 +47,9 @@ function destroySession(req) {
 }
 
 module.exports = {
-  /**
-   * Сторінка входу до адміністративної панелі.
-   *
-   * GET /admin/login
-   */
   loginPage: function (req, res) {
     const nextUrl = normalizeNextUrl(req.query.next);
 
-    /*
-     * Авторизованого адміністратора
-     * одразу повертаємо до адмінпанелі.
-     */
     if (req.session && req.session.isAdmin === true) {
       return res.redirect(nextUrl);
     }
@@ -92,12 +63,6 @@ module.exports = {
     });
   },
 
-  /**
-   * Перевіряє пароль і створює
-   * авторизовану сесію адміністратора.
-   *
-   * POST /admin/login
-   */
   login: async function (req, res) {
     const password = normalizeText(req.body && req.body.password);
     const nextUrl = normalizeNextUrl(req.body && req.body.next);
@@ -124,12 +89,6 @@ module.exports = {
       const isPasswordValid = await bcrypt.compare(password, passwordHash);
 
       if (!isPasswordValid) {
-        /*
-         * Невелика затримка ускладнює
-         * швидкий перебір паролів.
-         *
-         * Це не замінює повноцінний rate limit.
-         */
         await new Promise((resolve) => {
           setTimeout(resolve, 350);
         });
@@ -145,10 +104,6 @@ module.exports = {
         });
       }
 
-      /*
-       * Після успішної перевірки пароля
-       * генеруємо новий session ID.
-       */
       await regenerateSession(req);
       req.session.isAdmin = true;
       req.session.adminAuthenticatedAt = Date.now();
@@ -160,11 +115,6 @@ module.exports = {
     }
   },
 
-  /**
-   * Завершує сесію адміністратора.
-   *
-   * POST /admin/logout
-   */
   logout: async function (req, res) {
     try {
       await destroySession(req);

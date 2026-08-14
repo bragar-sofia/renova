@@ -1,14 +1,7 @@
-// api/models/Project.js
-
 const crypto = require('crypto');
 const { keys: PROJECT_STAGES } = require('../../lib/projectStages');
 
-/**
- * Генерує випадковий шестизначний номер заявки.
- *
- * Перед поверненням номера перевіряємо, чи він уже існує, оскільки в БД не можна поставити unique без required,
- * а генерація відбувається вже після передачі моделі до beforeCreate
- */
+// ===== Helpers =====
 async function generateUniqueRequestNumber() {
   const Project = sails.models.project;
   const maxAttempts = 30;
@@ -28,9 +21,6 @@ async function generateUniqueRequestNumber() {
   );
 }
 
-/**
- * Нормалізує структуру фотографій.
- */
 function normalizePhotos(photos) {
   const source =
     photos &&
@@ -50,12 +40,6 @@ function normalizePhotos(photos) {
   };
 }
 
-/**
- * Перевіряє, чи значення є валідним timestamp.
- *
- * 0 не вважаємо валідною бізнес-датою,
- * оскільки це 01.01.1970.
- */
 function isValidTimestamp(value) {
   return (
     Number.isFinite(value) &&
@@ -63,14 +47,6 @@ function isValidTimestamp(value) {
   );
 }
 
-/**
- * Повертає фактичну дату створення заявки
- * за хронологією етапів.
- *
- * Насамперед шукаємо request-received.
- * Якщо його немає, використовуємо перший
- * валідний запис stages.
- */
 function getRequestCreatedAtFromStages(stages) {
   if (!Array.isArray(stages)) {
     return null;
@@ -100,10 +76,6 @@ function getRequestCreatedAtFromStages(stages) {
     : null;
 }
 
-/**
- * Повертає дату останньої активності
- * за наявною хронологією етапів.
- */
 function getLastActivityAtFromStages(stages) {
   if (!Array.isArray(stages)) {
     return null;
@@ -128,191 +100,52 @@ function getLastActivityAtFromStages(stages) {
 }
 
 module.exports = {
+  // ===== Attributes =====
   attributes: {
-    /**
-     * Публічний шестизначний номер заявки.
-     *
-     * Зберігаємо як string, щоб номер завжди
-     * сприймався як ідентифікатор, а не число.
-     *
-     * Поле генерується автоматично в beforeCreate.
-     */
     requestNumber: {
       type: 'string'
     },
 
-    /**
-     * Фактична дата створення заявки.
-     *
-     * Відповідає enteredAt першого етапу
-     * request-received.
-     *
-     * Не плутати з createdAt:
-     * createdAt — технічна дата створення
-     * запису в базі даних.
-     */
     requestCreatedAt: {
       type: 'number'
     },
 
-    /**
-     * Дата останньої бізнес-активності
-     * по проєкту.
-     *
-     * Оновлюється при редагуванні даних,
-     * переході між етапами, роботі з фото
-     * та інших змінах Project.
-     *
-     * Не плутати з updatedAt:
-     * updatedAt — технічний timestamp Waterline.
-     */
     lastActivityAt: {
       type: 'number'
     },
 
-    /**
-     * Заголовок проєкту.
-     *
-     * Наприклад:
-     * "Капітальний ремонт токарного верстата 16К20".
-     *
-     * Також може використовуватися як назва
-     * запису в адміністративній панелі.
-     */
     title: {
       type: 'string',
       required: true
     },
 
-    /**
-     * Тип, виробник і модель обладнання.
-     *
-     * Наприклад:
-     * "Токарний верстат 16К20"
-     * або
-     * "Гідравлічний прес ДЕ2430".
-     */
     equipment: {
       type: 'string',
       required: true
     },
 
-    /**
-     * Вид ремонту або основний склад робіт.
-     *
-     * Наприклад:
-     * "Капітальний ремонт",
-     * "Відновлення шпиндельного вузла",
-     * "Модернізація системи ЧПК".
-     */
     repairType: {
       type: 'string',
       required: true
     },
 
-    /**
-     * Поточний етап проєкту.
-     *
-     * Це головне поле життєвого циклу проєкту.
-     *
-     * Якщо currentStage === 'completed',
-     * проєкт вважається завершеним і може
-     * відображатися в портфоліо.
-     */
     currentStage: {
       type: 'string',
       isIn: PROJECT_STAGES,
       defaultsTo: 'request-received'
     },
 
-    /**
-     * Коментар до поточного етапу.
-     *
-     * Поле використовується для зручного редагування
-     * коментаря в адміністративній панелі.
-     *
-     * Під час переходу на наступний етап поточний коментар
-     * записується до відповідного елемента в stages.
-     *
-     * Після переходу сюди записується початковий коментар
-     * нового етапу.
-     */
     currentStageNote: {
       type: 'string',
       columnType: 'text',
       defaultsTo: ''
     },
 
-    /**
-     * Хронологія переходів між етапами.
-     *
-     * Масив містить усі етапи, на які вже перейшов проєкт,
-     * включно з поточним етапом.
-     *
-     * enteredAt — дата і час переходу на відповідний етап.
-     *
-     * Окремі startedAt і completedAt не потрібні:
-     * дата переходу на наступний етап одночасно означає,
-     * що попередній етап було завершено.
-     *
-     * Формат:
-     *
-     * [
-     *   {
-     *     key: 'request-received',
-     *     enteredAt: 1785410400000,
-     *     note: 'Заявку отримано та передано менеджеру'
-     *   },
-     *   {
-     *     key: 'visit-scheduled',
-     *     enteredAt: 1785496800000,
-     *     note: 'Виїзд погоджено на 15 серпня'
-     *   },
-     *   {
-     *     key: 'diagnostics',
-     *     enteredAt: 1785583200000,
-     *     note: 'Проводиться перевірка шпиндельного вузла'
-     *   }
-     * ]
-     *
-     * Останній елемент масиву відповідає currentStage.
-     */
     stages: {
       type: 'json',
       defaultsTo: []
     },
 
-    /**
-     * Фотографії проєкту.
-     *
-     * before — фотографії до ремонту.
-     * after — відповідні фотографії після ремонту.
-     *
-     * Фото зіставляються за однаковим полем order.
-     *
-     * Наприклад:
-     *
-     * before: [
-     *   {
-     *     order: 1,
-     *     path: '/uploads/projects/123456/before-1.webp',
-     *     alt: 'Верстат до ремонту',
-     *     caption: 'Загальний вигляд'
-     *   }
-     * ]
-     *
-     * after: [
-     *   {
-     *     order: 1,
-     *     path: '/uploads/projects/123456/after-1.webp',
-     *     alt: 'Верстат після ремонту',
-     *     caption: 'Загальний вигляд після відновлення'
-     *   }
-     * ]
-     *
-     * Пара з order: 1 може використовуватися
-     * як головне порівняння у картці портфоліо.
-     */
     photos: {
       type: 'json',
       defaultsTo: {
@@ -321,64 +154,28 @@ module.exports = {
       }
     },
 
-    /**
-     * Загальний HTML-опис із CKEditor.
-     *
-     * Поле може містити:
-     *
-     * - початковий стан обладнання;
-     * - опис несправності;
-     * - результати діагностики;
-     * - перелік виконаних робіт;
-     * - складнощі під час ремонту;
-     * - отриманий результат.
-     */
     description: {
       type: 'string',
       columnType: 'text',
       defaultsTo: ''
     },
 
-    /**
-     * Чи показувати проєкт на сайті.
-     *
-     * Прапорець застосовується як до поточних заявок,
-     * так і до завершених проєктів у портфоліо.
-     *
-     * false — проєкт залишається в адмінпанелі,
-     * але не відображається публічно.
-     */
     isVisible: {
       type: 'boolean',
       defaultsTo: true
     }
   },
 
-  /**
-   * Під час створення:
-   *
-   * 1. Генеруємо номер заявки.
-   * 2. Встановлюємо початковий етап request-received.
-   * 3. Записуємо дату входу в початковий етап.
-   * 4. Створюємо порожній архів пройдених етапів.
-   * 5. Нормалізуємо структуру фотографій.
-   */
+  // ===== Lifecycle callbacks =====
   beforeCreate: async function (valuesToSet, proceed) {
     try {
       const now = Date.now();
 
-      /*
-       * Генеруємо номер заявки,
-       * якщо його не передано явно.
-       */
       if (!valuesToSet.requestNumber) {
         valuesToSet.requestNumber =
           await generateUniqueRequestNumber();
       }
 
-      /*
-       * Нормалізуємо поточний етап.
-       */
       if (
         !valuesToSet.currentStage ||
         !PROJECT_STAGES.includes(valuesToSet.currentStage)
@@ -386,10 +183,6 @@ module.exports = {
         valuesToSet.currentStage = PROJECT_STAGES[0];
       }
 
-      /*
-       * Нормалізуємо коментар
-       * поточного етапу.
-       */
       if (typeof valuesToSet.currentStageNote !== 'string') {
         valuesToSet.currentStageNote = '';
       } else {
@@ -397,12 +190,6 @@ module.exports = {
           valuesToSet.currentStageNote.trim();
       }
 
-      /*
-       * Якщо stages не передано,
-       * це звичайне створення нової заявки.
-       *
-       * Перший етап і дата створюються зараз.
-       */
       if (
         !Array.isArray(valuesToSet.stages) ||
         valuesToSet.stages.length === 0
@@ -416,15 +203,6 @@ module.exports = {
         ];
       }
 
-      /*
-       * Фактична дата створення заявки.
-       *
-       * Для seed-даних беремо enteredAt
-       * етапу request-received.
-       *
-       * Для нової заявки stages щойно
-       * було створено з enteredAt = now.
-       */
       if (
         !isValidTimestamp(
           valuesToSet.requestCreatedAt
@@ -436,15 +214,6 @@ module.exports = {
           ) || now;
       }
 
-      /*
-       * Початкова дата останньої активності.
-       *
-       * Для seed-а:
-       * enteredAt останнього етапу.
-       *
-       * Для нової заявки:
-       * requestCreatedAt / now.
-       */
       if (
         !isValidTimestamp(
           valuesToSet.lastActivityAt
@@ -467,16 +236,6 @@ module.exports = {
     }
   },
 
-  /**
-   * beforeUpdate не керує переходами між етапами.
-   *
-   * Перехід має виконуватися лише через окремий helper
-   * або спеціальну action контролера.
-   *
-   * Це важливо, щоб звичайне редагування title,
-   * description або photos випадково не створювало
-   * новий запис в історії етапів.
-   */
   beforeUpdate: function (valuesToSet, proceed) {
     try {
       if (
@@ -514,17 +273,6 @@ module.exports = {
         );
       }
 
-      /*
-       * Будь-яке оновлення Project
-       * вважаємо новою бізнес-активністю.
-       *
-       * Якщо lastActivityAt уже передано явно,
-       * не перезаписуємо його.
-       *
-       * Це потрібно, зокрема, для advanceStage,
-       * де використовуватимемо той самий timestamp,
-       * що й enteredAt нового етапу.
-       */
       if (
         !isValidTimestamp(
           valuesToSet.lastActivityAt
@@ -539,27 +287,7 @@ module.exports = {
     }
   },
 
-  /**
-   * Переводить проєкт на наступний етап.
-   *
-   * Логіка переходу:
-   *
-   * 1. Отримуємо актуальний проєкт.
-   * 2. Якщо currentStage === 'completed' — нічого не змінюємо.
-   * 3. Визначаємо наступний етап із PROJECT_STAGES.
-   * 4. Зберігаємо актуальний коментар поточного етапу
-   *    в останньому елементі stages.
-   * 5. Додаємо до stages новий елемент із:
-   *    - ключем нового етапу;
-   *    - датою переходу;
-   *    - початковим коментарем.
-   * 6. Оновлюємо currentStage і currentStageNote.
-   *
-   * @param {string|number} projectId ID проєкту
-   * @param {string} nextStageNote Початковий коментар нового етапу
-   *
-   * @returns {Promise<Object>} Оновлений проєкт
-   */
+  // ===== Methods =====
   advanceStage: async function (projectId, nextStageNote = '') {
     if (!projectId) {
       throw new Error(
@@ -579,9 +307,6 @@ module.exports = {
       );
     }
 
-    /*
-     * Завершений проєкт більше нікуди не переходить.
-     */
     if (project.currentStage === 'completed') {
       return project;
     }
@@ -599,10 +324,6 @@ module.exports = {
     const nextStage =
       PROJECT_STAGES[currentStageIndex + 1];
 
-    /*
-     * Захист на випадок, якщо поточний етап
-     * уже є останнім у переліку.
-     */
     if (!nextStage) {
       return project;
     }
@@ -626,10 +347,6 @@ module.exports = {
     const lastStageIndex = stages.length - 1;
     const lastStage = stages[lastStageIndex];
 
-    /*
-     * Перед переходом оновлюємо коментар поточного етапу
-     * в його записі хронології.
-     */
     if (
       !lastStage ||
       lastStage.key !== project.currentStage
@@ -644,19 +361,12 @@ module.exports = {
       note: currentNote
     };
 
-    /*
-     * Додаємо новий етап одразу в момент переходу на нього.
-     */
     stages.push({
       key: nextStage,
       enteredAt: transitionDate,
       note: normalizedNextStageNote
     });
 
-    /*
-     * Перевірка currentStage у критеріях захищає
-     * від двох одночасних переходів.
-     */
     const updatedProject = await Project.updateOne({
       id: project.id,
       currentStage: project.currentStage

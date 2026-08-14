@@ -61,7 +61,6 @@ const successMessage = successMessages[success] || '';
 <section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
 
-    <!-- Шапка сторінки -->
     <div
       class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
     >
@@ -127,7 +126,6 @@ const successMessage = successMessages[success] || '';
       </div>
     </div>
 
-    <!-- Повідомлення про успішну операцію -->
     <% if (successMessage) { %>
       <div
         class="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
@@ -148,7 +146,6 @@ const successMessage = successMessages[success] || '';
       </div>
     <% } %>
 
-    <!-- Таблиця -->
     <div
       class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
@@ -222,7 +219,6 @@ const successMessage = successMessages[success] || '';
               %>
 
               <tr class="group transition hover:bg-slate-50/80">
-                <!-- Номер заявки -->
                 <td class="whitespace-nowrap px-5 py-5 align-top">
                   <div
                     class="font-mono text-sm font-semibold text-slate-900"
@@ -231,7 +227,6 @@ const successMessage = successMessages[success] || '';
                   </div>
                 </td>
 
-                <!-- Дані проєкту -->
                 <td class="px-5 py-5 align-top">
                   <a
                     href="/admin/projects/<%= project.id %>/edit"
@@ -259,7 +254,6 @@ const successMessage = successMessages[success] || '';
                   </div>
                 </td>
 
-                <!-- Етап -->
                 <td class="px-5 py-5 align-top">
                     <span
                       class="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold <%= getStageBadgeClass(project.currentStage) %>"
@@ -301,7 +295,6 @@ const successMessage = successMessages[success] || '';
                   <% } %>
                 </td>
 
-                <!-- Видимість -->
                 <td class="whitespace-nowrap px-5 py-5 align-top">
                   <% if (project.isVisible) { %>
                     <span
@@ -326,7 +319,6 @@ const successMessage = successMessages[success] || '';
                   <% } %>
                 </td>
 
-                <!-- Дата -->
                 <td class="whitespace-nowrap px-5 py-5 align-top">
                   <time
                     class="text-sm text-slate-700"
@@ -340,7 +332,6 @@ const successMessage = successMessages[success] || '';
                   </p>
                 </td>
 
-                <!-- Дії -->
                 <td class="whitespace-nowrap px-5 py-5 text-right align-top">
                   <a
                     href="/admin/projects/<%= project.id %>/edit"
@@ -369,7 +360,6 @@ const successMessage = successMessages[success] || '';
           </table>
         </div>
       <% } else { %>
-        <!-- Порожній стан -->
         <div
           class="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center"
         >
@@ -422,7 +412,6 @@ const successMessage = successMessages[success] || '';
       <% } %>
     </div>
 
-    <!-- Пагінація -->
     <% if (pagination.totalPages > 1) { %>
       <div
         class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
@@ -442,7 +431,6 @@ const successMessage = successMessages[success] || '';
           class="flex flex-wrap items-center gap-1"
           aria-label="Пагінація проєктів"
         >
-          <!-- Попередня сторінка -->
           <% if (pagination.page > 1) { %>
             <a
               href="/admin/projects?page=<%= pagination.page - 1 %>"
@@ -458,7 +446,6 @@ const successMessage = successMessages[success] || '';
             </span>
           <% } %>
 
-          <!-- Перша сторінка -->
           <% if (startPage > 1) { %>
             <a
               href="/admin/projects?page=1"
@@ -476,7 +463,6 @@ const successMessage = successMessages[success] || '';
             <% } %>
           <% } %>
 
-          <!-- Сторінки навколо поточної -->
           <% for (let page = startPage; page <= endPage; page += 1) { %>
             <% if (page === pagination.page) { %>
               <span
@@ -495,7 +481,6 @@ const successMessage = successMessages[success] || '';
             <% } %>
           <% } %>
 
-          <!-- Остання сторінка -->
           <% if (endPage < pagination.totalPages) { %>
             <% if (endPage < pagination.totalPages - 1) { %>
               <span
@@ -513,7 +498,6 @@ const successMessage = successMessages[success] || '';
             </a>
           <% } %>
 
-          <!-- Наступна сторінка -->
           <% if (pagination.page < pagination.totalPages) { %>
             <a
               href="/admin/projects?page=<%= pagination.page + 1 %>"

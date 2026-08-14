@@ -1,12 +1,7 @@
-// api/responses/notFound.js
-
 module.exports = function notFound(data) {
   const req = this.req;
   const res = this.res;
 
-  /*
-   * Для AJAX / API-запитів повертаємо JSON.
-   */
   const wantsJson =
     req.wantsJSON ||
     (
@@ -28,10 +23,6 @@ module.exports = function notFound(data) {
     });
   }
 
-  /*
-   * Для звичайного браузерного запиту
-   * показуємо сторінку 404.
-   */
   return res.status(404).view(
     '404',
     {

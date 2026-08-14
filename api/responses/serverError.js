@@ -1,13 +1,7 @@
-// api/responses/serverError.js
-
 module.exports = function serverError(error) {
   const req = this.req;
   const res = this.res;
 
-  /*
-   * Саму помилку логгуємо на сервері,
-   * але не показуємо її користувачу.
-   */
   if (error) {
     sails.log.error(
       'Server error:',
@@ -15,9 +9,6 @@ module.exports = function serverError(error) {
     );
   }
 
-  /*
-   * Для AJAX / API-запитів повертаємо JSON.
-   */
   const wantsJson =
     req.wantsJSON ||
     (
@@ -34,10 +25,6 @@ module.exports = function serverError(error) {
     });
   }
 
-  /*
-   * Для звичайного браузерного запиту
-   * показуємо сторінку 500.
-   */
   return res.status(500).view(
     '500',
     {

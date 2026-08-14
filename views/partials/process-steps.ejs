@@ -2,12 +2,8 @@
 var fullWidth = (typeof fullWidth !== 'undefined') && fullWidth;
 var captionLines = (typeof captionLines !== 'undefined') ? captionLines : 0;
 var captionStyle = captionLines ? ('min-height:' + (captionLines * 1.5) + 'rem;') : '';
-// Багатокрокові схеми не вміщаються рядком на планшеті (~1024px),
-// тож для них перемикаємось на горизонтальний ряд лише з xl (1280px);
-// коротші схеми лишають ряд з lg.
 var manySteps = steps.length > 5;
 var bp = manySteps ? 'xl' : 'lg';
-// вужчі конектори для довгих схем, щоб ряд вмістився на xl
 var connectorCls = manySteps ? (bp + ':w-6') : (bp + ':w-[3.125rem]');
 var itemCls = fullWidth ? (bp + ':flex-1') : (bp + ':w-[12.5rem]');
 var rowAlign = bp + ':justify-center';

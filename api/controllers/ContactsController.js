@@ -1,22 +1,14 @@
-// api/controllers/ContactsController.js
-
 const nodemailer = require('nodemailer');
 
 let transporter = null;
 
-/**
- * Нормалізує текстове поле форми.
- */
+// ===== Helpers =====
 function normalizeText(value) {
   return typeof value === 'string'
     ? value.trim()
     : '';
 }
 
-/**
- * Екранує користувацький текст перед вставкою
- * в HTML-лист.
- */
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -26,10 +18,6 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-/**
- * Створює SMTP transporter один раз
- * і повторно використовує його.
- */
 function getTransporter() {
   if (!transporter) {
     transporter = nodemailer.createTransport({
@@ -45,13 +33,9 @@ function getTransporter() {
   return transporter;
 }
 
+// ===== Actions =====
 module.exports = {
 
-  /**
-   * Обробляє форму зворотного зв'язку.
-   *
-   * POST /contact
-   */
   sendMessage: async function (req, res) {
     try {
       const name =
@@ -66,9 +50,6 @@ module.exports = {
       const message =
         normalizeText(req.body.message);
 
-      /*
-       * Обов'язкові поля.
-       */
       if (
         !name ||
         !phone ||
@@ -80,10 +61,6 @@ module.exports = {
         });
       }
 
-      /*
-       * Обмеження довжини дублюємо на сервері,
-       * оскільки maxlength у браузері не є захистом.
-       */
       if (
         name.length > 80 ||
         phone.length > 30 ||
@@ -95,9 +72,6 @@ module.exports = {
         });
       }
 
-      /*
-       * Базова серверна перевірка email.
-       */
       const emailRegex =
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -107,9 +81,6 @@ module.exports = {
         });
       }
 
-      /*
-       * Перевіряємо конфігурацію пошти.
-       */
       if (
         !process.env.EMAIL_USER ||
         !process.env.EMAIL_APP_PASSWORD ||

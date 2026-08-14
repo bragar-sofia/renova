@@ -3,9 +3,7 @@ const {
   labels: STAGE_LABELS
 } = require('../../lib/projectStages');
 
-/**
- * Видаляє HTML-теги та нормалізує пробіли.
- */
+// ===== Helpers =====
 function stripHtml(html) {
   return typeof html === 'string'
     ? html
@@ -15,18 +13,12 @@ function stripHtml(html) {
     : '';
 }
 
-/**
- * Нормалізує звичайний текст.
- */
 function normalizeText(value) {
   return typeof value === 'string'
     ? value.trim()
     : '';
 }
 
-/**
- * Скорочує текст до заданої довжини.
- */
 function truncate(text, max) {
   if (!text) {
     return '';
@@ -43,10 +35,6 @@ function pad(number) {
     : String(number);
 }
 
-/**
- * Формат:
- * 04.08.2026, 15:10
- */
 function formatDate(timestamp) {
   if (
     !Number.isFinite(timestamp) ||
@@ -67,10 +55,6 @@ function formatDate(timestamp) {
   ].join(', ');
 }
 
-/**
- * Формат:
- * 04.08.26
- */
 function formatDateShort(timestamp) {
   if (
     !Number.isFinite(timestamp) ||
@@ -92,9 +76,6 @@ function formatDateShort(timestamp) {
   ].join('.');
 }
 
-/**
- * Нормалізує та сортує фотографії за order.
- */
 function sortPhotos(photos) {
   if (!Array.isArray(photos)) {
     return [];
@@ -118,9 +99,6 @@ function sortPhotos(photos) {
     });
 }
 
-/**
- * Повертає нормалізовану структуру фотографій.
- */
 function getProjectPhotos(photos) {
   const source =
     photos &&
@@ -135,12 +113,6 @@ function getProjectPhotos(photos) {
   };
 }
 
-/**
- * Повертає першу фотографію потрібного типу.
- *
- * Для активного проєкту зазвичай показуємо before.
- * Для завершеного проєкту — after.
- */
 function firstPhoto(photos, preferredType = 'before') {
   const normalizedPhotos = getProjectPhotos(photos);
 
@@ -161,14 +133,8 @@ function firstPhoto(photos, preferredType = 'before') {
     : null;
 }
 
+// ===== Actions =====
 module.exports = {
-  /**
-   * Список публічних проєктів.
-   *
-   * Завантажуємо всі видимі записи, оскільки
-   * перемикання активних і завершених проєктів
-   * виконується на клієнті без перезавантаження.
-   */
   index: async function (req, res) {
     try {
       const status =
@@ -183,13 +149,6 @@ module.exports = {
           ? 'old'
           : 'new';
 
-      /*
-       * Не фільтруємо тут currentStage і пошуковий запит.
-       *
-       * Сторінка повинна одразу отримати:
-       * - активні заявки;
-       * - завершені проєкти.
-       */
       const found = await Project.find({
         isVisible: true
       });
@@ -199,12 +158,6 @@ module.exports = {
           project.photos
         );
 
-        /*
-         * Для завершених карток:
-         *
-         * before — початкове зображення;
-         * after — зображення після ремонту.
-         */
         const imageMain =
           photos.before[0]?.path ||
           photos.after[0]?.path ||
@@ -232,12 +185,6 @@ module.exports = {
         const currentStageNote =
           normalizeText(project.currentStageNote);
 
-        /*
-         * Підготовлений текст для клієнтського пошуку.
-         *
-         * У data-search не передаємо HTML,
-         * а лише звичайний нормалізований текст.
-         */
         const searchText = [
           project.requestNumber,
           project.title,
@@ -294,28 +241,12 @@ module.exports = {
           completed:
             project.currentStage === 'completed',
 
-          /*
-           * Використовуємо для пошуку у браузері.
-           */
           searchText,
 
-          /*
-           * Використовуємо для клієнтського
-           * і початкового серверного сортування.
-           *
-           * Сортуємо за останньою бізнес-активністю:
-           * редагуванням даних, переходом етапу,
-           * зміною фото тощо.
-           */
           sortTimestamp: project.lastActivityAt
         };
       });
 
-      /*
-       * Початкове серверне сортування потрібне,
-       * щоб сторінка одразу відобразилася правильно
-       * ще до виконання клієнтського JavaScript.
-       */
       projects.sort((first, second) => {
         return sort === 'old'
           ? first.sortTimestamp - second.sortTimestamp
@@ -340,9 +271,7 @@ module.exports = {
     }
   },
 
-  /**
-   * Сторінка окремого проєкту.
-   */
+  // ===== Project detail =====
   show: async function (req, res) {
     try {
       const project = await Project.findOne({
@@ -362,9 +291,6 @@ module.exports = {
           project.currentStage
         );
 
-      /**
-       * Останній запис кожного етапу.
-       */
       const stagesByKey = {};
 
       const projectStages = Array.isArray(project.stages)
@@ -388,12 +314,6 @@ module.exports = {
             currentStageIndex >= 0 &&
             index <= currentStageIndex;
 
-          /**
-           * Для активного проєкту поточний етап
-           * ще не вважається завершеним.
-           *
-           * Для completed останній етап також завершений.
-           */
           const done =
             index < currentStageIndex ||
             (
@@ -401,14 +321,6 @@ module.exports = {
               index === currentStageIndex
             );
 
-          /**
-           * Актуальний коментар поточного етапу
-           * зберігається в currentStageNote.
-           *
-           * stages містить коментар, який був записаний
-           * під час переходу на цей етап, і він може бути
-           * неактуальним після редагування.
-           */
           const note = isCurrent
             ? (
               normalizeText(
@@ -469,10 +381,6 @@ module.exports = {
 
         after: photos.after,
 
-        /**
-         * Для завершеного кейсу основним робимо after,
-         * для активного — before.
-         */
         mainPhoto: firstPhoto(
           project.photos,
           completed ? 'after' : 'before'

@@ -1,119 +1,6 @@
 <script>
-  /* Вмикаємо reveal одразу, ще до першого рендеру контенту сторінки —
-     інакше контент встигає промайнути видимим (поки вантажиться зовнішній
-     скрипт у кінці body), а reveal здається таким, що «починається двічі». */
   document.documentElement.classList.add('reveal-ready');
 </script>
-
-<style>
-    #stages-details .stages-chevron {
-        transform: rotate(0deg);
-    }
-
-    #stages-details.is-expanded .stages-chevron {
-        transform: rotate(180deg);
-    }
-
-    /* Плавне відкриття / закриття етапів роботи */
-    #stages-details [data-stages-content] {
-        display: grid;
-        grid-template-rows: 0fr;
-        opacity: 0;
-        transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 0.4s ease;
-        will-change: grid-template-rows;
-    }
-    #stages-details.is-expanded [data-stages-content] {
-        grid-template-rows: 1fr;
-        opacity: 1;
-    }
-    #stages-details [data-stages-content] > .stages-inner {
-        overflow: hidden;
-        min-height: 0;
-        transform: translateY(-8px);
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    #stages-details.is-expanded [data-stages-content] > .stages-inner {
-        transform: translateY(0);
-    }
-    @media (prefers-reduced-motion: reduce) {
-        #stages-details [data-stages-content],
-        #stages-details [data-stages-content] > .stages-inner {
-            transition: none;
-        }
-    }
-
-    /* Повноекранне порівняння До / Після */
-    .ba-stage {
-        position: relative;
-        width: min(92vw, 1100px);
-        aspect-ratio: 3 / 2;
-        max-height: 82vh;
-        overflow: hidden;
-        border-radius: 0.75rem;
-        background: #0b0b0b;
-        touch-action: none;
-    }
-    .ba-stage img {
-        position: absolute;
-        inset: 0;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        -webkit-user-drag: none;
-        user-select: none;
-    }
-    .ba-stage .ba-before {
-        clip-path: inset(0 calc(100% - var(--ba-pos, 50%)) 0 0);
-    }
-    .ba-divider {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: var(--ba-pos, 50%);
-        width: 3px;
-        background: #eff6f9;
-        transform: translateX(-1.5px);
-        pointer-events: none;
-        box-shadow: 0 0 0 1px rgba(7, 49, 78, 0.18);
-    }
-    .ba-handle {
-        position: absolute;
-        top: 50%;
-        left: var(--ba-pos, 50%);
-        transform: translate(-50%, -50%);
-        height: 44px;
-        width: 44px;
-        border-radius: 9999px;
-        background: #012a4a;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 0 3px #eff6f9, 0 2px 10px rgba(7, 49, 78, 0.45);
-        cursor: ew-resize;
-    }
-    .ba-stage.ba-dragging .ba-handle { cursor: grabbing; }
-    .ba-tag {
-        position: absolute;
-        top: 14px;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        background: rgba(1, 42, 74, 0.72);
-        color: #fff;
-        font-size: 0.8rem;
-        font-weight: 700;
-        pointer-events: none;
-    }
-    .ba-tag-before { left: 14px; }
-    .ba-tag-after { right: 14px; }
-    .ba-stage.ba-view .ba-divider,
-    .ba-stage.ba-view .ba-handle,
-    .ba-stage.ba-view .ba-tag {
-        display: none;
-    }
-    .ba-stage.ba-view { cursor: default; }
-</style>
 
 <%
 function statusSvg(completed) {
@@ -128,6 +15,7 @@ function statusSvg(completed) {
 
     <section>
 
+    <% /* Breadcrumb & status */ %>
     <a href="/projects<%= completed ? '?status=completed' : '' %>" class="inline-flex items-center gap-2 text-base font-display font-bold text-navy transition hover:text-steel">
       <img class="h-3 w-auto rotate-90 object-contain" src="/images/icons/icon-chevron-inactive.svg" alt="">
       Усі заявки
@@ -145,6 +33,7 @@ function statusSvg(completed) {
       var heroSwap = (afterFirst && afterFirst !== heroBase) ? afterFirst : null;
       var hasHero = mainPhoto && completed;
     %>
+    <% /* Content grid */ %>
     <div class="mt-6 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:grid-rows-[auto_1fr] lg:gap-x-14 lg:gap-y-7">
 
       <% if (hasHero) { %>
@@ -338,6 +227,7 @@ function statusSvg(completed) {
     }
   %>
     <script>window.__baPairs = <%- JSON.stringify(baPairs) %>;</script>
+    <% /* Before/after lightbox */ %>
     <div id="photo-lightbox" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center gap-5 bg-black/85 p-4 opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-label="Перегляд до та після">
       <button type="button" data-lightbox-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-navy text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60" aria-label="Закрити">
         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -375,6 +265,7 @@ function statusSvg(completed) {
 </div>
 
 <script>
+  // ===== Stages accordion =====
   document.addEventListener('DOMContentLoaded', function () {
     var details = document.querySelector('#stages-details');
     if (!details) { return; }
@@ -399,7 +290,6 @@ function statusSvg(completed) {
       }
 
       if (details.open) {
-        // Закриття: анімуємо згортання, потім прибираємо open
         animating = true;
         details.classList.remove('is-expanded');
 
@@ -419,8 +309,6 @@ function statusSvg(completed) {
         content.addEventListener('transitionend', onEnd);
         setTimeout(finish, 650);
       } else {
-        // Відкриття: показуємо контент у згорнутому стані, фіксуємо його
-        // синхронним reflow, потім запускаємо перехід до розгорнутого.
         details.open = true;
         void content.offsetHeight;
         details.classList.add('is-expanded');
@@ -430,6 +318,7 @@ function statusSvg(completed) {
 </script>
 
 <script>
+  // ===== Hero auto-animation =====
   (function () {
     var photo = document.querySelector('[data-cp-auto]');
     if (!photo) { return; }
@@ -441,6 +330,7 @@ function statusSvg(completed) {
 </script>
 
 <script>
+  // ===== Lightbox =====
   (function () {
     var lb = document.getElementById('photo-lightbox');
     if (!lb) { return; }
@@ -460,8 +350,8 @@ function statusSvg(completed) {
     var toggleLabel = lb.querySelector('[data-ba-toggle-label]');
 
     var current = 0;
-    var viewSide = 'after';   // яке фото показуємо у звичайному режимі
-    var compare = false;      // увімкнено режим До/Після
+    var viewSide = 'after';
+    var compare = false;
     var hideTimer = null;
     var dragging = false;
 
@@ -492,17 +382,15 @@ function statusSvg(completed) {
       }
 
       if (comparing) {
-        // Обидва видимі, before обрізається роздільником
         afterImg.style.display = '';
         beforeImg.style.display = '';
         setPos(50);
       } else {
-        // Звичайний перегляд: показуємо одне фото на всю площу
         var showBefore = (viewSide === 'before' && p.before) || !p.after;
         if (showBefore) {
           beforeImg.style.display = '';
           afterImg.style.display = p.after ? '' : 'none';
-          setPos(100); // before перекриває все
+          setPos(100);
         } else {
           afterImg.style.display = '';
           beforeImg.style.display = 'none';
@@ -510,7 +398,6 @@ function statusSvg(completed) {
         }
       }
 
-      // Перемикач доступний лише коли є обидва фото
       toggleBtn.style.display = hasBoth ? '' : 'none';
       toggleLabel.textContent = comparing ? 'Звичайний перегляд' : 'Порівняти До / Після';
 

@@ -78,7 +78,6 @@ const afterPhotos =
 <section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
 
-    <!-- Навігація -->
     <nav
       class="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500"
       aria-label="Навігація"
@@ -106,7 +105,6 @@ const afterPhotos =
       </span>
     </nav>
 
-    <!-- Шапка сторінки -->
     <div
       class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between"
     >
@@ -172,7 +170,6 @@ const afterPhotos =
       </div>
     </div>
 
-    <!-- Повідомлення -->
     <% if (successMessage) { %>
       <div
         class="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
@@ -229,14 +226,12 @@ const afterPhotos =
 
     <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
 
-      <!-- Основна форма -->
       <form
         id="project-edit-form"
         action="/admin/projects/<%= project.id %>"
         method="post"
         class="space-y-6"
       >
-        <!-- Основні дані -->
         <div
           class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
         >
@@ -315,7 +310,6 @@ const afterPhotos =
           </div>
         </div>
 
-        <!-- Поточний етап -->
         <div
           class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
         >
@@ -383,7 +377,6 @@ const afterPhotos =
           </div>
         </div>
 
-        <!-- Опис -->
         <div
           class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
         >
@@ -414,7 +407,6 @@ const afterPhotos =
           </div>
         </div>
 
-        <!-- Публікація -->
         <div
           class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
         >
@@ -454,7 +446,6 @@ const afterPhotos =
           </label>
         </div>
 
-        <!-- Кнопки -->
         <div
           class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between"
         >
@@ -486,10 +477,8 @@ const afterPhotos =
         </div>
       </form>
 
-      <!-- Права колонка -->
       <aside class="space-y-6">
 
-        <!-- Стан проєкту -->
         <div
           class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
         >
@@ -574,7 +563,6 @@ const afterPhotos =
           </dl>
         </div>
 
-        <!-- Перехід на наступний етап -->
         <div
           class="rounded-2xl border <%= isCompleted
             ? 'border-emerald-200 bg-emerald-50'
@@ -671,7 +659,6 @@ const afterPhotos =
           <% } %>
         </div>
 
-        <!-- Хронологія -->
         <div
           class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
         >
@@ -786,10 +773,6 @@ const afterPhotos =
   document.addEventListener('DOMContentLoaded', function () {
     const editorElement = document.querySelector('#description');
 
-    /*
-     * Працює, якщо ClassicEditor уже підключений
-     * у layout або в загальних скриптах адмінпанелі.
-     */
     if (editorElement && window.ClassicEditor) {
       window.ClassicEditor
         .create(editorElement)
