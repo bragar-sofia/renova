@@ -72,6 +72,18 @@
           "path": "https://picsum.photos/id/1005/1200/800?grayscale&blur=3",
           "alt": "Вузол верстата до ремонту (3)",
           "caption": "Стан до ремонту (3)"
+        },
+        {
+          "order": 4,
+          "path": "https://picsum.photos/id/1015/1200/800?grayscale&blur=3",
+          "alt": "Вузол верстата до ремонту (4)",
+          "caption": "Стан до ремонту (4)"
+        },
+        {
+          "order": 5,
+          "path": "https://picsum.photos/id/1024/1200/800?grayscale&blur=3",
+          "alt": "Вузол верстата до ремонту (5)",
+          "caption": "Стан до ремонту (5)"
         }
       ],
       "after": [
@@ -92,6 +104,18 @@
           "path": "https://picsum.photos/id/1005/1200/800",
           "alt": "Вузол верстата після ремонту (3)",
           "caption": "Стан після ремонту (3)"
+        },
+        {
+          "order": 4,
+          "path": "https://picsum.photos/id/1015/1200/800",
+          "alt": "Вузол верстата після ремонту (4)",
+          "caption": "Стан після ремонту (4)"
+        },
+        {
+          "order": 5,
+          "path": "https://picsum.photos/id/1024/1200/800",
+          "alt": "Вузол верстата після ремонту (5)",
+          "caption": "Стан після ремонту (5)"
         }
       ]
     },
