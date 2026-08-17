@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
-    <title>New Sails App</title>
+  <meta charset="utf-8">
+  <title>New Sails App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- Enable motion only when allowed -->
+  <script>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('reveal-ready');
+    }
+  </script>
 
-    <link rel="stylesheet" href="/styles/tailwind-generated.css">
-    <link rel="stylesheet" href="/styles/app.css">
+  <link rel="preload" href="/fonts/geologica-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles/tailwind-generated.css">
+  <link rel="stylesheet" href="/styles/app.css">
 </head>
 
 <body>
@@ -14,120 +22,154 @@
 <%- body %>
 <%- include('../partials/site-footer', { base: '' }) %>
 
-<!--TEMPLATES-->
-<!--TEMPLATES END-->
+<!-- TEMPLATES -->
+<!-- TEMPLATES END -->
 
-<!--SCRIPTS-->
+<!-- SCRIPTS -->
 <script src="/dependencies/sails.io.js"></script>
-<!--SCRIPTS END-->
+<!-- SCRIPTS END -->
 
-<script>
-  document.documentElement.classList.add('reveal-ready');
 
-  document.addEventListener('DOMContentLoaded', function () {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    var blocks = Array.prototype.filter.call(
-      document.querySelectorAll('main section'),
-      function (s) { return !s.querySelector('section'); }
-    );
-    var vh = function () { return window.innerHeight || document.documentElement.clientHeight; };
-    var inView = function (el) { return el.getBoundingClientRect().top < vh() * 0.65; };
-
-    var pending = blocks.slice();
-    var anyRevealed = false;
-    var drop = function (el) { var i = pending.indexOf(el); if (i > -1) pending.splice(i, 1); };
-    var showAnim = function (el) {
-      if (el.classList.contains('revealed-instant') || el.classList.contains('is-visible')) return;
-      el.classList.add('is-visible'); drop(el); anyRevealed = true;
-    };
-    var showInstant = function (el) {
-      if (el.classList.contains('revealed-instant') || el.classList.contains('is-visible')) return;
-      el.classList.add('revealed-instant'); drop(el); anyRevealed = true;
-    };
-
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (!e.isIntersecting) return;
-          showAnim(e.target);
-          io.unobserve(e.target);
-        });
-      }, { threshold: 0, rootMargin: '0px 0px -35% 0px' });
-      pending.slice().forEach(function (b) { io.observe(b); });
-    }
-
-    var onScroll = function () {
-      for (var i = pending.length - 1; i >= 0; i--) {
-        if (inView(pending[i])) showAnim(pending[i]);
-      }
-      if (!pending.length) window.removeEventListener('scroll', onScroll);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    var revealFirstScreen = function () {
-      var h = window.innerHeight || document.documentElement.clientHeight;
-      for (var i = pending.length - 1; i >= 0; i--) {
-        if (pending[i].getBoundingClientRect().top < h - 24) showAnim(pending[i]);
-      }
-    };
-    window.addEventListener('load', function () {
-      revealFirstScreen();
-      setTimeout(function () {
-        if (blocks[0] && getComputedStyle(blocks[0]).opacity === '0') {
-          document.documentElement.classList.remove('reveal-ready');
-        }
-      }, 1200);
-    });
-  });
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+<!-- ===== Section reveal ===== -->
 <script>
   (function () {
-    function init() {
-      if (!window.lottie) return;
-      var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-lottie]'));
-      if (!nodes.length) return;
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      nodes.forEach(function (el) {
-        var anim = lottie.loadAnimation({
-          container: el,
+    if (!document.documentElement.classList.contains('reveal-ready')) {
+      return;
+    }
+
+    var sections = document.querySelectorAll('main section:not(:has(section)):not(.revealed-instant)');
+    if (!sections.length) {
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      sections.forEach(function (section) {
+        section.classList.add('is-visible');
+      });
+
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: '0px 0px -15% 0px'
+      }
+    );
+
+    sections.forEach(function (section) {
+      observer.observe(section);
+    });
+  })();
+</script>
+
+
+<!-- ===== Lottie ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+
+<script>
+  (function () {
+    function initLottie() {
+      if (!window.lottie) {
+        return;
+      }
+
+      var elements = document.querySelectorAll('[data-lottie]');
+      if (!elements.length) {
+        return;
+      }
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var states = new WeakMap();
+
+      function run(element) {
+        var state = states.get(element);
+        if (!state || state.started || !state.loaded || !state.visible) {
+          return;
+        }
+
+        state.started = true;
+        if (reduceMotion) {
+          state.animation.goToAndStop(Math.max(0, state.animation.totalFrames - 1), true);
+          return;
+        }
+
+        state.animation.goToAndPlay(0, true);
+      }
+
+      var observer = null;
+
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) {
+                return;
+              }
+
+              var state = states.get(entry.target);
+
+              if (!state) {
+                return;
+              }
+
+              state.visible = true;
+              run(entry.target);
+              observer.unobserve(entry.target);
+            });
+          },
+          {
+            threshold: 0.25
+          }
+        );
+      }
+
+      elements.forEach(function (element) {
+        var animation = window.lottie.loadAnimation({
+          container: element,
           renderer: 'svg',
           loop: false,
           autoplay: false,
-          path: el.getAttribute('data-lottie')
+          path: element.getAttribute('data-lottie')
         });
-        var loaded = false, triggered = false, done = false;
-        anim.addEventListener('DOMLoaded', function () { loaded = true; if (triggered) run(); });
-        function run() {
-          if (done || !loaded) return;
-          done = true;
-          if (reduce) {
-            anim.goToAndStop(Math.max(0, anim.totalFrames - 1), true);
-          } else {
-            anim.goToAndPlay(0, true);
+
+        states.set(element, {
+          animation: animation,
+          loaded: false,
+          visible: reduceMotion || !observer,
+          started: false
+        });
+
+        animation.addEventListener('DOMLoaded', function () {
+          var state = states.get(element);
+
+          if (!state) {
+            return;
           }
-        }
-        function onVisible() {
-          if (triggered) return;
-          triggered = true;
-          run();
-        }
-        if ('IntersectionObserver' in window) {
-          var io = new IntersectionObserver(function (entries) {
-            for (var i = 0; i < entries.length; i++) {
-              if (entries[i].isIntersecting) { onVisible(); io.disconnect(); break; }
-            }
-          }, { threshold: 0.35 });
-          io.observe(el);
-        } else {
-          onVisible();
+
+          state.loaded = true;
+          run(element);
+        });
+
+        if (observer) {
+          observer.observe(element);
         }
       });
     }
-    if (document.readyState === 'complete') init();
-    else window.addEventListener('load', init);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLottie, {once: true});
+    } else {
+      initLottie();
+    }
   })();
 </script>
 
