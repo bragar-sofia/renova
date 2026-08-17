@@ -1,44 +1,97 @@
 <%
 var active = (typeof active !== 'undefined') ? active : '';
 var navItems = [
-  { label: 'Послуги',        href: '/services', page: 'services', submenu: [
-    { label: 'Відновлення обладнання',   href: '/services#restoration' },
-    { label: 'Сервісне обслуговування',  href: '/services#service' },
-    { label: 'Постачання обладнання',    href: '/services#supply' }
-  ] },
-  { label: 'Наші проекти',   href: '/projects', page: 'projects' },
-  { label: 'Про нас',        href: base + '#about',    spy: 'about', sep: true },
-  { label: 'Часті запитання', href: base + '#faq',      spy: 'faq' },
-  { label: 'Контакти',       href: base + '#contacts', spy: 'contacts' }
+  {
+    label: 'Послуги',
+    href: '/services',
+    page: 'services',
+    submenu: [
+      {
+        label: 'Відновлення обладнання',
+        href: '/services#restoration',
+        spy: 'restoration'
+      },
+      {
+        label: 'Сервісне обслуговування',
+        href: '/services#service',
+        spy: 'service'
+      },
+      {
+        label: 'Постачання обладнання',
+        href: '/services#supply',
+        spy: 'supply'
+      }
+    ]
+  },
+  {
+    label: 'Наші проекти',
+    href: '/projects',
+    page: 'projects'
+  },
+  {
+    label: 'Про нас',
+    href: base + '#about',
+    spy: 'about',
+    sep: true
+  },
+  {
+    label: 'Часті запитання',
+    href: base + '#faq',
+    spy: 'faq'
+  },
+  {
+    label: 'Контакти',
+    href: base + '#contacts',
+    spy: 'contacts'
+  }
 ];
 %>
+
 <header class="sticky top-0 z-50 border-b-2 border-steel bg-white">
   <div class="mx-auto grid h-20 max-w-shell grid-cols-[1fr_auto_1fr] items-center gap-5 px-6 lg:px-8 xl:px-16 2xl:px-24">
+    <!-- Logo -->
     <a href="<%= base %>#home" aria-label="RENOVA — головна" class="justify-self-start">
       <img class="h-20 w-auto object-contain" src="/images/renova-brand.png" alt="RENOVA">
     </a>
 
+    <!-- Desktop navigation -->
     <nav class="hidden items-center gap-7 justify-self-center text-base font-display font-normal lg:flex" aria-label="Основна навігація">
       <% navItems.forEach(function (it) { %>
         <% if (it.submenu) { %>
           <div class="nav-has-menu group relative<%= it.sep ? ' lg:ml-6 xl:ml-8' : '' %>">
-            <a class="nav-link inline-flex items-center gap-1 text-navy transition-colors hover:text-steel<%= active === it.page ? ' is-active' : '' %>" href="<%= it.href %>"><%= it.label %><svg class="nav-caret h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></a>
+            <a class="nav-link inline-flex items-center gap-1 text-navy transition-colors hover:text-steel<%= active === it.page ? ' is-active' : '' %>" href="<%= it.href %>">
+              <%= it.label %>
+              <svg class="nav-caret h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+            </a>
+
             <div class="nav-menu invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4 opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100">
               <div class="min-w-[17rem] overflow-hidden rounded-2xl border border-steel/20 bg-white p-2 shadow-[0_20px_50px_rgba(7,49,78,0.16)]">
                 <% it.submenu.forEach(function (sub) { %>
-                  <a class="block whitespace-nowrap rounded-lg px-4 py-2.5 font-display text-base font-normal text-navy transition hover:bg-sky hover:text-navy" href="<%= sub.href %>"><%= sub.label %></a>
+                  <a class="nav-sub-link block whitespace-nowrap rounded-lg px-4 py-2.5 font-display text-base font-normal text-navy transition-colors" data-spy="<%= sub.spy %>" href="<%= sub.href %>">
+                    <%= sub.label %>
+                  </a>
                 <% }); %>
               </div>
             </div>
           </div>
         <% } else { %>
-          <a class="nav-link text-navy transition-colors hover:text-steel<%= it.sep ? ' lg:ml-6 xl:ml-8' : '' %><%= active === it.page ? ' is-active' : '' %>" data-spy="<%= it.spy %>" href="<%= it.href %>"><%= it.label %></a>
+          <a class="nav-link text-navy transition-colors hover:text-steel<%= it.sep ? ' lg:ml-6 xl:ml-8' : '' %><%= active === it.page ? ' is-active' : '' %>"
+            <% if (it.spy) { %>data-spy="<%= it.spy %>"<% } %>
+            href="<%= it.href %>"
+          >
+            <%= it.label %>
+          </a>
         <% } %>
       <% }); %>
     </nav>
 
+    <!-- Actions -->
     <div class="col-start-3 flex items-center gap-3 justify-self-end lg:gap-5">
-      <a href="<%= base %>#contacts" class="hidden whitespace-nowrap rounded-pill bg-navy px-4 py-2.5 text-sm font-display font-bold text-white transition hover:bg-[#0b527b] lg:inline-block xl:px-6 xl:py-3 xl:text-base">Замовити діагностику</a>
+      <a href="<%= base %>#contacts" class="hidden whitespace-nowrap rounded-pill bg-navy px-4 py-2.5 text-sm font-display font-bold text-white transition hover:bg-[#0b527b] lg:inline-block xl:px-6 xl:py-3 xl:text-base">
+        Замовити діагностику
+      </a>
 
       <button type="button" data-burger aria-label="Меню" aria-controls="mobile-menu" aria-expanded="false" class="relative h-11 w-11 shrink-0 lg:hidden">
         <span class="burger-line"></span>
@@ -48,19 +101,31 @@ var navItems = [
     </div>
   </div>
 
+
+  <!-- Mobile menu -->
   <div id="mobile-menu" data-mobile-menu class="menu-panel absolute inset-x-0 top-full border-b-2 border-steel bg-white shadow-lg lg:hidden">
     <nav class="mx-auto flex max-w-shell flex-col gap-1 px-6 py-4 font-display text-lg text-navy" aria-label="Мобільна навігація">
       <% navItems.forEach(function (it) { %>
-        <a class="mnav-link py-2<%= active === it.page ? ' is-active' : '' %>" data-spy="<%= it.spy %>" href="<%= it.href %>"><%= it.label %></a>
+        <a class="mnav-link py-2<%= active === it.page ? ' is-active' : '' %>" <% if (it.spy) { %>data-spy="<%= it.spy %>"<% } %>
+          href="<%= it.href %>"
+        >
+          <%= it.label %>
+        </a>
+
         <% if (it.submenu) { %>
           <div class="mb-1 flex flex-col border-l-2 border-steel/25 pl-3 text-base">
             <% it.submenu.forEach(function (sub) { %>
-              <a class="py-1.5 text-navy/80 transition hover:text-steel" href="<%= sub.href %>"><%= sub.label %></a>
+              <a class="mnav-link py-1.5 text-navy/80 transition-colors" data-spy="<%= sub.spy %>" href="<%= sub.href %>">
+                <%= sub.label %>
+              </a>
             <% }); %>
           </div>
         <% } %>
       <% }); %>
-      <a href="<%= base %>#contacts" class="mt-3 rounded-pill bg-navy px-6 py-3 text-center text-base font-bold text-white transition hover:bg-[#0b527b]">Замовити діагностику</a>
+
+      <a href="<%= base %>#contacts" class="mt-3 rounded-pill bg-navy px-6 py-3 text-center text-base font-bold text-white transition hover:bg-[#0b527b]">
+        Замовити діагностику
+      </a>
     </nav>
   </div>
 </header>
@@ -68,59 +133,112 @@ var navItems = [
 <script>
   (function () {
     var script = document.currentScript;
-    var start = function () {
-    var header = script.previousElementSibling;
-    while (header && header.tagName !== 'HEADER') header = header.previousElementSibling;
-    if (!header) return;
-    var burger = header.querySelector('[data-burger]');
-    var panel = header.querySelector('[data-mobile-menu]');
 
-    if (burger && panel) {
-      burger.addEventListener('click', function () {
-        var open = header.classList.toggle('menu-open');
-        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      });
-      panel.querySelectorAll('a').forEach(function (a) {
-        a.addEventListener('click', function () {
-          header.classList.remove('menu-open');
-          burger.setAttribute('aria-expanded', 'false');
-        });
-      });
-      document.addEventListener('click', function (e) {
-        if (header.classList.contains('menu-open') && !header.contains(e.target)) {
-          header.classList.remove('menu-open');
+    function initHeader() {
+      var header = script.previousElementSibling;
+
+      while (header && header.tagName !== 'HEADER') {
+        header = header.previousElementSibling;
+      }
+
+      if (!header) {
+        return;
+      }
+
+      /* ===== Mobile menu ===== */
+      var burger = header.querySelector('[data-burger]');
+      var panel = header.querySelector('[data-mobile-menu]');
+
+      function closeMenu() {
+        header.classList.remove('menu-open');
+
+        if (burger) {
           burger.setAttribute('aria-expanded', 'false');
         }
-      });
-    }
+      }
 
-    var links = Array.prototype.slice.call(header.querySelectorAll('[data-spy]'));
-    var byId = {};
-    links.forEach(function (l) { (byId[l.dataset.spy] = byId[l.dataset.spy] || []).push(l); });
-    var sections = Object.keys(byId)
-      .map(function (id) { return document.getElementById(id); })
-      .filter(Boolean);
-
-    if (sections.length) {
-      var setActive = function (id) {
-        links.forEach(function (l) { l.classList.toggle('is-active', l.dataset.spy === id); });
-      };
-      var current = null;
-      var onScroll = function () {
-        var line = window.innerHeight * 0.4;
-        var best = null, bestTop = -Infinity;
-        sections.forEach(function (s) {
-          var top = s.getBoundingClientRect().top;
-          if (top <= line && top > bestTop) { bestTop = top; best = s.id; }
+      if (burger && panel) {
+        burger.addEventListener('click', function () {
+          var open = header.classList.toggle('menu-open');
+          burger.setAttribute('aria-expanded', open ? 'true' : 'false');
         });
-        if (best !== current) { current = best; if (best) setActive(best); else links.forEach(function (l) { l.classList.remove('is-active'); }); }
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      onScroll();
+
+        panel.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', closeMenu);
+        });
+
+        document.addEventListener('click', function (event) {
+          if (header.classList.contains('menu-open') && !header.contains(event.target)) {
+            closeMenu();
+          }
+        });
+      }
+
+      /* ===== Navigation scroll spy ===== */
+      var links = Array.prototype.slice.call(header.querySelectorAll('[data-spy]'));
+      if (!links.length) {
+        return;
+      }
+
+      var linksById = {};
+      links.forEach(function (link) {
+        var id = link.dataset.spy;
+        if (!linksById[id]) {
+          linksById[id] = [];
+        }
+
+        linksById[id].push(link);
+      });
+
+      var sections = Object.keys(linksById)
+        .map(function (id) {
+          return document.getElementById(id);
+        })
+        .filter(Boolean);
+
+      if (!sections.length) {
+        return;
+      }
+
+      var current = null;
+
+      function setActive(id) {
+        links.forEach(function (link) {
+          link.classList.toggle('is-active', link.dataset.spy === id);
+        });
+      }
+
+      function updateNavigation() {
+        var line = window.innerHeight * 0.4;
+        var best = null;
+        var bestTop = -Infinity;
+
+        sections.forEach(function (section) {
+          var top = section.getBoundingClientRect().top;
+
+          if (top <= line && top > bestTop) {
+            bestTop = top;
+            best = section.id;
+          }
+        });
+
+        if (best === current) {
+          return;
+        }
+
+        current = best;
+        setActive(best);
+      }
+
+      window.addEventListener('scroll', updateNavigation, {passive: true});
+      window.addEventListener('resize', updateNavigation);
+      updateNavigation();
     }
-    };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
-    else start();
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeader, {once: true});
+    } else {
+      initHeader();
+    }
   })();
 </script>
