@@ -1,46 +1,207 @@
+<%
+var active = (typeof active !== 'undefined') ? active : '';
+
+var footerNav = [
+  {
+    label: 'Головна',
+    href: base,
+    page: 'home'
+  },
+  {
+    label: 'Послуги',
+    href: '/services',
+    page: 'services'
+  },
+  {
+    label: 'Наші проекти',
+    href: '/projects',
+    page: 'projects'
+  },
+  {
+    label: 'Про нас',
+    href: base + '#about',
+    spy: 'about'
+  },
+  {
+    label: 'Часті запитання',
+    href: base + '#faq',
+    spy: 'faq'
+  },
+  {
+    label: 'Контакти',
+    href: base + '#contacts',
+    spy: 'contacts'
+  }
+];
+%>
+
 <footer class="border-t-2 border-steel bg-white">
-  <div class="mx-auto flex w-fit max-w-shell flex-col items-start gap-10 px-6 py-12 font-display text-[clamp(0.85rem,0.6rem+0.4vw,1rem)] text-navy sm:w-auto sm:grid sm:grid-cols-[auto_auto] sm:items-center sm:justify-center sm:gap-x-[clamp(2.5rem,8vw,6rem)] sm:gap-y-[clamp(1.5rem,4vw,3rem)] md:flex md:flex-row md:items-center md:justify-between md:gap-4 md:px-8 md:py-14 lg:gap-8 xl:px-16 2xl:px-24">
-    <div class="flex flex-col items-start sm:justify-self-start">
-      <img class="h-auto w-[clamp(7rem,3rem+11vw,12rem)] object-contain" src="/images/renova-brand.png" alt="RENOVA">
-      <p class="-mt-2 max-w-[13rem] text-left text-xs leading-snug text-[#6c95a6] lg:text-sm">Повертаємо промислове обладнання до роботи</p>
-    </div>
-    <nav class="flex flex-col items-start gap-3 whitespace-nowrap sm:flex-row sm:justify-self-start sm:gap-x-6 lg:gap-x-16" aria-label="Навігація у футері">
-      <div class="flex flex-col items-start gap-y-3">
-        <a class="transition-colors hover:text-steel" href="<%= base %>">Головна</a>
-        <a class="transition-colors hover:text-steel" href="/services">Послуги</a>
-        <a class="transition-colors hover:text-steel" href="/projects">Наші проекти</a>
+  <div class="mx-auto max-w-7xl px-6 py-6 font-display text-navy md:px-8 lg:py-7">
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:items-center lg:gap-0">
+
+      <!-- Brand -->
+      <div class="flex flex-col items-start lg:pr-10">
+        <a
+          href="<%= base %>#home"
+          aria-label="RENOVA — головна"
+        >
+          <img
+            class="h-auto w-[clamp(7rem,8vw,9rem)] object-contain"
+            src="/images/renova-brand.png"
+            alt="RENOVA"
+          >
+        </a>
+
+        <p class="mt-1 max-w-[13rem] text-xs leading-snug text-[#6c95a6]">
+          Повертаємо промислове обладнання до роботи
+        </p>
       </div>
-      <div class="flex flex-col items-start gap-y-3">
-        <a class="transition-colors hover:text-steel" href="<%= base %>#about">Про нас</a>
-        <a class="transition-colors hover:text-steel" href="<%= base %>#faq">Часті запитання</a>
-        <a class="transition-colors hover:text-steel" href="<%= base %>#contacts">Зв'язатись</a>
+
+
+      <!-- Navigation -->
+      <nav
+        class="grid grid-cols-2 gap-x-10 gap-y-2 text-sm lg:border-l lg:border-steel/20 lg:px-10 lg:text-base"
+        aria-label="Навігація у футері"
+      >
+
+        <div class="flex flex-col items-start gap-2.5">
+          <% footerNav.slice(0, 3).forEach(function (item) { %>
+            <a
+              class="nav-link<%= active === item.page ? ' is-active' : '' %>"
+              href="<%= item.href %>"
+            >
+              <%= item.label %>
+            </a>
+          <% }); %>
+        </div>
+
+        <div class="flex flex-col items-start gap-2.5">
+          <% footerNav.slice(3).forEach(function (item) { %>
+            <a
+              class="nav-link"
+              data-spy="<%= item.spy %>"
+              href="<%= item.href %>"
+            >
+              <%= item.label %>
+            </a>
+          <% }); %>
+        </div>
+
+      </nav>
+
+
+      <!-- Contacts -->
+      <div
+        class="flex min-w-0 flex-col items-start gap-3 text-sm sm:col-span-2 lg:col-span-1 lg:border-l lg:border-steel/20 lg:pl-10 lg:text-base"
+      >
+
+        <a
+          class="flex items-center gap-3 whitespace-nowrap transition-colors hover:text-steel"
+          href="tel:+380756787784"
+        >
+          <span class="relative flex h-9 w-9 shrink-0 items-center justify-center">
+            <img
+              class="absolute inset-0 h-full w-full object-contain"
+              src="/images/icons/icon-circle-bg.svg"
+              alt=""
+            >
+
+            <img
+              class="relative h-5 w-5 object-contain"
+              src="/images/icons/icon-phone-footer.png"
+              alt=""
+            >
+          </span>
+
+          <span>+38 (075) 678 77 84</span>
+        </a>
+
+
+        <a
+          class="flex min-w-0 items-center gap-3 transition-colors hover:text-steel"
+          href="mailto:commerce.renova@gmail.com"
+        >
+          <span class="relative flex h-9 w-9 shrink-0 items-center justify-center">
+            <img
+              class="absolute inset-0 h-full w-full object-contain"
+              src="/images/icons/icon-circle-bg.svg"
+              alt=""
+            >
+
+            <img
+              class="relative h-5 w-5 object-contain"
+              src="/images/icons/icon-at-sign-footer.png"
+              alt=""
+            >
+          </span>
+
+          <span>
+            commerce.renova@gmail.com
+          </span>
+        </a>
+
       </div>
-    </nav>
-    <div class="flex flex-col items-start gap-y-4 sm:justify-self-start lg:gap-y-6">
-      <p class="flex items-center gap-3 whitespace-nowrap"><span class="relative flex h-10 w-10 shrink-0 items-center justify-center"><img class="absolute inset-0 h-full w-full object-contain" src="/images/icons/icon-circle-bg.svg" alt=""><img class="relative h-6 w-6 object-contain" src="/images/icons/icon-phone-footer.png" alt=""></span>+38 (075) 678 77 84</p>
-      <p class="flex items-center gap-3 whitespace-nowrap"><span class="relative flex h-10 w-10 shrink-0 items-center justify-center"><img class="absolute inset-0 h-full w-full object-contain" src="/images/icons/icon-circle-bg.svg" alt=""><img class="relative h-6 w-6 object-contain" src="/images/icons/icon-at-sign-footer.png" alt=""></span>commerce.renova@gmail.com</p>
+
     </div>
-    <div class="grid grid-cols-4 gap-4 justify-self-center sm:justify-self-start md:grid-cols-2 md:justify-self-auto">
-      <a class="transition-opacity hover:opacity-80" href="#" aria-label="Instagram"><img class="h-10 w-10" src="/images/icons/icon-social-instagram.svg" alt="Instagram"></a>
-      <a class="transition-opacity hover:opacity-80" href="#" aria-label="Telegram"><img class="h-10 w-10" src="/images/icons/icon-social-telegram.svg" alt="Telegram"></a>
-      <a class="transition-opacity hover:opacity-80" href="#" aria-label="Viber"><img class="h-10 w-10" src="/images/icons/icon-social-viber.svg" alt="Viber"></a>
-      <a class="transition-opacity hover:opacity-80" href="#" aria-label="WhatsApp"><img class="h-10 w-10" src="/images/icons/icon-social-whatsapp.svg" alt="WhatsApp"></a>
-    </div>
+
   </div>
 </footer>
 
-<button type="button" data-to-top aria-label="Догори" class="to-top fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-lg transition hover:bg-[#0b527b] md:hidden">
-  <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+
+<button
+  type="button"
+  data-to-top
+  aria-label="Догори"
+  class="to-top fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-lg transition hover:bg-[#0b527b] md:hidden"
+>
+  <svg
+    viewBox="0 0 24 24"
+    class="h-5 w-5"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M6 15l6-6 6 6"></path>
+  </svg>
 </button>
+
+
 <script>
   (function () {
-    var btn = document.querySelector('[data-to-top]');
-    if (!btn) return;
-    var toggle = function () {
-      btn.classList.toggle('is-visible', (window.scrollY || document.documentElement.scrollTop) > 400);
-    };
-    window.addEventListener('scroll', toggle, { passive: true });
-    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-    toggle();
+    var button = document.querySelector('[data-to-top]');
+
+    if (!button) {
+      return;
+    }
+
+    function update() {
+      button.classList.toggle(
+        'is-visible',
+        window.scrollY > 400
+      );
+    }
+
+    button.addEventListener('click', function () {
+      var reduceMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? 'auto' : 'smooth'
+      });
+    });
+
+    window.addEventListener(
+      'scroll',
+      update,
+      { passive: true }
+    );
+
+    update();
   })();
 </script>

@@ -20,7 +20,7 @@
 <body>
 <%- include('../partials/site-header', { base: '/', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
 <%- body %>
-<%- include('../partials/site-footer', { base: '' }) %>
+<%- include('../partials/site-footer', { base: '/', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
 
 <!-- TEMPLATES -->
 <!-- TEMPLATES END -->
