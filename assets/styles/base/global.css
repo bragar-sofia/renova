@@ -1,0 +1,5 @@
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  --reveal-ease: cubic-bezier(.16, 1, .3, 1);
+}

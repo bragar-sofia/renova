@@ -1,0 +1,144 @@
+/* ===== Project stages ===== */
+#stages-details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+#stages-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+#stages-details .stages-chevron {
+  transform: rotate(0deg);
+}
+
+#stages-details.is-expanded .stages-chevron {
+  transform: rotate(180deg);
+}
+
+/* ===== Project stages accordion ===== */
+#stages-details [data-stages-content] {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+  opacity 0.4s ease;
+  will-change: grid-template-rows;
+}
+
+#stages-details.is-expanded [data-stages-content] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+#stages-details [data-stages-content] > .stages-inner {
+  overflow: hidden;
+  min-height: 0;
+  transform: translateY(-8px);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#stages-details.is-expanded [data-stages-content] > .stages-inner {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #stages-details [data-stages-content],
+  #stages-details [data-stages-content] > .stages-inner {
+    transition: none;
+  }
+}
+
+/* ===== Project before / after viewer ===== */
+.ba-stage {
+  position: relative;
+  width: min(92vw, 1100px);
+  aspect-ratio: 3 / 2;
+  max-height: 82vh;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: #0b0b0b;
+  touch-action: none;
+}
+
+.ba-stage img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* ===== Before / after image reveal ===== */
+.ba-stage .ba-before {
+  clip-path: inset(0 calc(100% - var(--ba-pos, 50%)) 0 0);
+}
+
+/* ===== Before / after divider ===== */
+.ba-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--ba-pos, 50%);
+  width: 3px;
+  background: #eff6f9;
+  transform: translateX(-1.5px);
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(7, 49, 78, 0.18);
+}
+
+/* ===== Before / after handle ===== */
+.ba-handle {
+  position: absolute;
+  top: 50%;
+  left: var(--ba-pos, 50%);
+  transform: translate(-50%, -50%);
+  height: 44px;
+  width: 44px;
+  border-radius: 9999px;
+  background: #012a4a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 3px #eff6f9, 0 2px 10px rgba(7, 49, 78, 0.45);
+  cursor: ew-resize;
+}
+
+.ba-stage.ba-dragging .ba-handle {
+  cursor: grabbing;
+}
+
+/* ===== Before / after labels ===== */
+.ba-tag {
+  position: absolute;
+  top: 14px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(1, 42, 74, 0.72);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.ba-tag-before {
+  left: 14px;
+}
+
+.ba-tag-after {
+  right: 14px;
+}
+
+/* ===== Single image mode ===== */
+.ba-stage.ba-view {
+  cursor: default;
+}
+
+.ba-stage.ba-view .ba-divider,
+.ba-stage.ba-view .ba-handle,
+.ba-stage.ba-view .ba-tag {
+  display: none;
+}

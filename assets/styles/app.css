@@ -1,0 +1,16 @@
+/* Base */
+@import "./base/fonts.css";
+@import "./base/global.css";
+@import "./base/motion.css";
+
+/* Components */
+@import "./components/header.css";
+@import "./components/footer.css";
+@import "./components/faq.css";
+@import "./components/project-card.css";
+
+/* Pages */
+@import "./pages/home.css";
+@import "./pages/services.css";
+@import "./pages/projects.css";
+@import "./pages/project.css";

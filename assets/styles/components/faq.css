@@ -1,0 +1,32 @@
+/* ===== FAQ accordion ===== */
+#faq summary::-webkit-details-marker {
+  display: none;
+}
+
+#faq .faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+  opacity 0.34s ease;
+}
+
+#faq .faq-item.is-open .faq-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+#faq .faq-answer > .faq-answer-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+#faq .faq-item.is-open .faq-chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #faq .faq-answer {
+    transition: none;
+  }
+}

@@ -1,0 +1,312 @@
+/* ===== Service sections ===== */
+.fade-left {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 28%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 28%);
+}
+
+.fade-right {
+  -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+  mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+}
+
+.service-section {
+  position: relative;
+}
+
+.service-sticky-heading {
+  background: #eff6f9;
+}
+
+.service-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: #012a4a;
+  color: #fff;
+}
+
+/* ===== Service images ===== */
+.service-image {
+  isolation: isolate;
+  background: #e5f1f7;
+}
+
+.service-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.11;
+  background-image: linear-gradient(rgba(43, 109, 151, 0.52) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(43, 109, 151, 0.52) 1px, transparent 1px);
+  background-size: 38px 38px;
+  mix-blend-mode: multiply;
+}
+
+.service-image:has(.fade-left)::after {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 28%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 28%);
+}
+
+.service-image:has(.fade-right)::after {
+  -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+  mask-image: linear-gradient(to left, transparent 0%, #000 28%);
+}
+
+.service-image img {
+  z-index: 0;
+}
+
+/* ===== Service cards ===== */
+.service-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  box-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
+}
+
+.service-card::after {
+  content: "";
+  position: absolute;
+  right: -1rem;
+  bottom: -1rem;
+  width: 8rem;
+  height: 8rem;
+  pointer-events: none;
+  opacity: 0.14;
+  background-image: radial-gradient(circle, rgba(43, 109, 151, 0.75) 1.3px, transparent 1.5px);
+  background-size: 11px 11px;
+  -webkit-mask-image: radial-gradient(circle at bottom right, #000 0%, transparent 72%);
+  mask-image: radial-gradient(circle at bottom right, #000 0%, transparent 72%);
+}
+
+/* ===== Check lists ===== */
+.check-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.check-list li {
+  position: relative;
+  padding-left: 1.1rem;
+  line-height: 1.45;
+}
+
+.check-list li::before {
+  content: "";
+  position: absolute;
+  top: 0.62rem;
+  left: 0.15rem;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: #527b8d;
+}
+
+
+/* ===== Services intro ===== */
+.services-intro {
+  isolation: isolate;
+}
+
+.services-intro::after {
+  content: "";
+  position: absolute;
+  top: -12rem;
+  right: -10rem;
+  width: 34rem;
+  height: 34rem;
+  border: 1px solid rgba(43, 109, 151, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.services-intro::before {
+  content: "";
+  position: absolute;
+  top: -5rem;
+  right: -3rem;
+  width: 22rem;
+  height: 22rem;
+  border: 1px solid rgba(43, 109, 151, 0.16);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.services-intro-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+
+  background-image: linear-gradient(
+      rgba(43, 109, 151, 0.55) 1px,
+      transparent 1px
+  ),
+  linear-gradient(
+      90deg,
+      rgba(43, 109, 151, 0.55) 1px,
+      transparent 1px
+  );
+
+  background-size: 42px 42px;
+
+  -webkit-mask-image: linear-gradient(
+      to left,
+      #000 0%,
+      rgba(0, 0, 0, 0.75) 40%,
+      transparent 75%
+  );
+
+  mask-image: linear-gradient(
+      to left,
+      #000 0%,
+      rgba(0, 0, 0, 0.75) 40%,
+      transparent 75%
+  );
+}
+
+/* ===== Service responsive ===== */
+@media (max-width: 767px) {
+  .service-image::after {
+    opacity: 0.07;
+  }
+
+  .services-intro::before {
+    top: -6rem;
+    right: -8rem;
+  }
+
+  .services-intro::after {
+    display: none;
+  }
+
+  .services-intro-grid {
+    opacity: 0.055;
+  }
+}
+
+/* ===== Services side navigation ===== */
+.svc-nav {
+  position: fixed;
+  right: 1rem;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  width: 4.25rem;
+  padding: 14px 12px;
+  background: rgba(239, 246, 249, 0.8);
+  border-radius: 1.25rem;
+}
+
+@media (min-width: 1280px) {
+  .svc-nav {
+    display: flex;
+  }
+}
+
+.svc-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 15px;
+}
+
+.svc-dash {
+  display: block;
+  border-radius: 2px;
+  background: #9db6c2;
+  transition: width 0.28s cubic-bezier(.16, 1, .3, 1), background-color 0.24s ease;
+}
+
+.svc-nav-section .svc-dash {
+  width: 1.75rem;
+  height: 3px;
+  background: #6c95a6;
+}
+
+.svc-nav-sub .svc-dash {
+  width: 1rem;
+  height: 2px;
+}
+
+.svc-nav-item:hover .svc-dash {
+  width: 2.6rem;
+  background: #012a4a;
+}
+
+.svc-nav-item.is-active .svc-dash {
+  background: #012a4a;
+}
+
+.svc-nav-section.is-active .svc-dash {
+  width: 2.25rem;
+}
+
+.svc-nav-sub.is-active .svc-dash {
+  width: 1.5rem;
+}
+
+/* ===== Services side navigation labels ===== */
+.svc-label {
+  position: absolute;
+  right: calc(100% + 0.75rem);
+  left: auto;
+  white-space: nowrap;
+  background: #eff6f9;
+  color: #012a4a;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  opacity: 0;
+  transform: translateX(6px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border: 1px solid rgba(82, 123, 141, 0.2);
+}
+
+.svc-nav-item:hover .svc-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.svc-nav-section .svc-label {
+  font-family: 'Geologica', 'Arial', sans-serif;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.svc-nav-sub .svc-label {
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-dash, .svc-label {
+    transition: none;
+  }
+}
+
+/* ===== Services headings ===== */
+@media (min-width: 1024px) {
+  #services h2.scroll-mt-28,
+  #services h3 {
+    white-space: nowrap;
+  }
+}
+
+#services #service-prevent,
+#services #supply-catalog,
+#services .svc-repair-title {
+  white-space: normal;
+}
