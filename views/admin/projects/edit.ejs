@@ -11,7 +11,6 @@ const formatDate = (value) => {
   }
 
   const date = new Date(value);
-
   if (Number.isNaN(date.getTime())) {
     return '—';
   }
@@ -26,77 +25,34 @@ const formatDate = (value) => {
 };
 
 const getStageLabel = (key) => {
-  return (
-    projectStageLabels[key] ||
-    key ||
-    'Не визначено'
-  );
+  return (projectStageLabels[key] || key || 'Не визначено');
 };
 
-const stageHistory = Array.isArray(project.stages)
-  ? project.stages
-  : [];
-
+const stageHistory = Array.isArray(project.stages) ? project.stages : [];
 const stageHistoryMap = {};
-
 stageHistory.forEach((stage) => {
   if (stage && stage.key) {
     stageHistoryMap[stage.key] = stage;
   }
 });
 
-const formErrors = Array.isArray(errors)
-  ? errors
-  : [];
-
-const successMessage =
-  successMessages[success] || '';
-
-const progress =
-  currentStageIndex >= 0 && projectStages.length > 0
-    ? Math.round(
-      ((currentStageIndex + 1) / projectStages.length) * 100
-    )
-    : 0;
-
-const isCompleted =
-  project.currentStage === 'completed';
-
-const beforePhotos =
-  project.photos &&
-  Array.isArray(project.photos.before)
-    ? project.photos.before
-    : [];
-
-const afterPhotos =
-  project.photos &&
-  Array.isArray(project.photos.after)
-    ? project.photos.after
-    : [];
+const formErrors = Array.isArray(errors) ? errors : [];
+const successMessage = successMessages[success] || '';
+const progress = currentStageIndex >= 0 && projectStages.length > 0 ? Math.round(((currentStageIndex + 1) / projectStages.length) * 100) : 0;
+const isCompleted = project.currentStage === 'completed';
+const beforePhotos = project.photos && Array.isArray(project.photos.before) ? project.photos.before : [];
+const afterPhotos = project.photos && Array.isArray(project.photos.after) ? project.photos.after : [];
 %>
 
 <section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
 
-    <nav
-      class="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500"
-      aria-label="Навігація"
-    >
-      <a
-        href="/admin/projects"
-        class="transition hover:text-navy"
-      >
+    <nav class="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500" aria-label="Навігація">
+      <a href="/admin/projects" class="transition hover:text-navy">
         Проєкти та заявки
       </a>
 
-      <svg
-        class="h-4 w-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        aria-hidden="true"
-      >
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="m9 18 6-6-6-6"></path>
       </svg>
 
@@ -105,18 +61,14 @@ const afterPhotos =
       </span>
     </nav>
 
-    <div
-      class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between"
-    >
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
       <div>
         <div class="flex flex-wrap items-center gap-3">
           <h1 class="text-2xl font-semibold text-slate-900 sm:text-3xl">
             Редагування заявки
           </h1>
 
-          <span
-            class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 font-mono text-sm font-semibold text-slate-700"
-          >
+          <span class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 font-mono text-sm font-semibold text-slate-700">
             №<%= project.requestNumber %>
           </span>
         </div>
@@ -127,42 +79,19 @@ const afterPhotos =
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <a
-          href="/admin/projects"
-          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
-        >
-          <svg
-            class="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
+        <a href="/admin/projects" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="m15 18-6-6 6-6"></path>
           </svg>
-
           До списку
         </a>
 
-        <button
-          type="submit"
-          form="project-edit-form"
-          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
-        >
-          <svg
-            class="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
+        <button type="submit" form="project-edit-form" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M5 4h12l2 2v14H5z"></path>
             <path d="M8 4v6h8V4"></path>
             <path d="M8 20v-6h8v6"></path>
           </svg>
-
           Зберегти зміни
         </button>
 
@@ -171,39 +100,18 @@ const afterPhotos =
     </div>
 
     <% if (successMessage) { %>
-      <div
-        class="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
-        role="status"
-      >
-        <svg
-          class="mt-0.5 h-5 w-5 shrink-0"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
+      <div class="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
+        <svg class="mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M20 6 9 17l-5-5"></path>
         </svg>
-
         <span><%= successMessage %></span>
       </div>
     <% } %>
 
     <% if (formErrors.length > 0) { %>
-      <div
-        class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800"
-        role="alert"
-      >
+      <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800" role="alert">
         <div class="flex items-start gap-3">
-          <svg
-            class="mt-0.5 h-5 w-5 shrink-0"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
+          <svg class="mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="12" cy="12" r="9"></circle>
             <path d="M12 8v5"></path>
             <path d="M12 17h.01"></path>
@@ -225,16 +133,8 @@ const afterPhotos =
     <% } %>
 
     <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
-
-      <form
-        id="project-edit-form"
-        action="/admin/projects/<%= project.id %>"
-        method="post"
-        class="space-y-6"
-      >
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+      <form id="project-edit-form" action="/admin/projects/<%= project.id %>" method="post" class="space-y-6">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div>
             <h2 class="text-lg font-semibold text-slate-900">
               Основна інформація
@@ -247,72 +147,37 @@ const afterPhotos =
 
           <div class="mt-6 space-y-5">
             <div>
-              <label
-                for="title"
-                class="block text-sm font-semibold text-slate-700"
-              >
+              <label for="title" class="block text-sm font-semibold text-slate-700">
                 Заголовок проєкту
                 <span class="text-red-500">*</span>
               </label>
 
-              <input
-                id="title"
-                type="text"
-                name="title"
-                value="<%= project.title || '' %>"
-                required
-                class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-                placeholder="Наприклад: Капітальний ремонт токарного верстата 16К20"
-              >
+              <input id="title" type="text" name="title" value="<%= project.title || '' %>" required class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Наприклад: Капітальний ремонт токарного верстата 16К20">
             </div>
 
             <div class="grid gap-5 md:grid-cols-2">
               <div>
-                <label
-                  for="equipment"
-                  class="block text-sm font-semibold text-slate-700"
-                >
+                <label for="equipment" class="block text-sm font-semibold text-slate-700">
                   Обладнання
                   <span class="text-red-500">*</span>
                 </label>
 
-                <input
-                  id="equipment"
-                  type="text"
-                  name="equipment"
-                  value="<%= project.equipment || '' %>"
-                  required
-                  class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-                  placeholder="Тип, виробник і модель обладнання"
-                >
+                <input id="equipment" type="text" name="equipment" value="<%= project.equipment || '' %>" required class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Тип, виробник і модель обладнання">
               </div>
 
               <div>
-                <label
-                  for="repairType"
-                  class="block text-sm font-semibold text-slate-700"
-                >
+                <label for="repairType" class="block text-sm font-semibold text-slate-700">
                   Вид ремонту
                   <span class="text-red-500">*</span>
                 </label>
 
-                <input
-                  id="repairType"
-                  type="text"
-                  name="repairType"
-                  value="<%= project.repairType || '' %>"
-                  required
-                  class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-                  placeholder="Наприклад: Капітальний ремонт"
-                >
+                <input id="repairType" type="text" name="repairType" value="<%= project.repairType || '' %>" required class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Наприклад: Капітальний ремонт">
               </div>
             </div>
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 class="text-lg font-semibold text-slate-900">
@@ -324,31 +189,16 @@ const afterPhotos =
               </p>
             </div>
 
-            <span
-              class="<%= isCompleted
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                : 'border-sky-200 bg-sky-50 text-sky-700'
-              %> inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold"
-            >
+            <span class="<%= isCompleted ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-sky-200 bg-sky-50 text-sky-700' %> inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold">
               <%= getStageLabel(project.currentStage) %>
             </span>
           </div>
 
           <div class="mt-5">
-            <label
-              for="currentStageNote"
-              class="block text-sm font-semibold text-slate-700"
-            >
+            <label for="currentStageNote" class="block text-sm font-semibold text-slate-700">
               Коментар до поточного етапу
             </label>
-
-            <textarea
-              id="currentStageNote"
-              name="currentStageNote"
-              rows="4"
-              class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-              placeholder="Опишіть, що зараз відбувається з обладнанням"
-            ><%= project.currentStageNote || '' %></textarea>
+            <textarea id="currentStageNote" name="currentStageNote" rows="4" class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Опишіть, що зараз відбувається з обладнанням"><%= project.currentStageNote || '' %></textarea>
           </div>
 
           <div class="mt-5">
@@ -362,24 +212,13 @@ const afterPhotos =
               </span>
             </div>
 
-            <div
-              class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200"
-              role="progressbar"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              aria-valuenow="<%= progress %>"
-            >
-              <div
-                class="<%= isCompleted ? 'bg-emerald-500' : 'bg-navy' %> h-full rounded-full transition-all"
-                style="width: <%= progress %>%"
-              ></div>
+            <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= progress %>">
+              <div class="<%= isCompleted ? 'bg-emerald-500' : 'bg-navy' %> h-full rounded-full transition-all" style="width: <%= progress %>%"></div>
             </div>
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div>
             <h2 class="text-lg font-semibold text-slate-900">
               Опис проєкту
@@ -391,47 +230,21 @@ const afterPhotos =
           </div>
 
           <div class="mt-5">
-            <label
-              for="description"
-              class="sr-only"
-            >
+            <label for="description" class="sr-only">
               Опис проєкту
             </label>
-
-            <textarea
-              id="description"
-              name="description"
-              rows="18"
-              class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"
-            ><%= project.description || '' %></textarea>
+            <textarea id="description" name="description" rows="18" class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"><%= project.description || '' %></textarea>
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <h2 class="text-lg font-semibold text-slate-900">
             Відображення на сайті
           </h2>
 
-          <input
-            type="hidden"
-            name="isVisible"
-            value="false"
-          >
-
-          <label
-            for="isVisible"
-            class="mt-5 flex cursor-pointer items-start gap-4 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50"
-          >
-            <input
-              id="isVisible"
-              type="checkbox"
-              name="isVisible"
-              value="true"
-              <%= project.isVisible ? 'checked' : '' %>
-              class="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-navy focus:ring-navy"
-            >
+          <input type="hidden" name="isVisible" value="false">
+          <label for="isVisible" class="mt-5 flex cursor-pointer items-start gap-4 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50">
+            <input id="isVisible" type="checkbox" name="isVisible" value="true"<%= project.isVisible ? 'checked' : '' %>class="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-navy focus:ring-navy">
 
             <span>
               <span class="block text-sm font-semibold text-slate-900">
@@ -446,42 +259,23 @@ const afterPhotos =
           </label>
         </div>
 
-        <div
-          class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <a
-            href="/admin/projects"
-            class="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-          >
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <a href="/admin/projects" class="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
             Скасувати
           </a>
 
-          <button
-            type="submit"
-            class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
-          >
-            <svg
-              class="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
+          <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M5 4h12l2 2v14H5z"></path>
               <path d="M8 4v6h8V4"></path>
             </svg>
-
             Зберегти зміни
           </button>
         </div>
       </form>
 
       <aside class="space-y-6">
-
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 class="text-base font-semibold text-slate-900">
             Інформація про заявку
           </h2>
@@ -524,16 +318,12 @@ const afterPhotos =
 
               <dd>
                 <% if (project.isVisible) { %>
-                  <span
-                    class="inline-flex items-center gap-1.5 font-medium text-emerald-700"
-                  >
+                  <span class="inline-flex items-center gap-1.5 font-medium text-emerald-700">
                     <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
                     Відображається
                   </span>
                 <% } else { %>
-                  <span
-                    class="inline-flex items-center gap-1.5 font-medium text-slate-500"
-                  >
+                  <span class="inline-flex items-center gap-1.5 font-medium text-slate-500">
                     <span class="h-2 w-2 rounded-full bg-slate-400"></span>
                     Приховано
                   </span>
@@ -563,25 +353,11 @@ const afterPhotos =
           </dl>
         </div>
 
-        <div
-          class="rounded-2xl border <%= isCompleted
-            ? 'border-emerald-200 bg-emerald-50'
-            : 'border-slate-200 bg-white'
-          %> p-5 shadow-sm"
-        >
+        <div class="rounded-2xl border <%= isCompleted ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-white' %> p-5 shadow-sm">
           <% if (isCompleted) { %>
             <div class="flex items-start gap-3">
-              <div
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
-              >
-                <svg
-                  class="h-5 w-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M20 6 9 17l-5-5"></path>
                 </svg>
               </div>
@@ -611,46 +387,21 @@ const afterPhotos =
               </p>
             </div>
 
-            <form
-              action="/admin/projects/<%= project.id %>/advance-stage"
-              method="post"
-              class="mt-4"
-              data-advance-stage-form
-            >
-              <label
-                for="nextStageNote"
-                class="block text-sm font-semibold text-slate-700"
-              >
+            <form action="/admin/projects/<%= project.id %>/advance-stage" method="post" class="mt-4" data-advance-stage-form>
+              <label for="nextStageNote" class="block text-sm font-semibold text-slate-700">
                 Коментар до нового етапу
               </label>
 
-              <textarea
-                id="nextStageNote"
-                name="nextStageNote"
-                rows="4"
-                class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm leading-5 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"
-                placeholder="Необов’язковий коментар"
-              ></textarea>
+              <textarea id="nextStageNote" name="nextStageNote" rows="4" class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm leading-5 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Необов’язковий коментар"></textarea>
 
               <p class="mt-3 text-xs leading-5 text-slate-500">
                 Перед переходом збережіть зміни основної форми,
                 якщо редагували коментар поточного етапу.
               </p>
 
-              <button
-                type="submit"
-                class="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b527b]"
-              >
+              <button type="submit" class="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b527b]">
                 Перейти до етапу
-
-                <svg
-                  class="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M5 12h14"></path>
                   <path d="m13 5 7 7-7 7"></path>
                 </svg>
@@ -659,9 +410,7 @@ const afterPhotos =
           <% } %>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-4">
             <h2 class="text-base font-semibold text-slate-900">
               Хронологія
@@ -679,43 +428,17 @@ const afterPhotos =
                 const isCurrent = stageKey === project.currentStage;
                 const isReached = index <= currentStageIndex;
                 const isLast = index === projectStages.length - 1;
-
-                const stageNote = isCurrent
-                  ? project.currentStageNote
-                  : stage && stage.note
-                    ? stage.note
-                    : '';
+                const stageNote = isCurrent ? project.currentStageNote : stage && stage.note ? stage.note : '';
               %>
 
               <li class="relative flex gap-4 <%= !isLast ? 'pb-6' : '' %>">
                 <% if (!isLast) { %>
-                  <span
-                    class="absolute left-[15px] top-8 h-[calc(100%-1rem)] w-px <%= index < currentStageIndex
-                      ? 'bg-navy'
-                      : 'bg-slate-200'
-                    %>"
-                    aria-hidden="true"
-                  ></span>
+                  <span class="absolute left-[15px] top-8 h-[calc(100%-1rem)] w-px <%= index < currentStageIndex ? 'bg-navy' : 'bg-slate-200' %>" aria-hidden="true"></span>
                 <% } %>
 
-                <span
-                  class="<%=
-                    isCurrent
-                      ? 'border-navy bg-navy text-white'
-                      : isReached
-                        ? 'border-navy bg-white text-navy'
-                        : 'border-slate-300 bg-white text-slate-300'
-                  %> relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2"
-                >
+                <span class="<%=isCurrent? 'border-navy bg-navy text-white': isReached ? 'border-navy bg-white text-navy' : 'border-slate-300 bg-white text-slate-300' %> relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2">
                   <% if (isReached && !isCurrent) { %>
-                    <svg
-                      class="h-4 w-4"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      aria-hidden="true"
-                    >
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                       <path d="M20 6 9 17l-5-5"></path>
                     </svg>
                   <% } else { %>
@@ -727,29 +450,19 @@ const afterPhotos =
 
                 <div class="min-w-0 pt-1">
                   <div class="flex flex-wrap items-center gap-2">
-                    <p
-                      class="<%= isReached
-                        ? 'text-slate-900'
-                        : 'text-slate-400'
-                      %> text-sm font-semibold"
-                    >
+                    <p class="<%= isReached ? 'text-slate-900' : 'text-slate-400' %> text-sm font-semibold">
                       <%= getStageLabel(stageKey) %>
                     </p>
 
                     <% if (isCurrent) { %>
-                      <span
-                        class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700"
-                      >
+                      <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700">
                         Поточний
                       </span>
                     <% } %>
                   </div>
 
                   <% if (stage && stage.enteredAt) { %>
-                    <time
-                      class="mt-1 block text-xs text-slate-500"
-                      datetime="<%= new Date(stage.enteredAt).toISOString() %>"
-                    >
+                    <time class="mt-1 block text-xs text-slate-500" datetime="<%= new Date(stage.enteredAt).toISOString() %>">
                       <%= formatDate(stage.enteredAt) %>
                     </time>
                   <% } %>
@@ -781,16 +494,10 @@ const afterPhotos =
         });
     }
 
-    const advanceStageForm = document.querySelector(
-      '[data-advance-stage-form]'
-    );
-
+    const advanceStageForm = document.querySelector('[data-advance-stage-form]');
     if (advanceStageForm) {
       advanceStageForm.addEventListener('submit', function (event) {
-        const confirmed = window.confirm(
-          'Перевести проєкт на наступний етап? Повернення до попереднього етапу поки не передбачено.'
-        );
-
+        const confirmed = window.confirm('Перевести проєкт на наступний етап? Повернення до попереднього етапу поки не передбачено.');
         if (!confirmed) {
           event.preventDefault();
         }

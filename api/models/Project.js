@@ -1,103 +1,6 @@
 const crypto = require('crypto');
 const { keys: PROJECT_STAGES } = require('../../lib/projectStages');
-
-// ===== Helpers =====
-async function generateUniqueRequestNumber() {
-  const Project = sails.models.project;
-  const maxAttempts = 30;
-
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    const requestNumber = crypto.randomInt(100000, 1000000).toString();
-
-    const existingProject = await Project.findOne({ requestNumber })
-
-    if (!existingProject) {
-      return requestNumber;
-    }
-  }
-
-  throw new Error(
-    'Не вдалося згенерувати унікальний номер заявки.'
-  );
-}
-
-function normalizePhotos(photos) {
-  const source =
-    photos &&
-    typeof photos === 'object' &&
-    !Array.isArray(photos)
-      ? photos
-      : {};
-
-  return {
-    before: Array.isArray(source.before)
-      ? source.before
-      : [],
-
-    after: Array.isArray(source.after)
-      ? source.after
-      : []
-  };
-}
-
-function isValidTimestamp(value) {
-  return (
-    Number.isFinite(value) &&
-    value > 0
-  );
-}
-
-function getRequestCreatedAtFromStages(stages) {
-  if (!Array.isArray(stages)) {
-    return null;
-  }
-
-  const requestEntry = stages.find((stage) => {
-    return (
-      stage &&
-      stage.key === PROJECT_STAGES[0] &&
-      isValidTimestamp(stage.enteredAt)
-    );
-  });
-
-  if (requestEntry) {
-    return requestEntry.enteredAt;
-  }
-
-  const firstEntry = stages.find((stage) => {
-    return (
-      stage &&
-      isValidTimestamp(stage.enteredAt)
-    );
-  });
-
-  return firstEntry
-    ? firstEntry.enteredAt
-    : null;
-}
-
-function getLastActivityAtFromStages(stages) {
-  if (!Array.isArray(stages)) {
-    return null;
-  }
-
-  for (
-    let index = stages.length - 1;
-    index >= 0;
-    index -= 1
-  ) {
-    const stage = stages[index];
-
-    if (
-      stage &&
-      isValidTimestamp(stage.enteredAt)
-    ) {
-      return stage.enteredAt;
-    }
-  }
-
-  return null;
-}
+const { generateUniqueRequestNumber, normalizePhotos, isValidTimestamp, getRequestCreatedAtFromStages, getLastActivityAtFromStages } = require('../../lib/utils');
 
 module.exports = {
   // ===== Attributes =====
@@ -172,28 +75,20 @@ module.exports = {
       const now = Date.now();
 
       if (!valuesToSet.requestNumber) {
-        valuesToSet.requestNumber =
-          await generateUniqueRequestNumber();
+        valuesToSet.requestNumber = await generateUniqueRequestNumber();
       }
 
-      if (
-        !valuesToSet.currentStage ||
-        !PROJECT_STAGES.includes(valuesToSet.currentStage)
-      ) {
+      if (!valuesToSet.currentStage || !PROJECT_STAGES.includes(valuesToSet.currentStage)) {
         valuesToSet.currentStage = PROJECT_STAGES[0];
       }
 
       if (typeof valuesToSet.currentStageNote !== 'string') {
         valuesToSet.currentStageNote = '';
       } else {
-        valuesToSet.currentStageNote =
-          valuesToSet.currentStageNote.trim();
+        valuesToSet.currentStageNote = valuesToSet.currentStageNote.trim();
       }
 
-      if (
-        !Array.isArray(valuesToSet.stages) ||
-        valuesToSet.stages.length === 0
-      ) {
+      if (!Array.isArray(valuesToSet.stages) || valuesToSet.stages.length === 0) {
         valuesToSet.stages = [
           {
             key: valuesToSet.currentStage,
@@ -203,32 +98,15 @@ module.exports = {
         ];
       }
 
-      if (
-        !isValidTimestamp(
-          valuesToSet.requestCreatedAt
-        )
-      ) {
-        valuesToSet.requestCreatedAt =
-          getRequestCreatedAtFromStages(
-            valuesToSet.stages
-          ) || now;
+      if (!isValidTimestamp(valuesToSet.requestCreatedAt)) {
+        valuesToSet.requestCreatedAt = getRequestCreatedAtFromStages(valuesToSet.stages) || now;
       }
 
-      if (
-        !isValidTimestamp(
-          valuesToSet.lastActivityAt
-        )
-      ) {
-        valuesToSet.lastActivityAt =
-          getLastActivityAtFromStages(
-            valuesToSet.stages
-          ) ||
-          valuesToSet.requestCreatedAt;
+      if (!isValidTimestamp(valuesToSet.lastActivityAt)) {
+        valuesToSet.lastActivityAt = getLastActivityAtFromStages(valuesToSet.stages) || valuesToSet.requestCreatedAt;
       }
 
-      valuesToSet.photos = normalizePhotos(
-        valuesToSet.photos
-      );
+      valuesToSet.photos = normalizePhotos(valuesToSet.photos);
 
       return proceed();
     } catch (error) {
@@ -238,46 +116,19 @@ module.exports = {
 
   beforeUpdate: function (valuesToSet, proceed) {
     try {
-      if (
-        Object.prototype.hasOwnProperty.call(
-          valuesToSet,
-          'currentStage'
-        ) &&
-        !PROJECT_STAGES.includes(valuesToSet.currentStage)
-      ) {
-        throw new Error(
-          `Невідомий етап проєкту: ${valuesToSet.currentStage}`
-        );
+      if (Object.prototype.hasOwnProperty.call(valuesToSet, 'currentStage') && !PROJECT_STAGES.includes(valuesToSet.currentStage)) {
+        throw new Error(`Невідомий етап проєкту: ${valuesToSet.currentStage}`);
       }
 
-      if (
-        Object.prototype.hasOwnProperty.call(
-          valuesToSet,
-          'stages'
-        ) &&
-        !Array.isArray(valuesToSet.stages)
-      ) {
-        throw new Error(
-          'Поле stages повинно бути масивом.'
-        );
+      if (Object.prototype.hasOwnProperty.call(valuesToSet, 'stages') && !Array.isArray(valuesToSet.stages)) {
+        throw new Error('Поле stages повинно бути масивом.');
       }
 
-      if (
-        Object.prototype.hasOwnProperty.call(
-          valuesToSet,
-          'photos'
-        )
-      ) {
-        valuesToSet.photos = normalizePhotos(
-          valuesToSet.photos
-        );
+      if (Object.prototype.hasOwnProperty.call(valuesToSet, 'photos')) {
+        valuesToSet.photos = normalizePhotos(valuesToSet.photos);
       }
 
-      if (
-        !isValidTimestamp(
-          valuesToSet.lastActivityAt
-        )
-      ) {
+      if (!isValidTimestamp(valuesToSet.lastActivityAt)) {
         valuesToSet.lastActivityAt = Date.now();
       }
 
@@ -290,70 +141,37 @@ module.exports = {
   // ===== Methods =====
   advanceStage: async function (projectId, nextStageNote = '') {
     if (!projectId) {
-      throw new Error(
-        'Для переходу на наступний етап необхідно передати ID проєкту.'
-      );
+      throw new Error('Для переходу на наступний етап необхідно передати ID проєкту.');
     }
 
-    const Project = sails.models.project;
-
-    const project = await Project.findOne({
-      id: projectId
-    });
-
+    const project = await Project.findOne({ id: projectId });
     if (!project) {
-      throw new Error(
-        `Проєкт з ID "${projectId}" не знайдено.`
-      );
+      throw new Error(`Проєкт з ID "${projectId}" не знайдено.`);
     }
 
     if (project.currentStage === 'completed') {
       return project;
     }
 
-    const currentStageIndex = PROJECT_STAGES.indexOf(
-      project.currentStage
-    );
-
+    const currentStageIndex = PROJECT_STAGES.indexOf(project.currentStage);
     if (currentStageIndex === -1) {
-      throw new Error(
-        `Невідомий поточний етап проєкту: "${project.currentStage}".`
-      );
+      throw new Error(`Невідомий поточний етап проєкту: "${project.currentStage}".`);
     }
 
-    const nextStage =
-      PROJECT_STAGES[currentStageIndex + 1];
-
+    const nextStage = PROJECT_STAGES[currentStageIndex + 1];
     if (!nextStage) {
       return project;
     }
 
     const transitionDate = Date.now();
-
-    const currentNote =
-      typeof project.currentStageNote === 'string'
-        ? project.currentStageNote.trim()
-        : '';
-
-    const normalizedNextStageNote =
-      typeof nextStageNote === 'string'
-        ? nextStageNote.trim()
-        : '';
-
-    const stages = Array.isArray(project.stages)
-      ? project.stages.map(stage => ({ ...stage }))
-      : [];
-
+    const currentNote = typeof project.currentStageNote === 'string' ? project.currentStageNote.trim() : '';
+    const normalizedNextStageNote = typeof nextStageNote === 'string' ? nextStageNote.trim() : '';
+    const stages = Array.isArray(project.stages) ? project.stages.map(stage => ({ ...stage })) : [];
     const lastStageIndex = stages.length - 1;
     const lastStage = stages[lastStageIndex];
 
-    if (
-      !lastStage ||
-      lastStage.key !== project.currentStage
-    ) {
-      throw new Error(
-        'Хронологія проєкту не відповідає поточному етапу.'
-      );
+    if (!lastStage || lastStage.key !== project.currentStage) {
+      throw new Error('Хронологія проєкту не відповідає поточному етапу.');
     }
 
     stages[lastStageIndex] = {
@@ -378,9 +196,7 @@ module.exports = {
     });
 
     if (!updatedProject) {
-      throw new Error(
-        'Етап проєкту вже було змінено іншим запитом. Оновіть сторінку та повторіть дію.'
-      );
+      throw new Error('Етап проєкту вже було змінено іншим запитом. Оновіть сторінку та повторіть дію.');
     }
 
     return updatedProject;

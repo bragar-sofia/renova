@@ -1,44 +1,21 @@
 <%
 const getStageLabel = (key) => {
-  return (
-    projectStageLabels[key] ||
-    key ||
-    'Не визначено'
-  );
+  return (projectStageLabels[key] || key || 'Не визначено');
 };
 
-const formErrors = Array.isArray(errors)
-  ? errors
-  : [];
-
-const initialStage =
-  Array.isArray(projectStages) && projectStages.length > 0
-    ? projectStages[0]
-    : 'request-received';
+const formErrors = Array.isArray(errors) ? errors : [];
+const initialStage = Array.isArray(projectStages) && projectStages.length > 0 ? projectStages[0] : 'request-received';
 %>
 
 <section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
 
-    <nav
-      class="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500"
-      aria-label="Навігація"
-    >
-      <a
-        href="/admin/projects"
-        class="transition hover:text-navy"
-      >
+    <nav class="mb-5 flex flex-wrap items-center gap-2 text-sm text-slate-500" aria-label="Навігація">
+      <a href="/admin/projects" class="transition hover:text-navy">
         Проєкти та заявки
       </a>
 
-      <svg
-        class="h-4 w-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        aria-hidden="true"
-      >
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="m9 18 6-6-6-6"></path>
       </svg>
 
@@ -47,9 +24,7 @@ const initialStage =
       </span>
     </nav>
 
-    <div
-      class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between"
-    >
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
       <div>
         <h1 class="text-2xl font-semibold text-slate-900 sm:text-3xl">
           Нова заявка
@@ -62,37 +37,16 @@ const initialStage =
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <a
-          href="/admin/projects"
-          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
-        >
-          <svg
-            class="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
+        <a href="/admin/projects" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="m15 18-6-6 6-6"></path>
           </svg>
 
           До списку
         </a>
 
-        <button
-          type="submit"
-          form="project-create-form"
-          class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
-        >
-          <svg
-            class="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
+        <button type="submit" form="project-create-form" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M12 5v14"></path>
             <path d="M5 12h14"></path>
           </svg>
@@ -105,19 +59,9 @@ const initialStage =
     </div>
 
     <% if (formErrors.length > 0) { %>
-      <div
-        class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800"
-        role="alert"
-      >
+      <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800" role="alert">
         <div class="flex items-start gap-3">
-          <svg
-            class="mt-0.5 h-5 w-5 shrink-0"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
+          <svg class="mt-0.5 h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="12" cy="12" r="9"></circle>
             <path d="M12 8v5"></path>
             <path d="M12 17h.01"></path>
@@ -139,16 +83,8 @@ const initialStage =
     <% } %>
 
     <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-
-      <form
-        id="project-create-form"
-        action="/admin/projects"
-        method="post"
-        class="space-y-6"
-      >
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+      <form id="project-create-form" action="/admin/projects" method="post" class="space-y-6">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div>
             <h2 class="text-lg font-semibold text-slate-900">
               Основна інформація
@@ -161,24 +97,12 @@ const initialStage =
 
           <div class="mt-6 space-y-5">
             <div>
-              <label
-                for="title"
-                class="block text-sm font-semibold text-slate-700"
-              >
+              <label for="title" class="block text-sm font-semibold text-slate-700">
                 Заголовок проєкту
                 <span class="text-red-500">*</span>
               </label>
 
-              <input
-                id="title"
-                type="text"
-                name="title"
-                value="<%= project.title || '' %>"
-                required
-                autofocus
-                class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-                placeholder="Наприклад: Капітальний ремонт токарного верстата 16К20"
-              >
+              <input id="title" type="text" name="title" value="<%= project.title || '' %>" required autofocus class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Наприклад: Капітальний ремонт токарного верстата 16К20">
 
               <p class="mt-2 text-xs leading-5 text-slate-500">
                 Цей заголовок відображатиметься в адмінпанелі та на сайті.
@@ -187,23 +111,12 @@ const initialStage =
 
             <div class="grid gap-5 md:grid-cols-2">
               <div>
-                <label
-                  for="equipment"
-                  class="block text-sm font-semibold text-slate-700"
-                >
+                <label for="equipment" class="block text-sm font-semibold text-slate-700">
                   Обладнання
                   <span class="text-red-500">*</span>
                 </label>
 
-                <input
-                  id="equipment"
-                  type="text"
-                  name="equipment"
-                  value="<%= project.equipment || '' %>"
-                  required
-                  class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-                  placeholder="Тип, виробник і модель"
-                >
+                <input id="equipment" type="text" name="equipment" value="<%= project.equipment || '' %>" required class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Тип, виробник і модель">
 
                 <p class="mt-2 text-xs leading-5 text-slate-500">
                   Наприклад: токарний верстат 16К20.
@@ -211,23 +124,12 @@ const initialStage =
               </div>
 
               <div>
-                <label
-                  for="repairType"
-                  class="block text-sm font-semibold text-slate-700"
-                >
+                <label for="repairType" class="block text-sm font-semibold text-slate-700">
                   Вид ремонту
                   <span class="text-red-500">*</span>
                 </label>
 
-                <input
-                  id="repairType"
-                  type="text"
-                  name="repairType"
-                  value="<%= project.repairType || '' %>"
-                  required
-                  class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-                  placeholder="Наприклад: Капітальний ремонт"
-                >
+                <input id="repairType" type="text" name="repairType" value="<%= project.repairType || '' %>" required class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Наприклад: Капітальний ремонт">
 
                 <p class="mt-2 text-xs leading-5 text-slate-500">
                   Вкажіть основний вид або склад запланованих робіт.
@@ -237,9 +139,7 @@ const initialStage =
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 class="text-lg font-semibold text-slate-900">
@@ -252,28 +152,17 @@ const initialStage =
               </p>
             </div>
 
-            <span
-              class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700"
-            >
+            <span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">
               <%= getStageLabel(initialStage) %>
             </span>
           </div>
 
           <div class="mt-5">
-            <label
-              for="currentStageNote"
-              class="block text-sm font-semibold text-slate-700"
-            >
+            <label for="currentStageNote" class="block text-sm font-semibold text-slate-700">
               Коментар до початкового етапу
             </label>
 
-            <textarea
-              id="currentStageNote"
-              name="currentStageNote"
-              rows="4"
-              class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10"
-              placeholder="Наприклад: Отримано звернення щодо несправності шпиндельного вузла"
-            ><%= project.currentStageNote || '' %></textarea>
+            <textarea id="currentStageNote" name="currentStageNote" rows="4" class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Наприклад: Отримано звернення щодо несправності шпиндельного вузла"><%= project.currentStageNote || '' %></textarea>
 
             <p class="mt-2 text-xs leading-5 text-slate-500">
               Коментар буде додано до першого запису в хронології проєкту.
@@ -281,9 +170,7 @@ const initialStage =
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <div>
             <h2 class="text-lg font-semibold text-slate-900">
               Опис проєкту
@@ -296,41 +183,21 @@ const initialStage =
           </div>
 
           <div class="mt-5">
-            <label
-              for="description"
-              class="sr-only"
-            >
+            <label for="description" class="sr-only">
               Опис проєкту
             </label>
 
-            <textarea
-              id="description"
-              name="description"
-              rows="18"
-              class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"
-            ><%= project.description || '' %></textarea>
+            <textarea id="description" name="description" rows="18" class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10"><%= project.description || '' %></textarea>
           </div>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
           <h2 class="text-lg font-semibold text-slate-900">
             Відображення на сайті
           </h2>
 
-          <label
-            for="isVisible"
-            class="mt-5 flex cursor-pointer items-start gap-4 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50"
-          >
-            <input
-              id="isVisible"
-              type="checkbox"
-              name="isVisible"
-              value="true"
-              <%= project.isVisible ? 'checked' : '' %>
-              class="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-navy focus:ring-navy"
-            >
+          <label for="isVisible" class="mt-5 flex cursor-pointer items-start gap-4 rounded-xl border border-slate-200 p-4 transition hover:bg-slate-50">
+            <input id="isVisible" type="checkbox" name="isVisible" value="true"<%= project.isVisible ? 'checked' : '' %>class="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 text-navy focus:ring-navy">
 
             <span>
               <span class="block text-sm font-semibold text-slate-900">
@@ -345,28 +212,13 @@ const initialStage =
           </label>
         </div>
 
-        <div
-          class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <a
-            href="/admin/projects"
-            class="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-          >
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <a href="/admin/projects" class="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
             Скасувати
           </a>
 
-          <button
-            type="submit"
-            class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]"
-          >
-            <svg
-              class="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
+          <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-navy px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#0b527b]">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M12 5v14"></path>
               <path d="M5 12h14"></path>
             </svg>
@@ -377,27 +229,15 @@ const initialStage =
       </form>
 
       <aside class="space-y-6">
-
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h2 class="text-base font-semibold text-slate-900">
             Буде створено автоматично
           </h2>
 
           <ul class="mt-5 space-y-4">
             <li class="flex items-start gap-3">
-              <span
-                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-navy"
-              >
-                <svg
-                  class="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-navy">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M5 4h14v16H5z"></path>
                   <path d="M9 8h6"></path>
                   <path d="M9 12h6"></path>
@@ -416,17 +256,8 @@ const initialStage =
             </li>
 
             <li class="flex items-start gap-3">
-              <span
-                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-navy"
-              >
-                <svg
-                  class="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-navy">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <circle cx="12" cy="12" r="9"></circle>
                   <path d="M12 7v5l3 2"></path>
                 </svg>
@@ -444,17 +275,8 @@ const initialStage =
             </li>
 
             <li class="flex items-start gap-3">
-              <span
-                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-navy"
-              >
-                <svg
-                  class="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  aria-hidden="true"
-                >
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-navy">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M4 12h16"></path>
                   <path d="m14 6 6 6-6 6"></path>
                 </svg>
@@ -474,9 +296,7 @@ const initialStage =
           </ul>
         </div>
 
-        <div
-          class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-        >
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-4">
             <h2 class="text-base font-semibold text-slate-900">
               Етапи проєкту
@@ -490,21 +310,11 @@ const initialStage =
           <ol class="mt-5 space-y-3">
             <% projectStages.forEach((stageKey, index) => { %>
               <li class="flex items-center gap-3">
-                <span
-                  class="<%= index === 0
-                    ? 'border-navy bg-navy text-white'
-                    : 'border-slate-300 bg-white text-slate-500'
-                  %> flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold"
-                >
+                <span class="<%= index === 0 ? 'border-navy bg-navy text-white' : 'border-slate-300 bg-white text-slate-500' %> flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold">
                   <%= index + 1 %>
                 </span>
 
-                <span
-                  class="<%= index === 0
-                    ? 'font-semibold text-slate-900'
-                    : 'text-slate-500'
-                  %> text-sm"
-                >
+                <span class="<%= index === 0 ? 'font-semibold text-slate-900' : 'text-slate-500' %> text-sm">
                   <%= getStageLabel(stageKey) %>
                 </span>
               </li>
@@ -512,18 +322,9 @@ const initialStage =
           </ol>
         </div>
 
-        <div
-          class="rounded-2xl border border-amber-200 bg-amber-50 p-5"
-        >
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <div class="flex items-start gap-3">
-            <svg
-              class="mt-0.5 h-5 w-5 shrink-0 text-amber-700"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-amber-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <circle cx="12" cy="12" r="9"></circle>
               <path d="M12 11v5"></path>
               <path d="M12 8h.01"></path>
@@ -554,10 +355,7 @@ const initialStage =
       window.ClassicEditor
         .create(editorElement)
         .catch(function (error) {
-          console.error(
-            'CKEditor initialization error:',
-            error
-          );
+          console.error('CKEditor initialization error:', error);
         });
     }
   });
