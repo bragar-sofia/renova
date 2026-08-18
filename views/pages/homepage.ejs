@@ -209,70 +209,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           Перейти до всіх проектів
         </a>
       </div>
-
-      <script>
-        (function () {
-          /* ===== Active project status lines ===== */
-          var lines = document.querySelectorAll('#projects-preview [data-status-line]');
-          function refresh() {
-            lines.forEach(function (line) {
-              var num = line.querySelector('[data-num]');
-              var stat = line.querySelector('[data-stat]');
-              var sep = line.querySelector('[data-sep]');
-
-              if (!num || !stat || !sep) {
-                return;
-              }
-
-              num.style.display = '';
-              stat.style.display = '';
-              sep.style.display = '';
-
-              var lineHeight = parseFloat(getComputedStyle(line).lineHeight) || 24;
-              if (line.getBoundingClientRect().height > lineHeight * 1.5) {
-                sep.style.display = 'none';
-                num.style.display = 'block';
-                stat.style.display = 'block';
-              }
-            });
-          }
-          refresh();
-          window.addEventListener('resize', refresh);
-          window.addEventListener('load', refresh);
-
-          /* ===== Before / after toggle ===== */
-          var toggles = document.querySelectorAll('#projects-preview [data-cp-toggle]');
-          toggles.forEach(function (toggle) {
-            toggle.addEventListener('click', function (event) {
-              event.preventDefault();
-              event.stopPropagation();
-
-              var card = toggle.closest('[data-project-card]');
-              if (!card) {
-                return;
-              }
-
-              var showAfter = !card.classList.contains('is-after');
-              card.classList.add('is-switching');
-              card.classList.toggle('is-after', showAfter);
-
-              clearTimeout(card._cpTimer);
-
-              card._cpTimer = setTimeout(function () {
-                card.classList.remove('is-switching');
-              }, 2050);
-
-              toggle.setAttribute('aria-pressed', showAfter ? 'true' : 'false');
-              toggle.setAttribute('aria-label', showAfter ? 'Показати фото до ремонту' : 'Показати фото після ремонту');
-
-              var label = toggle.querySelector('[data-cp-toggle-label]');
-              if (label) {
-                label.textContent = showAfter ? 'Після' : 'До';
-              }
-            });
-          });
-        })();
-      </script>
     </section>
 
     <% /* About */ %>
@@ -281,13 +217,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         <div class="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
           <div>
             <h2 class="font-display text-h1 font-normal text-navy">Про нас</h2>
-            <div
-              class="mt-8 w-full overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] md:w-fit"
-            >
-            <nav
-              class="-ml-px -mt-px flex flex-wrap border-b border-steel/30 font-display text-h3 font-normal text-navy"
-              aria-label="Інформація про компанію"
-            >
+            <div class="mt-8 w-full overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] md:w-fit">
+            <nav class="-ml-px -mt-px flex flex-wrap border-b border-steel/30 font-display text-h3 font-normal text-navy" aria-label="Інформація про компанію">
               <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-navy px-5 py-3 text-center text-white transition hover:bg-[#0b527b]" href="#about">Хто ми?</a>
               <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Наш досвід</a>
               <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Спеціалісти</a>
@@ -317,30 +248,17 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             </div>
           </div>
           </div>
-          <div
-            class="relative hidden -mr-6 overflow-hidden rounded-l-card rounded-r-none md:block md:h-[30rem] lg:h-[34rem] lg:-mr-8 xl:h-[38rem] xl:-mr-16 2xl:h-[42rem] 2xl:-mr-24">
-            <img class="absolute inset-0 h-full w-full object-cover object-left" src="/images/machining-center-trimmed.png"
-                 alt="Сучасний оброблювальний центр" loading="lazy" decoding="async">
+          <div class="relative hidden -mr-6 overflow-hidden rounded-l-card rounded-r-none md:block md:h-[30rem] lg:h-[34rem] lg:-mr-8 xl:h-[38rem] xl:-mr-16 2xl:h-[42rem] 2xl:-mr-24">
+            <img class="absolute inset-0 h-full w-full object-cover object-left" src="/images/machining-center-trimmed.png" alt="Сучасний оброблювальний центр" loading="lazy" decoding="async">
           </div>
         </div>
       </div>
     </section>
 
     <% /* Contacts & form */ %>
-    <section
-      id="contacts"
-      class="mx-auto max-w-shell px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
-    >
-      <div
-        class="relative overflow-hidden rounded-hero bg-steel p-5 text-white sm:p-7 lg:grid lg:grid-cols-2 lg:gap-12 lg:p-14"
-      >
-        <img
-          class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100"
-          src="/images/tools.png"
-          alt=""
-          loading="lazy"
-          decoding="async"
-        >
+    <section id="contacts" class="mx-auto max-w-shell px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+      <div class="relative overflow-hidden rounded-hero bg-steel p-5 text-white sm:p-7 lg:grid lg:grid-cols-2 lg:gap-12 lg:p-14">
+        <img class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100" src="/images/tools.png" alt="" loading="lazy" decoding="async">
 
         <div class="relative">
           <h2 class="font-display text-h1 font-normal">
@@ -352,369 +270,42 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </p>
 
           <div class="mt-7 space-y-3 font-display text-h3">
-            <a
-              class="copy-link flex items-center gap-3 transition hover:text-navy"
-              href="tel:+380756787784"
-              title="Натисніть, щоб скопіювати"
-            >
-              <img
-                class="h-8 w-8 object-contain"
-                src="/images/icons/icon-phone-contact.svg"
-                alt=""
-              >
-
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="tel:+380756787784" title="Натисніть, щоб скопіювати">
+              <img class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">
               <span class="copy-text">
-            075 678 77 84
-          </span>
+                075 678 77 84
+              </span>
             </a>
 
-            <a
-              class="copy-link flex items-center gap-3 transition hover:text-navy"
-              href="mailto:commerce.renova@gmail.com"
-              title="Натисніть, щоб скопіювати"
-            >
-              <img
-                class="h-8 w-8 object-contain"
-                src="/images/icons/icon-email-contact.svg"
-                alt=""
-              >
-
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="mailto:commerce.renova@gmail.com" title="Натисніть, щоб скопіювати">
+              <img class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt="">
               <span class="copy-text">
-            commerce.renova@gmail.com
-          </span>
+                commerce.renova@gmail.com
+              </span>
             </a>
           </div>
         </div>
 
-        <form
-          id="contact-form"
-          class="relative mt-7 space-y-3 lg:mt-0"
-          action="/contact"
-          method="post"
-        >
+        <form id="contact-form" class="relative mt-7 space-y-3 lg:mt-0" action="/contact" method="post">
           <% if (typeof _csrf !== 'undefined' && _csrf) { %>
-            <input
-              type="hidden"
-              name="_csrf"
-              value="<%= _csrf %>"
-            >
+            <input type="hidden" name="_csrf" value="<%= _csrf %>">
           <% } %>
 
           <div class="grid gap-3 sm:grid-cols-2">
-            <label
-              class="sr-only"
-              for="contact-name"
-            >
-              Ім'я
-            </label>
-
-            <input
-              id="contact-name"
-              class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
-              type="text"
-              name="name"
-              autocomplete="name"
-              placeholder="Ваше ім'я"
-              maxlength="80"
-              required
-            >
-
-            <label
-              class="sr-only"
-              for="contact-phone"
-            >
-              Номер телефону
-            </label>
-
-            <input
-              id="contact-phone"
-              class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
-              type="tel"
-              name="phone"
-              autocomplete="tel"
-              inputmode="tel"
-              placeholder="Номер телефону"
-              maxlength="30"
-              required
-            >
+            <input id="contact-name" class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" type="text" name="name" autocomplete="name" placeholder="Ваше ім'я" maxlength="80" required>
+            <input id="contact-phone" class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="Номер телефону" maxlength="30" required>
           </div>
 
-          <label
-            class="sr-only"
-            for="contact-email"
-          >
-            Електронна пошта
-          </label>
+          <input id="contact-email" class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" type="email" name="email" autocomplete="email" placeholder="Електронна пошта" maxlength="254" required>
+          <textarea id="contact-message" class="block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" name="message" placeholder="Опишіть ваш запит" maxlength="3000" required></textarea>
 
-          <input
-            id="contact-email"
-            class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
-            type="email"
-            name="email"
-            autocomplete="email"
-            placeholder="Електронна пошта"
-            maxlength="254"
-            required
-          >
-
-          <label
-            class="sr-only"
-            for="contact-message"
-          >
-            Опишіть ваш запит
-          </label>
-
-          <textarea
-            id="contact-message"
-            class="block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40"
-            name="message"
-            placeholder="Опишіть ваш запит"
-            maxlength="3000"
-            required
-          ></textarea>
-
-          <button
-            class="w-full rounded-pill bg-navy py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b] disabled:cursor-not-allowed disabled:opacity-60"
-            type="submit"
-            data-contact-submit
-          >
+          <button class="w-full rounded-pill bg-navy py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b] disabled:cursor-not-allowed disabled:opacity-60" type="submit" data-contact-submit>
             Надіслати форму
           </button>
 
-          <div
-            class="hidden rounded-pill px-4 py-3 text-center text-sm font-medium"
-            data-contact-status
-            role="status"
-            aria-live="polite"
-          ></div>
+          <div class="hidden rounded-pill px-4 py-3 text-center text-sm font-medium" data-contact-status role="status" aria-live="polite"></div>
         </form>
       </div>
-
-      <script>
-        (function () {
-          var links =
-            document.querySelectorAll(
-              '#contacts .copy-link'
-            );
-
-          if (links.length) {
-            function legacyCopy(text) {
-              var textarea =
-                document.createElement('textarea');
-
-              textarea.value = text;
-
-              textarea.setAttribute(
-                'readonly',
-                ''
-              );
-
-              textarea.style.position = 'fixed';
-              textarea.style.top = '-1000px';
-              textarea.style.opacity = '0';
-
-              document.body.appendChild(
-                textarea
-              );
-
-              textarea.select();
-
-              try {
-                document.execCommand('copy');
-              } catch (error) {
-              }
-
-              document.body.removeChild(
-                textarea
-              );
-            }
-
-            function copyText(text, done) {
-              if (
-                navigator.clipboard &&
-                navigator.clipboard.writeText
-              ) {
-                navigator.clipboard
-                  .writeText(text)
-                  .then(done)
-                  .catch(function () {
-                    legacyCopy(text);
-                    done();
-                  });
-
-                return;
-              }
-
-              legacyCopy(text);
-              done();
-            }
-
-            links.forEach(function (link) {
-              var textElement =
-                link.querySelector(
-                  '.copy-text'
-                );
-
-              if (!textElement) {
-                return;
-              }
-
-              var originalText =
-                textElement.textContent.trim();
-
-              link.addEventListener(
-                'click',
-                function (event) {
-                  event.preventDefault();
-
-                  copyText(
-                    originalText,
-                    function () {
-                      textElement.textContent =
-                        'Скопійовано';
-
-                      link.classList.add(
-                        'is-copied'
-                      );
-
-                      clearTimeout(
-                        link._copyTimeout
-                      );
-
-                      link._copyTimeout =
-                        setTimeout(
-                          function () {
-                            textElement.textContent =
-                              originalText;
-
-                            link.classList.remove(
-                              'is-copied'
-                            );
-                          },
-                          1400
-                        );
-                    }
-                  );
-                }
-              );
-            });
-          }
-
-          var form =
-            document.querySelector(
-              '#contact-form'
-            );
-
-          if (!form) {
-            return;
-          }
-
-          var submitButton =
-            form.querySelector(
-              '[data-contact-submit]'
-            );
-
-          var statusElement =
-            form.querySelector(
-              '[data-contact-status]'
-            );
-
-          var defaultButtonText =
-            submitButton.textContent.trim();
-
-          function showStatus(type, message) {
-            statusElement.textContent =
-              message;
-
-            statusElement.className =
-              'rounded-pill px-4 py-3 text-center text-sm font-medium';
-
-            if (type === 'success') {
-              statusElement.classList.add(
-                'bg-emerald-50',
-                'text-emerald-800'
-              );
-            } else {
-              statusElement.classList.add(
-                'bg-red-50',
-                'text-red-800'
-              );
-            }
-          }
-
-          form.addEventListener(
-            'submit',
-            async function (event) {
-              event.preventDefault();
-
-              submitButton.disabled = true;
-              submitButton.textContent =
-                'Надсилаємо...';
-
-              statusElement.classList.add(
-                'hidden'
-              );
-
-              try {
-                var formData =
-                  new FormData(form);
-
-                var response =
-                  await fetch(
-                    form.action,
-                    {
-                      method: 'POST',
-
-                      headers: {
-                        Accept:
-                          'application/json'
-                      },
-
-                      body:
-                        new URLSearchParams(
-                          formData
-                        )
-                    }
-                  );
-
-                var data = {};
-
-                try {
-                  data =
-                    await response.json();
-                } catch (error) {
-                }
-
-                if (!response.ok) {
-                  throw new Error(
-                    data.error ||
-                    'Не вдалося надіслати повідомлення.'
-                  );
-                }
-
-                form.reset();
-
-                showStatus(
-                  'success',
-                  data.message ||
-                  'Дякуємо! Ваше повідомлення надіслано.'
-                );
-              } catch (error) {
-                showStatus(
-                  'error',
-                  error.message ||
-                  'Не вдалося надіслати повідомлення. Спробуйте ще раз.'
-                );
-              } finally {
-                submitButton.disabled = false;
-
-                submitButton.textContent =
-                  defaultButtonText;
-              }
-            }
-          );
-        })();
-      </script>
     </section>
 
     <% /* FAQ */ %>
@@ -733,12 +324,9 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
         %>
         <% faqItems.forEach(function (item) { %>
           <details class="faq-item group border-b border-steel py-4 first:pt-2 last:border-b-0 last:pb-2 md:first:pt-0 md:last:pb-0">
-            <summary
-              class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
-              <span><%= item.q %></span> <img
-                class="faq-chevron h-3 w-auto shrink-0 object-contain transition-transform group-hover:scale-125"
-                src="/images/icons/icon-chevron-down.svg" alt=""></summary>
-            <div class="faq-answer">
+            <summary class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
+              <span><%= item.q %></span>
+              <img class="faq-chevron h-3 w-auto shrink-0 object-contain transition-transform group-hover:scale-125" src="/images/icons/icon-chevron-down.svg" alt=""></summary><div class="faq-answer">
               <div class="faq-answer-inner">
                 <p class="mt-3 text-base leading-7 text-navy"><%- item.a %></p>
               </div>
@@ -746,55 +334,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </details>
         <% }); %>
       </div>
-
-      <script>
-        (function () {
-          var items = document.querySelectorAll('#faq .faq-item');
-          if (!items.length) { return; }
-          var reduce = window.matchMedia &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-          items.forEach(function (details) {
-            var summary = details.querySelector('summary');
-            var answer = details.querySelector('.faq-answer');
-            if (!summary || !answer) { return; }
-            var animating = false;
-
-            summary.addEventListener('click', function (e) {
-              e.preventDefault();
-              if (animating) { return; }
-
-              if (reduce) {
-                details.open = !details.open;
-                details.classList.toggle('is-open', details.open);
-                return;
-              }
-
-              if (details.open) {
-                animating = true;
-                details.classList.remove('is-open');
-                var done = false;
-                var finish = function () {
-                  if (done) { return; }
-                  done = true;
-                  answer.removeEventListener('transitionend', onEnd);
-                  details.open = false;
-                  animating = false;
-                };
-                var onEnd = function (ev) {
-                  if (ev.target === answer && ev.propertyName === 'grid-template-rows') { finish(); }
-                };
-                answer.addEventListener('transitionend', onEnd);
-                setTimeout(finish, 550);
-              } else {
-                details.open = true;
-                void answer.offsetHeight;
-                details.classList.add('is-open');
-              }
-            });
-          });
-        })();
-      </script>
     </section>
   </main>
 </div>
@@ -884,5 +423,218 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       setTimeout(snapSeps, 1100);
       window.addEventListener('resize', snapSeps);
     })();
+  })();
+</script>
+
+<script>
+  (function () {
+    /* ===== Before / after toggle ===== */
+    var toggles = document.querySelectorAll('#projects-preview [data-cp-toggle]');
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var card = toggle.closest('[data-project-card]');
+        if (!card) {
+          return;
+        }
+
+        var showAfter = !card.classList.contains('is-after');
+        card.classList.add('is-switching');
+        card.classList.toggle('is-after', showAfter);
+
+        clearTimeout(card._cpTimer);
+
+        card._cpTimer = setTimeout(function () {
+          card.classList.remove('is-switching');
+        }, 2050);
+
+        toggle.setAttribute('aria-pressed', showAfter ? 'true' : 'false');
+        toggle.setAttribute('aria-label', showAfter ? 'Показати фото до ремонту' : 'Показати фото після ремонту');
+
+        var label = toggle.querySelector('[data-cp-toggle-label]');
+        if (label) {
+          label.textContent = showAfter ? 'Після' : 'До';
+        }
+      });
+    });
+  })();
+</script>
+
+<script>
+  (function () {
+    var links = document.querySelectorAll('#contacts .copy-link');
+
+    if (links.length) {
+      function legacyCopy(text) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-1000px';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+        } catch (error) {
+        }
+
+        document.body.removeChild(textarea);
+      }
+
+      function copyText(text, done) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(text)
+            .then(done)
+            .catch(function () {
+              legacyCopy(text);
+              done();
+            });
+
+          return;
+        }
+
+        legacyCopy(text);
+        done();
+      }
+
+      links.forEach(function (link) {
+        var textElement = link.querySelector('.copy-text');
+        if (!textElement) {
+          return;
+        }
+
+        var originalText = textElement.textContent.trim();
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            copyText(originalText, function () {
+                textElement.textContent = 'Скопійовано';
+
+                link.classList.add('is-copied');
+                clearTimeout(link._copyTimeout);
+                link._copyTimeout = setTimeout(function () {
+                    textElement.textContent =
+                    originalText;
+                    link.classList.remove('is-copied');
+                }, 1400);
+              }
+            );
+          }
+        );
+      });
+    }
+
+    var form = document.querySelector('#contact-form');
+    if (!form) {
+      return;
+    }
+
+    var submitButton = form.querySelector('[data-contact-submit]');
+    var statusElement = form.querySelector('[data-contact-status]');
+    var defaultButtonText = submitButton.textContent.trim();
+
+    function showStatus(type, message) {
+      statusElement.textContent = message;
+      statusElement.className = 'rounded-pill px-4 py-3 text-center text-sm font-medium';
+
+      if (type === 'success') {
+        statusElement.classList.add('bg-emerald-50', 'text-emerald-800');
+      } else {
+        statusElement.classList.add('bg-red-50', 'text-red-800');
+      }
+    }
+
+    form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        submitButton.disabled = true;
+        submitButton.textContent = 'Надсилаємо...';
+        statusElement.classList.add('hidden');
+
+        try {
+          var formData = new FormData(form);
+          var response = await fetch(form.action, {
+              method: 'POST',
+              headers: {
+                Accept:
+                  'application/json'
+                },
+                body: new URLSearchParams(formData)
+              }
+            );
+
+          var data = {};
+
+          try {
+            data = await response.json();
+          } catch (error) {
+          }
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Не вдалося надіслати повідомлення.');
+          }
+
+          form.reset();
+          showStatus('success', data.message || 'Дякуємо! Ваше повідомлення надіслано.');
+        } catch (error) {
+          showStatus('error', error.message || 'Не вдалося надіслати повідомлення. Спробуйте ще раз.');
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = defaultButtonText;
+        }
+      }
+    );
+  })();
+</script>
+
+
+<script>
+  (function () {
+    var items = document.querySelectorAll('#faq .faq-item');
+    if (!items.length) { return; }
+    var reduce = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    items.forEach(function (details) {
+      var summary = details.querySelector('summary');
+      var answer = details.querySelector('.faq-answer');
+      if (!summary || !answer) { return; }
+      var animating = false;
+
+      summary.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (animating) { return; }
+
+        if (reduce) {
+          details.open = !details.open;
+          details.classList.toggle('is-open', details.open);
+          return;
+        }
+
+        if (details.open) {
+          animating = true;
+          details.classList.remove('is-open');
+          var done = false;
+          var finish = function () {
+            if (done) { return; }
+            done = true;
+            answer.removeEventListener('transitionend', onEnd);
+            details.open = false;
+            animating = false;
+          };
+          var onEnd = function (ev) {
+            if (ev.target === answer && ev.propertyName === 'grid-template-rows') { finish(); }
+          };
+          answer.addEventListener('transitionend', onEnd);
+          setTimeout(finish, 550);
+        } else {
+          details.open = true;
+          void answer.offsetHeight;
+          details.classList.add('is-open');
+        }
+      });
+    });
   })();
 </script>
