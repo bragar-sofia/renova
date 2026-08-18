@@ -390,38 +390,50 @@
 /* ===== Hero slogan ===== */
 .hero-slogan {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  display: grid;
+
   font-size: clamp(2rem, 0.4rem + 2.7vw, 3.4rem);
   line-height: 1.08;
 }
 
 .hero-slogan-text {
-  display: inline-block;
+  grid-area: 1 / 1;
+
+  display: block;
+
+  opacity: 0;
+  transform: translateY(18px) scale(.985);
+  filter: blur(5px);
+
   text-wrap: balance;
+  pointer-events: none;
+
+  transition: opacity .55s ease,
+  transform .7s cubic-bezier(.16, 1, .3, 1),
+  filter .55s ease;
+
   will-change: transform, opacity, filter;
-  transition: opacity 0.45s ease,
-  transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-  filter 0.45s ease;
 }
 
-.hero-slogan-text.is-out {
-  opacity: 0;
-  transform: translateY(-22px);
-  filter: blur(6px);
+.hero-slogan-text.is-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
-.hero-slogan-text.is-pre {
+.hero-slogan-text.is-leaving {
   opacity: 0;
-  transform: translateY(22px);
-  filter: blur(6px);
-  transition: none;
+  transform: translateY(-18px) scale(.995);
+  filter: blur(5px);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-slogan-text {
     transition: none;
+  }
+
+  .hero-slogan-text:not(.is-active) {
+    display: none;
   }
 }
 
@@ -596,11 +608,7 @@
         transparent 100%
     );
 
-    animation:
-        scan-reveal-soft
-        10s
-        cubic-bezier(.65, 0, .35, 1)
-        infinite;
+    animation: scan-reveal-soft 10s cubic-bezier(.65, 0, .35, 1) infinite;
   }
 
   .hero-photo-fade .machine-broken,

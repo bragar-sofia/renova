@@ -4,13 +4,27 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 %>
 <div class="min-h-screen bg-sky font-sans text-navy antialiased">
   <main id="home">
+    <%
+    var heroSlogans = [
+      'Повертаємо до роботи обладнання будь-якого типу та року випуску',
+      'Модернізуємо застаріле обладнання під сучасні виробничі задачі',
+      'Продовжуємо ресурс вашого обладнання завдяки професійному сервісу',
+      'Встановлюємо та запускаємо обладнання на вашому підприємстві',
+      'Швидко реагуємо на запит і залучаємо досвідчених фахівців необхідного профілю'
+    ];
+    %>
+
     <% /* Hero */ %>
     <section class="relative w-full overflow-hidden">
       <div class="hero-inner relative z-10 mx-auto flex w-full max-w-shell items-center px-6 pb-10 pt-8 md:min-h-[560px] md:flex-row md:items-center lg:px-8 lg:pb-14 xl:px-16 2xl:min-h-[700px] 2xl:px-24">
         <div class="hero-text-col w-full max-w-none md:max-w-[56%] 2xl:max-w-[52%]">
-        <h1 class="hero-slogan min-h-[2.5em] font-display text-h1 font-normal text-navy">
-          <span class="hero-slogan-text" data-hero-slogan>Ремонт і відновлення верстатів по всій Україні</span>
-        </h1>
+          <h1 class="hero-slogan font-display text-h1 font-normal text-navy">
+            <% heroSlogans.forEach(function (slogan, index) { %>
+              <span class="hero-slogan-text<%= index === 0 ? ' is-active' : '' %>" data-hero-slogan aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+                <%= slogan %>
+              </span>
+            <% }); %>
+          </h1>
 
         <p class="mt-5 max-w-[32rem] font-sans text-base leading-7 text-navy md:text-[1.05rem]">Відновлюємо, обслуговуємо, модернізуємо та запускаємо металообробне і пресове обладнання по всій Україні</p>
 
@@ -70,83 +84,112 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
     <script>
       (function () {
-        var el = document.querySelector('[data-hero-slogan]');
-        if (!el) { return; }
-        var h1 = el.closest('h1') || el.parentElement;
-        var slogans = [
-          'Ремонт і відновлення верстатів по всій Україні',
-          'Друге життя вашого металорізального обладнання',
-          'Відновлюємо верстати незалежно від року випуску',
-          'Ремонт і модернізація промислового обладнання',
-          'Повертаємо верстати до повноцінної роботи',
-          'Відновлення металорізального та пресового обладнання',
-          'Ремонт верстатів будь-якого року випуску',
-          'Відновлений верстат замість купівлі нового',
-          'Друге життя ваших верстатів і пресів',
-          'Ремонт та обслуговування верстатів по Україні'
-        ];
 
-        function lockHeight() {
-          var original = el.innerHTML;
-          var max = 0;
-          slogans.forEach(function (s) {
-            el.innerHTML = s;
-            if (el.offsetHeight > max) { max = el.offsetHeight; }
-          });
-          el.innerHTML = original;
-          h1.style.minHeight = max ? max + 'px' : '';
+        /* ===== Hero slogans ===== */
+
+        var slogans = Array.prototype.slice.call(
+          document.querySelectorAll('[data-hero-slogan]')
+        );
+
+        if (slogans.length > 1) {
+          var reduceMotion =
+            window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          if (!reduceMotion) {
+            var current = 0;
+
+            function nextSlogan() {
+              var previous = slogans[current];
+
+              current = (current + 1) % slogans.length;
+
+              var next = slogans[current];
+
+              previous.classList.remove('is-active');
+              previous.classList.add('is-leaving');
+              previous.setAttribute('aria-hidden', 'true');
+
+              setTimeout(function () {
+                next.classList.add('is-active');
+                next.setAttribute('aria-hidden', 'false');
+              }, 180);
+
+              setTimeout(function () {
+                previous.classList.remove('is-leaving');
+              }, 700);
+            }
+
+            setInterval(nextSlogan, 6500);
+          }
         }
-        lockHeight();
-        window.addEventListener('load', lockHeight);
-        var rt;
-        window.addEventListener('resize', function () {
-          clearTimeout(rt);
-          rt = setTimeout(function () { h1.style.minHeight = ''; lockHeight(); }, 200);
-        });
+
+
+        /* ===== Hero benefits entrance ===== */
 
         var band = document.querySelector('.hero-benefits-band');
+
         if (band) {
           window.requestAnimationFrame(function () {
-            window.requestAnimationFrame(function () { band.classList.add('is-in'); });
+            window.requestAnimationFrame(function () {
+              band.classList.add('is-in');
+            });
           });
-          setTimeout(function () { band.classList.add('is-in'); }, 300);
+
+          setTimeout(function () {
+            band.classList.add('is-in');
+          }, 300);
         }
+
+
+        /* ===== Hero benefit separators ===== */
 
         (function () {
           var seps = document.querySelectorAll('.hero-benefit-sep');
-          if (!seps.length) { return; }
+
+          if (!seps.length) {
+            return;
+          }
+
           function snapSeps() {
             var dpr = window.devicePixelRatio || 1;
-            seps.forEach(function (s) { s.style.transform = ''; s.style.width = ''; });
-            if (getComputedStyle(seps[0]).display === 'none') { return; }
-            var wCss = Math.max(1, Math.round(2 * dpr)) / dpr;
-            seps.forEach(function (s) { s.style.width = wCss + 'px'; });
-            seps.forEach(function (s) {
-              var leftDev = s.getBoundingClientRect().left * dpr;
-              s.style.transform = 'translateX(' + ((Math.round(leftDev) - leftDev) / dpr) + 'px)';
+
+            seps.forEach(function (sep) {
+              sep.style.transform = '';
+              sep.style.width = '';
+            });
+
+            if (getComputedStyle(seps[0]).display === 'none') {
+              return;
+            }
+
+            var width =
+              Math.max(1, Math.round(2 * dpr)) / dpr;
+
+            seps.forEach(function (sep) {
+              sep.style.width = width + 'px';
+            });
+
+            seps.forEach(function (sep) {
+              var left =
+                sep.getBoundingClientRect().left * dpr;
+
+              var offset =
+                (Math.round(left) - left) / dpr;
+
+              sep.style.transform =
+                'translateX(' + offset + 'px)';
             });
           }
+
           setTimeout(snapSeps, 1100);
-          window.addEventListener('resize', snapSeps);
+
+          window.addEventListener(
+            'resize',
+            snapSeps
+          );
         })();
 
-        var reduce = window.matchMedia &&
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduce) { return; }
-
-        var i = 0;
-        function next() {
-          el.classList.add('is-out');
-          setTimeout(function () {
-            i = (i + 1) % slogans.length;
-            el.innerHTML = slogans[i];
-            el.classList.add('is-pre');
-            el.classList.remove('is-out');
-            void el.offsetWidth;
-            el.classList.remove('is-pre');
-          }, 500);
-        }
-        setInterval(next, 4200);
       })();
     </script>
 
@@ -432,10 +475,10 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     <% /* Contacts & form */ %>
     <section
       id="contacts"
-      class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
+      class="mx-auto max-w-shell px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-14 xl:px-16 2xl:px-24"
     >
       <div
-        class="relative overflow-hidden rounded-hero bg-steel p-14 text-white lg:grid lg:grid-cols-2 lg:gap-12"
+        class="relative overflow-hidden rounded-hero bg-steel p-5 text-white sm:p-7 lg:grid lg:grid-cols-2 lg:gap-12 lg:p-14"
       >
         <img
           class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100"
