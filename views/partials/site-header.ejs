@@ -1,53 +1,21 @@
 <%
 var active = (typeof active !== 'undefined') ? active : '';
 var navItems = [
-  {
-    label: 'Послуги',
-    href: '/services',
-    page: 'services',
-    submenu: [
-      {
-        label: 'Відновлення обладнання',
-        href: '/services#restoration',
-        spy: 'restoration'
-      },
-      {
-        label: 'Сервісне обслуговування',
-        href: '/services#service',
-        spy: 'service'
-      },
-      {
-        label: 'Постачання обладнання',
-        href: '/services#supply',
-        spy: 'supply'
-      }
-    ]
+  { label: 'Послуги', href: '/services', page: 'services', submenu:
+      [
+        { label: 'Відновлення обладнання', href: '/services#restoration', spy: 'restoration' },
+        { label: 'Сервісне обслуговування', href: '/services#service', spy: 'service' },
+        { label: 'Постачання обладнання', href: '/services#supply', spy: 'supply' }
+      ]
   },
-  {
-    label: 'Наші проекти',
-    href: '/projects',
-    page: 'projects'
-  },
-  {
-    label: 'Про нас',
-    href: base + '#about',
-    spy: 'about',
-    sep: true
-  },
-  {
-    label: 'Часті запитання',
-    href: base + '#faq',
-    spy: 'faq'
-  },
-  {
-    label: 'Контакти',
-    href: base + '#contacts',
-    spy: 'contacts'
-  }
+  { label: 'Наші проекти', href: '/projects', page: 'projects' },
+  { label: 'Про нас', href: base + '#about', spy: 'about', sep: true },
+  { label: 'Часті запитання', href: base + '#faq', spy: 'faq' },
+  {label: 'Контакти', href: base + '#contacts', spy: 'contacts' }
 ];
 %>
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="site-container site-header-inner">
     <!-- Logo -->
     <a href="<%= base %>#home" class="site-header-brand" aria-label="RENOVA — головна">
@@ -136,114 +104,3 @@ var navItems = [
     </nav>
   </div>
 </header>
-
-
-<script>
-  (function () {
-    var script = document.currentScript;
-
-    function initHeader() {
-      var header = script.previousElementSibling;
-
-      while (header && header.tagName !== 'HEADER') {
-        header = header.previousElementSibling;
-      }
-
-      if (!header) {
-        return;
-      }
-
-      /* ===== Mobile menu ===== */
-      var burger = header.querySelector('[data-burger]');
-      var panel = header.querySelector('[data-mobile-menu]');
-
-      function closeMenu() {
-        header.classList.remove('menu-open');
-
-        if (burger) {
-          burger.setAttribute('aria-expanded', 'false');
-        }
-      }
-
-      if (burger && panel) {
-        burger.addEventListener('click', function () {
-          var open = header.classList.toggle('menu-open');
-          burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-
-        panel.querySelectorAll('a').forEach(function (link) {
-          link.addEventListener('click', closeMenu);
-        });
-
-        document.addEventListener('click', function (event) {
-          if (header.classList.contains('menu-open') && !header.contains(event.target)) {
-            closeMenu();
-          }
-        });
-      }
-
-      /* ===== Navigation scroll spy ===== */
-      var links = Array.prototype.slice.call(document.querySelectorAll('[data-spy]'));
-
-      var linksById = {};
-      links.forEach(function (link) {
-        var id = link.dataset.spy;
-        if (!linksById[id]) {
-          linksById[id] = [];
-        }
-
-        linksById[id].push(link);
-      });
-
-      var sections = Object.keys(linksById)
-        .map(function (id) {
-          return document.getElementById(id);
-        })
-        .filter(Boolean);
-
-      if (!sections.length) {
-        return;
-      }
-
-      var current = null;
-
-      function setActive(id) {
-        links.forEach(function (link) {
-          link.classList.toggle('is-active', link.dataset.spy === id);
-        });
-      }
-
-      function updateNavigation() {
-        var line = window.innerHeight * 0.4;
-        var best = null;
-        var bestTop = -Infinity;
-
-        sections.forEach(function (section) {
-          var top = section.getBoundingClientRect().top;
-
-          if (top <= line && top > bestTop) {
-            bestTop = top;
-            best = section.id;
-          }
-        });
-
-        if (best === current) {
-          return;
-        }
-
-        current = best;
-        setActive(best);
-      }
-
-      window.addEventListener('scroll', updateNavigation, { passive: true });
-      window.addEventListener('resize', updateNavigation);
-      updateNavigation();
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initHeader, { once: true });
-    } else {
-      initHeader();
-    }
-  })();
-</script>

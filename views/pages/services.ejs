@@ -1,29 +1,11 @@
 <%
 var repairTypes = [
-  {
-    title: 'Діагностика обладнання',
-    text: 'Комплексна перевірка обладнання, визначення причин несправності та оцінка поточного стану'
-  },
-  {
-    title: 'Поточний та аварійний ремонт',
-    text: 'Оперативне усунення несправностей, заміна вузлів, що вийшли з ладу і повернення обладнання до роботи.'
-  },
-  {
-    title: 'Капітальний ремонт',
-    text: 'Повне розбирання, виявлення дефектів, відновлення основних вузлів, складання, налаштування та випробування обладнання.'
-  },
-  {
-    title: 'Відновлення точності',
-    text: 'Шліфування базових поверхонь, відновлення напрямних, регулювання геометрії та перевірка відповідності нормам згідно ДСТУ або паспорта заводу-виробника на даний тип обладнання.'
-  },
-  {
-    title: 'Відновлення вузлів і систем',
-    text: 'Ремонтуємо та замінюємо зношені механічні вузли — від шпинделя до напрямних і механізмів подач, а також відновлюємо гідравліку, пневматику, електрообладнання та системи змащування й охолодження.'
-  },
-  {
-    title: 'Модернізація обладнання',
-    text: 'Модернізація обладнання шляхом заміни систем ЧПК, приводів, електроніки та інших морально або фізично застарілих компонентів на сучасні рішення.'
-  }
+  { title: 'Діагностика обладнання', text: 'Комплексна перевірка обладнання, визначення причин несправності та оцінка поточного стану' },
+  { title: 'Поточний та аварійний ремонт', text: 'Оперативне усунення несправностей, заміна вузлів, що вийшли з ладу і повернення обладнання до роботи.' },
+  { title: 'Капітальний ремонт', text: 'Повне розбирання, виявлення дефектів, відновлення основних вузлів, складання, налаштування та випробування обладнання.' },
+  { title: 'Відновлення точності', text: 'Шліфування базових поверхонь, відновлення напрямних, регулювання геометрії та перевірка відповідності нормам згідно ДСТУ або паспорта заводу-виробника на даний тип обладнання.' },
+  { title: 'Відновлення вузлів і систем', text: 'Ремонтуємо та замінюємо зношені механічні вузли — від шпинделя до напрямних і механізмів подач, а також відновлюємо гідравліку, пневматику, електрообладнання та системи змащування й охолодження.' },
+  { title: 'Модернізація обладнання', text: 'Модернізація обладнання шляхом заміни систем ЧПК, приводів, електроніки та інших морально або фізично застарілих компонентів на сучасні рішення.' }
 ];
 
 var overhaulScope = [
@@ -100,15 +82,15 @@ var serviceNav = [
 
 <div class="services-page">
   <main id="services">
-    <nav class="svc-nav" aria-label="Розділи послуг">
+    <nav class="svc-nav" data-services-nav aria-label="Розділи послуг">
       <% serviceNav.forEach(function (sec) { %>
-        <a class="svc-nav-item svc-nav-section" href="#<%= sec.id %>" data-target="<%= sec.id %>">
-          <span class="svc-dash"></span>
+        <a class="svc-nav-item svc-nav-section" href="#<%= sec.id %>" data-services-nav-item data-target="<%= sec.id %>">
+          <span class="svc-dash" data-services-nav-dash></span>
           <span class="svc-label"><%= sec.title %></span>
         </a>
         <% sec.subs.forEach(function (sub) { %>
-          <a class="svc-nav-item svc-nav-sub" href="#<%= sub.id %>" data-target="<%= sub.id %>">
-            <span class="svc-dash"></span>
+          <a class="svc-nav-item svc-nav-sub" href="#<%= sub.id %>" data-services-nav-item data-target="<%= sub.id %>">
+            <span class="svc-dash" data-services-nav-dash></span>
             <span class="svc-label"><%= sub.title %></span>
           </a>
         <% }); %>
@@ -117,7 +99,6 @@ var serviceNav = [
 
     <% /* ===================== Restoration ===================== */ %>
     <section id="restoration" class="service-section scroll-mt-24 space-y-8 pb-10 pt-4 lg:space-y-10 lg:pb-5 lg:pt-8">
-
       <div
         class="service-sticky-heading service-mobile-heading">
         <span class="service-number number-badge service-number-badge">1</span>
@@ -125,11 +106,9 @@ var serviceNav = [
       </div>
 
       <% /* ---------- Equipment restoration ---------- */ %>
-      <section
-        class="site-container grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
+      <section class="site-container grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
         <div>
-          <span
-            class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">1</span>
+          <span class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">1</span>
           <h2 class="heading-1 hidden md:block">Відновлення обладнання</h2>
           <p class="body-copy service-copy-first text-left">
             ТОВ «RENOVA» спеціалізується на проведенні робіт з&nbsp;ремонту та модернізації металорізального
@@ -150,14 +129,10 @@ var serviceNav = [
             технічно й&nbsp;економічно обґрунтований варіант відновлення з&nbsp;урахуванням технічного завдання
             та побажань замовника.
           </p>
-          <a href="/#contacts"
-             class="btn btn-primary service-cta">Замовити
-            відновлення          </a>
+          <a href="/#contacts" class="btn btn-primary service-cta">Замовити відновлення</a>
         </div>
-        <div
-          class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
-          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png"
-               alt="Ремонт токарного верстата у майстерні RENOVA" fetchpriority="high" decoding="async">
+        <div class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
+          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png" alt="Ремонт токарного верстата у майстерні RENOVA" fetchpriority="high" decoding="async">
         </div>
       </section>
 
@@ -183,8 +158,7 @@ var serviceNav = [
       </section>
 
       <% /* ---------- Major overhaul ---------- */ %>
-      <section
-        class="site-container grid items-start gap-8 lg:grid-cols-[0.4fr_0.6fr]">
+      <section class="site-container grid items-start gap-8 lg:grid-cols-[0.4fr_0.6fr]">
         <div>
           <h2 id="restoration-capital" class="heading-2 scroll-mt-28">Капітальний ремонт</h2>
           <p class="body-copy service-copy-first text-left">
@@ -200,16 +174,13 @@ var serviceNav = [
             </ul>
           </div>
         </div>
-        <div
-          class="service-image relative -mr-6 hidden h-72 overflow-hidden md:block md:h-96 lg:-mr-8 lg:h-full lg:min-h-[36.4375rem] xl:-mr-16 2xl:-mr-24">
-          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png"
-               alt="Розбирання коробки передач під час капітального ремонту" loading="lazy" decoding="async">
+        <div class="service-image relative -mr-6 hidden h-72 overflow-hidden md:block md:h-96 lg:-mr-8 lg:h-full lg:min-h-[36.4375rem] xl:-mr-16 2xl:-mr-24">
+          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png" alt="Розбирання коробки передач під час капітального ремонту" loading="lazy" decoding="async">
         </div>
       </section>
 
       <% /* ---------- Cost and timeline ---------- */ %>
-      <section
-        class="site-container grid items-center gap-8 lg:grid-cols-[auto_1fr] lg:gap-14">
+      <section class="site-container grid items-center gap-8 lg:grid-cols-[auto_1fr] lg:gap-14">
         <div class="mx-auto h-56 w-auto max-w-full aspect-[366/300] lg:mx-0 lg:h-52" data-lottie="/images/lottie/cost-terms.json" aria-hidden="true"></div>
         <div>
           <h2 id="restoration-cost" class="heading-2 scroll-mt-28">Вартість і терміни</h2>
@@ -224,29 +195,22 @@ var serviceNav = [
           </p>
         </div>
       </section>
-
     </section>
 
     <% /* ===================== Service ===================== */ %>
     <section id="service" class="service-section scroll-mt-24 space-y-8 py-10 lg:space-y-10 lg:pt-5 lg:pb-5">
-
-      <div
-        class="service-sticky-heading service-mobile-heading">
+      <div class="service-sticky-heading service-mobile-heading">
         <span class="service-number number-badge service-number-badge">2</span>
         <span class="heading-1">Сервісне обслуговування</span>
       </div>
 
       <% /* ---------- Maintenance ---------- */ %>
-      <section
-        class="site-container grid items-center gap-8 md:grid-cols-[0.8fr_1.2fr]">
-        <div
-          class="service-image relative -ml-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
-          <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png"
-               alt="Профілактичне обслуговування токарного верстата" loading="lazy" decoding="async">
+      <section class="site-container grid items-center gap-8 md:grid-cols-[0.8fr_1.2fr]">
+        <div class="service-image relative -ml-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
+          <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата" loading="lazy" decoding="async">
         </div>
         <div>
-          <span
-            class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">2</span>
+          <span class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">2</span>
           <h2 class="heading-1 hidden md:block">Сервісне обслуговування</h2>
           <p class="body-copy service-copy-first text-left">
             Найкращий ремонт – це той, якого вдалося уникнути. Тому RENOVA допомагає підтримувати металорізальне та
@@ -258,14 +222,12 @@ var serviceNav = [
             Для кожного підприємства ми розробляємо індивідуальний графік обслуговування з&nbsp;урахуванням типу
             обладнання, його поточного стану, навантаження та графіку роботи підприємства.
           </p>
-          <a href="/#contacts"
-             class="btn btn-primary service-cta max-[430px]:w-min">Замовити&nbsp;сервісне обслуговування</a>
+          <a href="/#contacts" class="btn btn-primary service-cta max-[430px]:w-min">Замовити&nbsp;сервісне обслуговування</a>
         </div>
       </section>
 
       <% /* ---------- Prevent failure ---------- */ %>
-      <section
-        class="site-container grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-14">
+      <section class="site-container grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-14">
         <div>
           <h2 id="service-prevent" class="heading-2 scroll-mt-28">Попередити несправність завжди краще ніж усувати&nbsp;її</h2>
           <p class="body-copy service-copy-first text-left">
@@ -289,12 +251,10 @@ var serviceNav = [
           <%- include('../partials/process-steps', { steps: serviceSteps, fullWidth: true }) %>
         </div>
       </section>
-
     </section>
 
     <% /* ===================== Supply ===================== */ %>
     <section id="supply" class="service-section scroll-mt-24 space-y-8 py-10 lg:space-y-10 lg:pt-5 lg:pb-14">
-
       <div
         class="service-sticky-heading service-mobile-heading">
         <span class="service-number number-badge service-number-badge">3</span>
@@ -302,11 +262,9 @@ var serviceNav = [
       </div>
 
       <% /* ---------- New equipment supply ---------- */ %>
-      <section
-        class="site-container grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
+      <section class="site-container grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
         <div>
-          <span
-            class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">3</span>
+          <span class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">3</span>
           <h2 class="heading-1 hidden md:block">Постачання нового обладнання</h2>
           <p class="body-copy service-copy-first text-left">
             Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове
@@ -317,20 +275,15 @@ var serviceNav = [
             та Азії, розраховуємо вартість постачання, монтажу та пусконалагоджувальних робіт. Після встановлення
             виконуємо налаштування, проводимо перевірку роботи обладнання та базове навчання представників замовника.
           </p>
-          <a href="/#contacts"
-             class="btn btn-primary service-cta">Замовити
-            нове обладнання          </a>
+          <a href="/#contacts" class="btn btn-primary service-cta">Замовити нове обладнання</a>
         </div>
-        <div
-          class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
-          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png"
-               alt="Складання нового обладнання перед відвантаженням" loading="lazy" decoding="async">
+        <div class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
+          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png" alt="Складання нового обладнання перед відвантаженням" loading="lazy" decoding="async">
         </div>
       </section>
 
       <% /* ---------- Equipment catalog ---------- */ %>
-      <section
-        class="site-container grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-14">
+      <section class="site-container grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-14">
         <div class="service-card card w-full max-w-2xl p-6 md:p-8">
           <h2 id="supply-catalog" class="heading-2 relative z-10 scroll-mt-28">Постачаємо широкий спектр обладнання</h2>
           <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
@@ -349,66 +302,6 @@ var serviceNav = [
           <%- include('../partials/process-steps', { steps: supplySteps, captionLines: 3 }) %>
         </div>
       </section>
-
     </section>
-
-    <script>
-      (function () {
-        var items = Array.prototype.slice.call(document.querySelectorAll('.svc-nav-item'));
-        if (!items.length) return;
-        var targets = items
-          .map(function (a) { return { item: a, el: document.getElementById(a.getAttribute('data-target')) }; })
-          .filter(function (t) { return t.el; });
-        if (!targets.length) return;
-        var current = null;
-        function onScroll() {
-          var line = window.innerHeight * 0.32;
-          var active = null;
-          targets.forEach(function (t) {
-            if (t.el.getBoundingClientRect().top <= line) active = t.item;
-          });
-          if (!active) active = targets[0].item;
-          if (active !== current) {
-            current = active;
-            items.forEach(function (a) { a.classList.toggle('is-active', a === active); });
-          }
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onScroll);
-        onScroll();
-
-        var nav = document.querySelector('.svc-nav');
-        if (nav) {
-          var dashes = Array.prototype.slice.call(nav.querySelectorAll('.svc-dash'));
-          var mq = window.matchMedia('(min-width: 1280px)');
-          var snapDashes = function () {
-            var dpr = window.devicePixelRatio || 1;
-            var toDevice = function (px) { return Math.round(px * dpr) / dpr; };
-            dashes.forEach(function (d) {
-              d.style.transform = 'none';
-              d.style.height = toDevice(d.closest('.svc-nav-section') ? 3 : 2) + 'px';
-            });
-            dashes.forEach(function (d) {
-              var top = d.getBoundingClientRect().top;
-              var delta = Math.round(top * dpr) / dpr - top;
-              d.style.transform = delta ? 'translateY(' + delta + 'px)' : 'none';
-            });
-          };
-          var centerNav = function () {
-            if (mq.matches) {
-              nav.style.transform = 'none';
-              nav.style.top = Math.round((window.innerHeight - nav.offsetHeight) / 2) + 'px';
-              snapDashes();
-            } else {
-              nav.style.transform = '';
-              nav.style.top = '';
-              dashes.forEach(function (d) { d.style.transform = ''; d.style.height = ''; });
-            }
-          };
-          centerNav();
-          window.addEventListener('resize', centerNav);
-        }
-      })();
-    </script>
   </main>
 </div>

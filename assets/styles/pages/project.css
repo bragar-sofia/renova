@@ -244,7 +244,12 @@
   aspect-ratio: 4 / 3;
   border-radius: var(--ui-card-radius);
   object-fit: cover;
-  cursor: pointer;
+  cursor: zoom-in;
+}
+
+.project-gallery-image:focus-visible {
+  outline: 2px solid var(--ui-steel);
+  outline-offset: 3px;
 }
 
 /* ===== Project: stages timeline ===== */
@@ -449,4 +454,9 @@
   text-align: center;
   font-size: .875rem;
   font-weight: 700;
+}
+
+/* ===== Project lightbox page state ===== */
+body.project-lightbox-open {
+  overflow: hidden;
 }

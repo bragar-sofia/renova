@@ -1,46 +1,23 @@
 <%
-var SUB_ACTIVE =
-  'Тут ви можете відстежувати статуси заявок, з якими ми працюємо';
-
-var SUB_COMPLETED =
-  'Тут ви можете переглянути наше портфоліо із завершених проєктів';
-
-var normalizedQ = String(q || '')
-  .trim()
-  .toLocaleLowerCase('uk-UA');
+var SUB_ACTIVE = 'Тут ви можете відстежувати статуси заявок, з якими ми працюємо';
+var SUB_COMPLETED = 'Тут ви можете переглянути наше портфоліо із завершених проєктів';
+var normalizedQ = String(q || '').trim().toLocaleLowerCase('uk-UA');
 
 function cardStatus(project) {
-  return project.completed
-    ? 'completed'
-    : 'active';
+  return project.completed ? 'completed' : 'active';
 }
 
 function matchInit(project) {
-  var searchText = String(
-    project.searchText || ''
-  );
-
-  return (
-    cardStatus(project) === status &&
-    (
-      !normalizedQ ||
-      searchText.indexOf(normalizedQ) !== -1
-    )
-  );
+  var searchText = String(project.searchText || '');
+  return (cardStatus(project) === status && (!normalizedQ || searchText.indexOf(normalizedQ) !== -1));
 }
 
-var matchTotal =
-  projects.filter(matchInit).length;
-
+var matchTotal = projects.filter(matchInit).length;
 var shownInit = 0;
 
 function visInit(project) {
   var matched = matchInit(project);
-
-  var visible =
-    matched &&
-    shownInit < 6;
-
+  var visible = matched && shownInit < 6;
   if (matched) {
     shownInit += 1;
   }
@@ -49,106 +26,205 @@ function visInit(project) {
 }
 %>
 
-<div class="projects-page">
-  <main class="site-container section-space">
 
-    <% /* Header & filters */ %>
+<div class="projects-page" data-projects-page>
+  <main class="site-container section-space">
+    <% /* ==== Header & filters ====== */ %>
     <section>
       <h1 class="heading-1">Заявки</h1>
-      <p data-subtitle class="project-subtitle"><%= status === 'completed' ? SUB_COMPLETED : SUB_ACTIVE %></p>
+      <p class="project-subtitle" data-subtitle>
+        <%= status === 'completed' ? SUB_COMPLETED : SUB_ACTIVE %>
+      </p>
 
       <div class="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div data-toggle class="project-tabs">
-          <span data-toggle-thumb class="project-tab-thumb" style="transform: translateX(<%= status === 'completed' ? '100%' : '0%' %>);"></span>
-          <button type="button" data-status-tab="active" class="project-tab <%= status === 'active' ? 'is-active' : '' %>">Активні</button>
-          <button type="button" data-status-tab="completed" class="project-tab <%= status === 'completed' ? 'is-active' : '' %>">Завершені</button>
+        <!-- Status tabs -->
+        <div class="project-tabs<%= status === 'completed' ? ' is-completed' : '' %>" data-toggle>
+          <span class="project-tab-thumb"></span>
+
+          <button type="button" class="project-tab<%= status === 'active' ? ' is-active' : '' %>" data-status-tab="active">
+            Активні
+          </button>
+
+          <button type="button" class="project-tab<%= status === 'completed' ? ' is-active' : '' %>" data-status-tab="completed">
+            Завершені
+          </button>
         </div>
 
+        <!-- Search & sort -->
         <div class="flex flex-col gap-3 sm:flex-row">
+          <!-- Search -->
           <div class="project-search">
-            <input type="text" data-search-input value="<%= q %>" placeholder="Пошук за номером, назвою або обладнанням" class="form-control form-control-outline project-search-input">
+            <input type="text" class="form-control form-control-outline project-search-input" data-search-input value="<%= q %>" placeholder="Пошук за номером, назвою або обладнанням">
             <span class="project-search-icon">
-              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="M21 21l-4.3-4.3"></path>
+              </svg>
             </span>
           </div>
 
+          <!-- Sort -->
           <div class="relative" data-sort>
-            <button type="button" data-sort-toggle class="project-control-button">
-              <span data-sort-label>Сортувати за</span>
-              <svg class="sort-chevron h-4 w-4 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            <button type="button" class="project-control-button" data-sort-toggle aria-expanded="false" aria-controls="project-sort-menu">
+              <span data-sort-label>
+                Сортувати за
+              </span>
+              <svg class="sort-chevron h-4 w-4 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
             </button>
-            <div class="sort-menu project-sort-menu absolute">
-              <button type="button" data-sort-opt="new" class="project-sort-option">Спочатку новіші</button>
-              <button type="button" data-sort-opt="old" class="project-sort-option">Спочатку старіші</button>
+
+            <div id="project-sort-menu" class="sort-menu project-sort-menu absolute">
+              <button type="button" class="project-sort-option" data-sort-opt="new">
+                Спочатку новіші
+              </button>
+
+              <button type="button" class="project-sort-option" data-sort-opt="old">
+                Спочатку старіші
+              </button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
+    <% /* ====== Views ====== */ %>
     <div id="views-wrap" class="mt-8">
-
-      <section data-empty class="card project-empty-state <%= matchTotal > 0 ? 'hidden' : '' %>">
+      <% /* ---------- Empty state ---------- */ %>
+      <section class="card project-empty-state" data-empty <%= matchTotal > 0 ? 'hidden' : '' %>>
         <p class="heading-3 project-empty-text" data-empty-text>
           <%= q ? 'За вашим запитом заявок не знайдено.' : (status === 'completed' ? 'Поки що немає завершених проєктів.' : 'Наразі немає активних заявок.') %>
         </p>
       </section>
 
-      <% /* Active table */ %>
-      <div data-view="active" class="<%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>">
+      <% /* ======= Active projects ===== */ %>
+      <div data-view="active" <%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>>
         <div class="reveal-item">
-        <div class="project-table-head heading-2">
-          <div class="text-center">Номер</div>
-          <div class="text-center">Проєкт</div>
-          <div class="text-center">Стан</div>
-          <div class="whitespace-nowrap text-center">Оновлено</div>
-        </div>
-        <% var activeRows = projects.filter(function (p) { return !p.completed; }); %>
-        <div class="space-y-4">
-          <% activeRows.forEach(function (p) { %>
-            <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="active" data-number="<%= p.requestNumber %>" data-search="<%= p.searchText %>" data-sort-value="<%= p.sortTimestamp %>"
-                class="card card-elevated interactive-card project-active-row group <%= visInit(p) ? '' : 'hidden' %>">
-              <div class="project-row-cell">№<%= p.requestNumber %></div>
-              <div class="project-row-cell project-row-cell--details">
-                <p class="heading-3"><%= p.title %></p>
-                <p class="mt-2 text-base text-navy"><span class="font-display font-normal">Обладнання:</span> <%= p.equipment %></p>
-                <p class="mt-1 text-base text-navy"><span class="font-display font-normal">Вид ремонту:</span> <%= p.repairType %></p>
-              </div>
-              <div class="project-row-cell project-row-cell--center">
-                <span class="font-bold lg:hidden">Стан: </span>
-                <div class="project-progress">
-                  <div class="flex items-end justify-between gap-2">
-                    <p class="text-base text-navy"><%= p.statusText %></p>
-                    <p class="text-base text-navy"><%= p.progress %>%</p>
-                  </div>
-                  <div class="project-progress-track">
-                    <div class="project-progress-bar" style="width: <%= p.progress %>%"></div>
+          <!-- Table head -->
+          <div class="project-table-head heading-2">
+            <div class="text-center">
+              Номер
+            </div>
+
+            <div class="text-center">
+              Проєкт
+            </div>
+
+            <div class="text-center">
+              Стан
+            </div>
+
+            <div class="whitespace-nowrap text-center">
+              Оновлено
+            </div>
+          </div>
+
+          <% var activeRows = projects.filter(function (p) {
+            return !p.completed;
+          }); %>
+
+          <div class="space-y-4">
+            <% activeRows.forEach(function (p) { %>
+              <a
+                href="/projects/<%= p.requestNumber %>"
+                class="card card-elevated interactive-card project-active-row group"
+                data-project-item
+                data-status="active"
+                data-number="<%= p.requestNumber %>"
+                data-search="<%= p.searchText %>"
+                data-sort-value="<%= p.sortTimestamp %>"
+                <%= visInit(p) ? '' : 'hidden' %>
+              >
+
+                <!-- Number -->
+                <div class="project-row-cell">
+                  №<%= p.requestNumber %>
+                </div>
+
+                <!-- Details -->
+                <div class="project-row-cell project-row-cell--details">
+                  <p class="heading-3">
+                    <%= p.title %>
+                  </p>
+
+                  <p class="mt-2 text-base text-navy">
+                    <span class="font-display font-normal">
+                      Обладнання:
+                    </span>
+                    <%= p.equipment %>
+                  </p>
+
+                  <p class="mt-1 text-base text-navy">
+                    <span class="font-display font-normal">
+                      Вид ремонту:
+                    </span>
+                    <%= p.repairType %>
+                  </p>
+                </div>
+
+                <!-- Progress -->
+                <div class="project-row-cell project-row-cell--center">
+                  <span class="font-bold lg:hidden">
+                    Стан:
+                  </span>
+
+                  <div class="project-progress">
+                    <div class="flex items-end justify-between gap-2">
+                      <p class="text-base text-navy">
+                        <%= p.statusText %>
+                      </p>
+
+                      <p class="text-base text-navy">
+                        <%= p.progress %>%
+                      </p>
+                    </div>
+
+                    <div class="project-progress-track">
+                      <div
+                        class="project-progress-bar"
+                        style="width: <%= p.progress %>%"
+                      ></div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="project-row-cell project-row-cell--center">
-                <span class="font-bold lg:hidden">Оновлено: </span>
-                <p class="whitespace-nowrap text-base text-navy"><%= p.updatedDate %></p>
-                <p class="mt-1 whitespace-nowrap text-base text-steel">Створено: <%= p.createdDate %></p>
-              </div>
-            </a>
-          <% }); %>
-        </div>
+
+                <!-- Dates -->
+                <div class="project-row-cell project-row-cell--center">
+                  <span class="font-bold lg:hidden">
+                    Оновлено:
+                  </span>
+
+                  <p class="whitespace-nowrap text-base text-navy">
+                    <%= p.updatedDate %>
+                  </p>
+
+                  <p class="mt-1 whitespace-nowrap text-base text-steel">
+                    Створено: <%= p.createdDate %>
+                  </p>
+                </div>
+              </a>
+            <% }); %>
+          </div>
         </div>
       </div>
 
-      <% /* Completed cards */ %>
-      <div data-view="completed" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>">
-        <% projects.forEach(function (p) { if (!p.completed) { return; } %>
+      <% /* ======== Completed projects ======== */ %>
+      <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" data-view="completed" <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>>
+        <% projects.forEach(function (p) {
+          if (!p.completed) {
+            return;
+          }
+        %>
 
         <article
+          class="reveal-item card card-elevated interactive-card project-completed-card group"
           data-project-item
           data-project-card
           data-status="completed"
           data-number="<%= p.requestNumber %>"
           data-search="<%= p.searchText %>"
           data-sort-value="<%= p.sortTimestamp %>"
-          class="reveal-item card card-elevated interactive-card project-completed-card group <%= visInit(p) ? '' : 'hidden' %>"
+          <%= visInit(p) ? '' : 'hidden' %>
         >
 
           <!-- Photo -->
@@ -162,7 +238,7 @@ function visInit(project) {
             <% } else { %>
               <div class="flex h-full items-center justify-center text-steel/40">
                 <svg viewBox="0 0 24 24" class="h-12 w-12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25z"></path>
                 </svg>
               </div>
             <% } %>
@@ -173,9 +249,11 @@ function visInit(project) {
             <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3">
               <% if (p.imageMain && p.imageHover) { %>
                 <button type="button" class="cp-toggle pointer-events-auto col-start-2 row-start-1 mb-2 shrink-0 justify-self-end md:mb-0" data-cp-toggle aria-pressed="false" aria-label="Показати фото після ремонту">
-                  <span class="cp-toggle-thumb">
-                    <span data-cp-toggle-label>До</span>
-                  </span>
+                    <span class="cp-toggle-thumb">
+                      <span data-cp-toggle-label>
+                        До
+                      </span>
+                    </span>
                 </button>
               <% } %>
 
@@ -195,7 +273,7 @@ function visInit(project) {
             <div class="mt-4 flex items-center justify-between">
               <span class="project-complete-status">
                 <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"></path>
                 </svg>
                 Завершено
               </span>
@@ -209,209 +287,20 @@ function visInit(project) {
 
           <!-- Whole-card link -->
           <a class="absolute inset-0 z-10" href="/projects/<%= p.requestNumber %>" aria-label="Відкрити проєкт: <%= p.title %>"></a>
-
         </article>
         <% }); %>
       </div>
     </div>
 
-    <div data-load-more-wrap class="mt-10 flex justify-center <%= matchTotal > 6 ? '' : 'hidden' %>">
-      <button type="button" data-load-more class="btn btn-primary btn-wide">Завантажити ще</button>
+    <% /* ===== Load more ======= */ %>
+    <div class="mt-10 flex justify-center" data-load-more-wrap <%= matchTotal > 6 ? '' : 'hidden' %>>
+      <button type="button" class="btn btn-primary btn-wide" data-load-more>
+        Завантажити ще
+      </button>
     </div>
-
   </main>
 </div>
 
-<script>
-  (function () {
-    var wrap = document.getElementById('views-wrap');
-    if (!wrap) { return; }
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var revealed = false;
-    var items = Array.prototype.slice.call(document.querySelectorAll('[data-project-item]'));
-    var viewActive = document.querySelector('[data-view="active"]');
-    var viewCompleted = document.querySelector('[data-view="completed"]');
-    var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-status-tab]'));
-    var thumb = document.querySelector('[data-toggle-thumb]');
-    var searchInput = document.querySelector('[data-search-input]');
-    var sortWrap = document.querySelector('[data-sort]');
-    var sortLabel = document.querySelector('[data-sort-label]');
-    var loadWrap = document.querySelector('[data-load-more-wrap]');
-    var loadBtn = document.querySelector('[data-load-more]');
-    var emptyEl = document.querySelector('[data-empty]');
-    var emptyText = document.querySelector('[data-empty-text]');
-    var subtitle = document.querySelector('[data-subtitle]');
-    var SUB = { active: 'Тут ви можете відстежувати статуси заявок, з якими ми працюємо', completed: 'Тут ви можете переглянути наше портфоліо із завершених проектів' };
-    var SORT_LABELS = { new: 'Спочатку новіші', old: 'Спочатку старіші' };
-    var PER = 6;
 
-    var params = new URLSearchParams(location.search);
-    var state = {
-      status: params.get('status') === 'completed' ? 'completed' : 'active',
-      q: (params.get('q') || '').trim(),
-      sort: params.get('sort') === 'old' ? 'old' : 'new',
-      shown: PER
-    };
-
-    function num(el, key) { return parseInt(el.getAttribute('data-' + key), 10) || 0; }
-    function moveThumb() { if (thumb) { thumb.style.transform = state.status === 'completed' ? 'translateX(100%)' : 'translateX(0%)'; } }
-
-    function visibleItems() {
-      var c = state.status === 'active' ? viewActive : viewCompleted;
-      if (!c) { return []; }
-      return Array.prototype.filter.call(c.querySelectorAll('.reveal-item'), function (el) { return !el.classList.contains('hidden'); });
-    }
-    function ensureRevealed() { visibleItems().forEach(function (el) { el.classList.add('reveal-in'); }); }
-    function staggerReveal() {
-      var vis = visibleItems();
-      if (reduceMotion) { vis.forEach(function (el) { el.classList.add('reveal-in'); }); return; }
-      vis.forEach(function (el) { el.classList.remove('reveal-in'); });
-      void wrap.offsetWidth;
-      vis.forEach(function (el, i) {
-        el.style.transitionDelay = (Math.min(i, 8) * 0.06) + 's';
-        el.classList.add('reveal-in');
-      });
-    }
-
-    function apply() {
-      var isActive = state.status === 'active';
-      var current = items.filter(function (c) { return c.getAttribute('data-status') === state.status; });
-      current.sort(function (a, b) {
-        var firstTimestamp =
-          num(a, 'sort-value');
-
-        var secondTimestamp =
-          num(b, 'sort-value');
-
-        return state.sort === 'old'
-          ? firstTimestamp - secondTimestamp
-          : secondTimestamp - firstTimestamp;
-      });
-      current.forEach(function (c) { c.parentNode.appendChild(c); });
-
-      var normalizedQuery =
-        state.q.toLocaleLowerCase('uk-UA');
-
-      var matched = 0;
-
-      current.forEach(function (item) {
-        var searchText =
-          item.getAttribute('data-search') || '';
-
-        var matchedQuery =
-          !normalizedQuery ||
-          searchText.indexOf(normalizedQuery) !== -1;
-
-        if (matchedQuery) {
-          item.classList.toggle(
-            'hidden',
-            matched >= state.shown
-          );
-
-          matched += 1;
-        } else {
-          item.classList.add('hidden');
-        }
-      });
-
-      if (viewActive) { viewActive.classList.toggle('hidden', !(isActive && matched > 0)); }
-      if (viewCompleted) { viewCompleted.classList.toggle('hidden', !(!isActive && matched > 0)); }
-      if (emptyText) { emptyText.textContent = state.q ? 'За вашим запитом заявок не знайдено.' : (isActive ? 'Наразі немає активних заявок.' : 'Поки що немає завершених проєктів.'); }
-      if (emptyEl) { emptyEl.classList.toggle('hidden', matched > 0); }
-      if (loadWrap) { loadWrap.classList.toggle('hidden', matched <= state.shown); }
-      if (subtitle) { subtitle.textContent = SUB[state.status]; }
-
-      tabs.forEach(function (t) {
-        var on = t.getAttribute('data-status-tab') === state.status;
-        t.classList.toggle('is-active', on);
-      });
-      moveThumb();
-      if (sortLabel) { sortLabel.textContent = SORT_LABELS[state.sort]; }
-
-      var p = new URLSearchParams();
-      if (state.status === 'completed') { p.set('status', 'completed'); }
-      if (state.q) { p.set('q', state.q); }
-      if (state.sort === 'old') { p.set('sort', 'old'); }
-      var qs = p.toString();
-      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
-
-      if (revealed) { ensureRevealed(); }
-    }
-
-    function fadeApply() {
-      wrap.style.opacity = '0';
-      if (subtitle) { subtitle.style.opacity = '0'; subtitle.style.transform = 'translateY(6px)'; }
-      setTimeout(function () {
-        apply(); staggerReveal();
-        wrap.style.opacity = '1';
-        if (subtitle) { subtitle.style.opacity = '1'; subtitle.style.transform = 'none'; }
-      }, 170);
-    }
-
-    tabs.forEach(function (t) {
-      t.addEventListener('click', function () {
-        var s = t.getAttribute('data-status-tab');
-        if (state.status === s) { return; }
-        state.status = s; state.shown = PER; fadeApply();
-      });
-    });
-
-    if (searchInput) {
-      searchInput.value = state.q;
-      searchInput.addEventListener('input', function () { state.q = searchInput.value.trim(); state.shown = PER; apply(); });
-    }
-
-    if (sortWrap) {
-      sortWrap.querySelector('[data-sort-toggle]').addEventListener('click', function (e) {
-        e.stopPropagation();
-        sortWrap.classList.toggle('sort-open');
-      });
-      Array.prototype.forEach.call(sortWrap.querySelectorAll('[data-sort-opt]'), function (o) {
-        o.addEventListener('click', function () { state.sort = o.getAttribute('data-sort-opt'); sortWrap.classList.remove('sort-open'); apply(); });
-      });
-      document.addEventListener('click', function (e) { if (!sortWrap.contains(e.target)) { sortWrap.classList.remove('sort-open'); } });
-    }
-
-    if (loadBtn) { loadBtn.addEventListener('click', function () { state.shown += PER; apply(); }); }
-
-    /* ===== Before / after toggle ===== */
-    var toggles = document.querySelectorAll('[data-view="completed"] [data-cp-toggle]');
-    toggles.forEach(function (toggle) {
-      toggle.addEventListener('click', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var card = toggle.closest('[data-project-card]');
-        if (!card) {
-          return;
-        }
-
-        var showAfter = !card.classList.contains('is-after');
-        card.classList.add('is-switching');
-        card.classList.toggle('is-after', showAfter);
-        clearTimeout(card._cpTimer);
-        card._cpTimer = setTimeout(function () {
-          card.classList.remove('is-switching');
-        }, 2050);
-
-        toggle.setAttribute('aria-pressed', showAfter ? 'true' : 'false');
-        toggle.setAttribute('aria-label', showAfter ? 'Показати фото до ремонту' : 'Показати фото після ремонту');
-
-        var label = toggle.querySelector('[data-cp-toggle-label]');
-        if (label) {
-          label.textContent = showAfter ? 'Після' : 'До';
-        }
-      });
-    });
-
-    apply();
-
-    function initialReveal() { revealed = true; staggerReveal(); }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initialReveal);
-    } else {
-      initialReveal();
-    }
-    window.addEventListener('load', function () { revealed = true; ensureRevealed(); });
-  })();
-</script>
+<script src="/js/components/before-after.js" defer></script>
+<script src="/js/pages/projects.js" defer></script>

@@ -1,36 +1,12 @@
 <%
 var active = (typeof active !== 'undefined') ? active : '';
 var footerNav = [
-  {
-    label: 'Головна',
-    href: base,
-    page: 'home'
-  },
-  {
-    label: 'Послуги',
-    href: '/services',
-    page: 'services'
-  },
-  {
-    label: 'Наші проекти',
-    href: '/projects',
-    page: 'projects'
-  },
-  {
-    label: 'Про нас',
-    href: base + '#about',
-    spy: 'about'
-  },
-  {
-    label: 'Часті запитання',
-    href: base + '#faq',
-    spy: 'faq'
-  },
-  {
-    label: 'Контакти',
-    href: base + '#contacts',
-    spy: 'contacts'
-  }
+  { label: 'Головна', href: base, page: 'home' },
+  { label: 'Послуги', href: '/services', page: 'services' },
+  { label: 'Наші проекти', href: '/projects', page: 'projects' },
+  { label: 'Про нас', href: base + '#about', spy: 'about' },
+  { label: 'Часті запитання', href: base + '#faq', spy: 'faq' },
+  { label: 'Контакти', href: base + '#contacts', spy: 'contacts' }
 ];
 %>
 
@@ -99,28 +75,3 @@ var footerNav = [
     <path d="M6 15l6-6 6 6"></path>
   </svg>
 </button>
-
-
-<script>
-  (function () {
-    var button = document.querySelector('[data-to-top]');
-    if (!button) {
-      return;
-    }
-
-    function update() {
-      button.classList.toggle('is-visible', window.scrollY > 400);
-    }
-
-    button.addEventListener('click', function () {
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({
-        top: 0,
-        behavior: reduceMotion ? 'auto' : 'smooth'
-      });
-    });
-
-    window.addEventListener('scroll', update, { passive: true });
-    update();
-  })();
-</script>

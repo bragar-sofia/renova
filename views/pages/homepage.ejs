@@ -262,23 +262,23 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           </p>
 
           <div class="contact-links mt-7 space-y-3">
-            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="tel:+380756787784" title="Натисніть, щоб скопіювати">
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" data-copy-link href="tel:+380756787784" title="Натисніть, щоб скопіювати">
               <img class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">
-              <span class="copy-text">
+              <span class="copy-text" data-copy-text>
                 075 678 77 84
               </span>
             </a>
 
-            <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="mailto:commerce.renova@gmail.com" title="Натисніть, щоб скопіювати">
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" data-copy-link href="mailto:commerce.renova@gmail.com" title="Натисніть, щоб скопіювати">
               <img class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt="">
-              <span class="copy-text">
+              <span class="copy-text" data-copy-text>
                 commerce.renova@gmail.com
               </span>
             </a>
           </div>
         </div>
 
-        <form id="contact-form" class="relative mt-7 space-y-3 lg:mt-0" action="/contact" method="post">
+        <form id="contact-form" class="relative mt-7 space-y-3 lg:mt-0" data-contact-form action="/contact" method="post">
           <% if (typeof _csrf !== 'undefined' && _csrf) { %>
             <input type="hidden" name="_csrf" value="<%= _csrf %>">
           <% } %>
@@ -295,7 +295,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             Надіслати форму
           </button>
 
-          <div class="form-status hidden" data-contact-status role="status" aria-live="polite"></div>
+            <div class="form-status" data-contact-status role="status" aria-live="polite" hidden></div>
         </form>
       </div>
     </section>
@@ -315,12 +315,12 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           ];
         %>
         <% faqItems.forEach(function (item) { %>
-          <details class="faq-item faq-item-local group">
+          <details class="faq-item faq-item-local group" data-faq-item>
             <summary class="faq-summary">
               <span><%= item.q %></span>
               <img class="faq-chevron" src="/images/icons/icon-chevron-down.svg" alt="">
             </summary>
-            <div class="faq-answer">
+            <div class="faq-answer" data-faq-answer>
               <div class="faq-answer-inner">
                 <p class="body-copy mt-3"><%- item.a %></p>
               </div>
@@ -333,302 +333,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 </div>
 
 
-<script>
-  (function () {
-    /* ===== Hero slogans ===== */
-    var slogans = Array.prototype.slice.call(document.querySelectorAll('[data-hero-slogan]'));
-    if (slogans.length > 1) {
-
-      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!reduceMotion) {
-        var current = 0;
-
-        function nextSlogan() {
-          var previous = slogans[current];
-          current = (current + 1) % slogans.length;
-          var next = slogans[current];
-
-          previous.classList.remove('is-active');
-          previous.classList.add('is-leaving');
-          previous.setAttribute('aria-hidden', 'true');
-
-          setTimeout(function () {
-            next.classList.add('is-active');
-            next.setAttribute('aria-hidden', 'false');
-          }, 180);
-
-          setTimeout(function () {
-            previous.classList.remove('is-leaving');
-          }, 700);
-        }
-
-        setInterval(nextSlogan, 6500);
-      }
-    }
-
-
-    /* ===== Hero benefits entrance ===== */
-    var band = document.querySelector('.hero-benefits-band');
-
-    if (band) {
-      window.requestAnimationFrame(function () {
-        window.requestAnimationFrame(function () {
-          band.classList.add('is-in');
-        });
-      });
-
-      setTimeout(function () {
-        band.classList.add('is-in');
-      }, 300);
-    }
-
-
-    /* ===== Hero benefit separators ===== */
-    (function () {
-      var seps = document.querySelectorAll('.hero-benefit-sep');
-      if (!seps.length) {
-        return;
-      }
-
-      function snapSeps() {
-        var dpr = window.devicePixelRatio || 1;
-
-        seps.forEach(function (sep) {
-          sep.style.transform = '';
-          sep.style.width = '';
-        });
-
-        if (getComputedStyle(seps[0]).display === 'none') {
-          return;
-        }
-
-        var width = Math.max(1, Math.round(2 * dpr)) / dpr;
-        seps.forEach(function (sep) {
-          sep.style.width = width + 'px';
-        });
-
-        seps.forEach(function (sep) {
-          var left = sep.getBoundingClientRect().left * dpr;
-          var offset = (Math.round(left) - left) / dpr;
-          sep.style.transform = 'translateX(' + offset + 'px)';
-        });
-      }
-
-      setTimeout(snapSeps, 1100);
-      window.addEventListener('resize', snapSeps);
-    })();
-  })();
-</script>
-
-<script>
-  (function () {
-    /* ===== Before / after toggle ===== */
-    var toggles = document.querySelectorAll('#projects-preview [data-cp-toggle]');
-    toggles.forEach(function (toggle) {
-      toggle.addEventListener('click', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var card = toggle.closest('[data-project-card]');
-        if (!card) {
-          return;
-        }
-
-        var showAfter = !card.classList.contains('is-after');
-        card.classList.add('is-switching');
-        card.classList.toggle('is-after', showAfter);
-
-        clearTimeout(card._cpTimer);
-
-        card._cpTimer = setTimeout(function () {
-          card.classList.remove('is-switching');
-        }, 2050);
-
-        toggle.setAttribute('aria-pressed', showAfter ? 'true' : 'false');
-        toggle.setAttribute('aria-label', showAfter ? 'Показати фото до ремонту' : 'Показати фото після ремонту');
-
-        var label = toggle.querySelector('[data-cp-toggle-label]');
-        if (label) {
-          label.textContent = showAfter ? 'Після' : 'До';
-        }
-      });
-    });
-  })();
-</script>
-
-<script>
-  (function () {
-    var links = document.querySelectorAll('#contacts .copy-link');
-
-    if (links.length) {
-      function legacyCopy(text) {
-        var textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'fixed';
-        textarea.style.top = '-1000px';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-          document.execCommand('copy');
-        } catch (error) {
-        }
-
-        document.body.removeChild(textarea);
-      }
-
-      function copyText(text, done) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard
-            .writeText(text)
-            .then(done)
-            .catch(function () {
-              legacyCopy(text);
-              done();
-            });
-
-          return;
-        }
-
-        legacyCopy(text);
-        done();
-      }
-
-      links.forEach(function (link) {
-        var textElement = link.querySelector('.copy-text');
-        if (!textElement) {
-          return;
-        }
-
-        var originalText = textElement.textContent.trim();
-        link.addEventListener('click', function (event) {
-            event.preventDefault();
-            copyText(originalText, function () {
-                textElement.textContent = 'Скопійовано';
-
-                link.classList.add('is-copied');
-                clearTimeout(link._copyTimeout);
-                link._copyTimeout = setTimeout(function () {
-                    textElement.textContent =
-                    originalText;
-                    link.classList.remove('is-copied');
-                }, 1400);
-              }
-            );
-          }
-        );
-      });
-    }
-
-    var form = document.querySelector('#contact-form');
-    if (!form) {
-      return;
-    }
-
-    var submitButton = form.querySelector('[data-contact-submit]');
-    var statusElement = form.querySelector('[data-contact-status]');
-    var defaultButtonText = submitButton.textContent.trim();
-
-    function showStatus(type, message) {
-      statusElement.textContent = message;
-      statusElement.className = 'form-status';
-
-      if (type === 'success') {
-        statusElement.classList.add('is-success');
-      } else {
-        statusElement.classList.add('is-error');
-      }
-    }
-
-    form.addEventListener('submit', async function (event) {
-        event.preventDefault();
-        submitButton.disabled = true;
-        submitButton.textContent = 'Надсилаємо...';
-        statusElement.classList.add('hidden');
-
-        try {
-          var formData = new FormData(form);
-          var response = await fetch(form.action, {
-              method: 'POST',
-              headers: {
-                Accept:
-                  'application/json'
-                },
-                body: new URLSearchParams(formData)
-              }
-            );
-
-          var data = {};
-
-          try {
-            data = await response.json();
-          } catch (error) {
-          }
-
-          if (!response.ok) {
-            throw new Error(data.error || 'Не вдалося надіслати повідомлення.');
-          }
-
-          form.reset();
-          showStatus('success', data.message || 'Дякуємо! Ваше повідомлення надіслано.');
-        } catch (error) {
-          showStatus('error', error.message || 'Не вдалося надіслати повідомлення. Спробуйте ще раз.');
-        } finally {
-          submitButton.disabled = false;
-          submitButton.textContent = defaultButtonText;
-        }
-      }
-    );
-  })();
-</script>
-
-
-<script>
-  (function () {
-    var items = document.querySelectorAll('#faq .faq-item');
-    if (!items.length) { return; }
-    var reduce = window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    items.forEach(function (details) {
-      var summary = details.querySelector('summary');
-      var answer = details.querySelector('.faq-answer');
-      if (!summary || !answer) { return; }
-      var animating = false;
-
-      summary.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (animating) { return; }
-
-        if (reduce) {
-          details.open = !details.open;
-          details.classList.toggle('is-open', details.open);
-          return;
-        }
-
-        if (details.open) {
-          animating = true;
-          details.classList.remove('is-open');
-          var done = false;
-          var finish = function () {
-            if (done) { return; }
-            done = true;
-            answer.removeEventListener('transitionend', onEnd);
-            details.open = false;
-            animating = false;
-          };
-          var onEnd = function (ev) {
-            if (ev.target === answer && ev.propertyName === 'grid-template-rows') { finish(); }
-          };
-          answer.addEventListener('transitionend', onEnd);
-          setTimeout(finish, 550);
-        } else {
-          details.open = true;
-          void answer.offsetHeight;
-          details.classList.add('is-open');
-        }
-      });
-    });
-  })();
-</script>
+<script src="/js/components/before-after.js" defer></script>
+<script src="/js/components/faq.js" defer></script>
+<script src="/js/pages/home.js" defer></script>

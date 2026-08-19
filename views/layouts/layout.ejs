@@ -5,12 +5,8 @@
   <title>New Sails App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <!-- Enable motion only when allowed -->
-  <script>
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('reveal-ready');
-    }
-  </script>
+  <!-- Motion state must be known before first render -->
+  <script src="/js/core/motion-init.js"></script>
 
   <link rel="preload" href="/fonts/geologica-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styles/app.css">
@@ -18,159 +14,22 @@
 </head>
 
 <body>
-<%- include('../partials/site-header', { base: '/', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
+<%- include('../partials/site-header', { base: '/', active: ( typeof activePage !== 'undefined' ? activePage : 'home' ) }) %>
 <%- body %>
-<%- include('../partials/site-footer', { base: '/', active: (typeof activePage !== 'undefined' ? activePage : 'home') }) %>
+<%- include('../partials/site-footer', { base: '/', active: ( typeof activePage !== 'undefined' ? activePage : 'home' ) }) %>
 
-<!-- TEMPLATES -->
-<!-- TEMPLATES END -->
-
-<!-- SCRIPTS -->
+<!-- Dependencies -->
 <script src="/dependencies/sails.io.js"></script>
-<!-- SCRIPTS END -->
-
-
-<!-- ===== Section reveal ===== -->
-<script>
-  (function () {
-    if (!document.documentElement.classList.contains('reveal-ready')) {
-      return;
-    }
-
-    var sections = document.querySelectorAll('main section:not(:has(section)):not(.revealed-instant)');
-    if (!sections.length) {
-      return;
-    }
-
-    if (!('IntersectionObserver' in window)) {
-      sections.forEach(function (section) {
-        section.classList.add('is-visible');
-      });
-
-      return;
-    }
-
-    var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) {
-            return;
-          }
-
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        rootMargin: '0px 0px -15% 0px'
-      }
-    );
-
-    sections.forEach(function (section) {
-      observer.observe(section);
-    });
-  })();
-</script>
-
-
-<!-- ===== Lottie ===== -->
 <script src="/dependencies/lottie.min.js" defer></script>
-<script>
-  (function () {
-    function initLottie() {
-      if (!window.lottie) {
-        return;
-      }
 
-      var elements = document.querySelectorAll('[data-lottie]');
-      if (!elements.length) {
-        return;
-      }
+<!-- Core -->
+<script src="/js/core/section-reveal.js" defer></script>
+<script src="/js/core/navigation-spy.js" defer></script>
+<script src="/js/core/lottie.js" defer></script>
 
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var states = new WeakMap();
-
-      function run(element) {
-        var state = states.get(element);
-        if (!state || state.started || !state.loaded || !state.visible) {
-          return;
-        }
-
-        state.started = true;
-        if (reduceMotion) {
-          state.animation.goToAndStop(Math.max(0, state.animation.totalFrames - 1), true);
-          return;
-        }
-
-        state.animation.goToAndPlay(0, true);
-      }
-
-      var observer = null;
-
-      if (!reduceMotion && 'IntersectionObserver' in window) {
-        observer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) {
-                return;
-              }
-
-              var state = states.get(entry.target);
-
-              if (!state) {
-                return;
-              }
-
-              state.visible = true;
-              run(entry.target);
-              observer.unobserve(entry.target);
-            });
-          },
-          {
-            threshold: 0.25
-          }
-        );
-      }
-
-      elements.forEach(function (element) {
-        var animation = window.lottie.loadAnimation({
-          container: element,
-          renderer: 'svg',
-          loop: false,
-          autoplay: false,
-          path: element.getAttribute('data-lottie')
-        });
-
-        states.set(element, {
-          animation: animation,
-          loaded: false,
-          visible: reduceMotion || !observer,
-          started: false
-        });
-
-        animation.addEventListener('DOMLoaded', function () {
-          var state = states.get(element);
-
-          if (!state) {
-            return;
-          }
-
-          state.loaded = true;
-          run(element);
-        });
-
-        if (observer) {
-          observer.observe(element);
-        }
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initLottie, {once: true});
-    } else {
-      initLottie();
-    }
-  })();
-</script>
+<!-- Components -->
+<script src="/js/components/header.js" defer></script>
+<script src="/js/components/footer.js" defer></script>
 
 </body>
 </html>

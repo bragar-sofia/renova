@@ -334,3 +334,8 @@
   color: var(--ui-steel);
   font-size: 1rem;
 }
+
+/* ===== Status tabs state ===== */
+.project-tabs.is-completed .project-tab-thumb {
+  transform: translateX(100%);
+}
