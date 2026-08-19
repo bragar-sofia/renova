@@ -1,3 +1,548 @@
+<style>
+  /* =========================================================
+     PROJECTS UI FOUNDATION
+     Temporary local component layer.
+     Shared primitives intentionally match Home / Services 1:1.
+     ========================================================= */
+
+  .projects-page {
+    --ui-navy: #012a4a;
+    --ui-navy-hover: #0b527b;
+    --ui-sky: #eff6f9;
+    --ui-steel: #527b8d;
+    --ui-card-radius: 1.875rem;
+    --ui-pill-radius: 0.5rem;
+    --ui-card-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
+    --ui-menu-shadow: 0 16px 42px rgba(7, 49, 78, 0.12);
+
+    min-height: 100vh;
+    background: var(--ui-sky);
+    color: var(--ui-navy);
+    font-family: 'Open Sans', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== Shared: layout ===== */
+  .site-container {
+    width: 100%;
+    max-width: 122rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .section-space {
+    padding-block: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .site-container {
+      padding-inline: 2rem;
+    }
+
+    .section-space {
+      padding-block: 3.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .site-container {
+      padding-inline: 4rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .site-container {
+      padding-inline: 6rem;
+    }
+  }
+
+  /* ===== Shared: typography ===== */
+  .heading-1,
+  .heading-2,
+  .heading-3,
+  .heading-4 {
+    margin: 0;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-weight: 400;
+  }
+
+  .heading-1 {
+    font-size: clamp(2rem, 0.5rem + 3.125vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-2 {
+    font-size: clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-3 {
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-4 {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .body-copy {
+    color: var(--ui-navy);
+    font-size: 1rem;
+    line-height: 1.75rem;
+  }
+
+  .text-muted {
+    color: var(--ui-steel);
+  }
+
+  /* ===== Shared: buttons ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--ui-pill-radius);
+    padding: 0.75rem 1.5rem;
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    text-align: center;
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--ui-steel);
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    border: 0;
+    background: var(--ui-navy);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--ui-navy-hover);
+  }
+
+  .btn-wide {
+    padding-inline: 2rem;
+  }
+
+  /* ===== Shared: cards / surfaces ===== */
+  .card {
+    border-radius: var(--ui-card-radius);
+    background: #fff;
+  }
+
+  .card-elevated {
+    box-shadow: var(--ui-card-shadow);
+  }
+
+  .interactive-card {
+    position: relative;
+  }
+
+  .interactive-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    border: 2px solid var(--ui-steel);
+    border-radius: inherit;
+    clip-path: inset(0 50% 0 50% round var(--ui-card-radius));
+    pointer-events: none;
+    transition: clip-path .5s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .interactive-card:hover::before,
+  .interactive-card:focus-visible::before,
+  .interactive-card:focus-within::before {
+    clip-path: inset(0 0 0 0 round var(--ui-card-radius));
+  }
+
+  /* Shared before / after state after project-card -> interactive-card migration. */
+  .interactive-card.is-after .cp-after {
+    --cp-x: 130%;
+  }
+
+  .interactive-card.is-after .cp-beam {
+    left: 130%;
+  }
+
+  .interactive-card.is-switching .cp-beam {
+    opacity: 1;
+  }
+
+  .interactive-card.is-after .cp-toggle-thumb {
+    transform: translateX(calc(100% + 3px));
+    background: var(--ui-steel);
+  }
+
+  @media (hover: hover) {
+    .interactive-card:hover .cp-after,
+    .interactive-card:focus-within .cp-after {
+      --cp-x: 130%;
+    }
+
+    .interactive-card:hover .cp-beam,
+    .interactive-card:focus-within .cp-beam {
+      left: 130%;
+      opacity: 1;
+    }
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .action-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: color .2s ease;
+  }
+
+  .action-link:hover {
+    color: var(--ui-steel);
+  }
+
+  .action-link img {
+    width: auto;
+    height: .75rem;
+    transform: rotate(-90deg);
+    object-fit: contain;
+    transition: transform .2s ease;
+  }
+
+  .group:hover .action-link img {
+    transform: translateX(4px) rotate(-90deg);
+  }
+
+  /* ===== Shared: form controls ===== */
+  .form-control {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: var(--ui-pill-radius);
+    background: #fff;
+    color: var(--ui-navy);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease, color .2s ease;
+  }
+
+  input.form-control {
+    height: 3rem;
+    padding-inline: 1rem;
+  }
+
+  .form-control::placeholder {
+    color: rgba(82, 123, 141, .7);
+  }
+
+  .form-control:focus {
+    box-shadow: 0 0 0 2px rgba(1, 42, 74, .4);
+  }
+
+  .form-control-outline {
+    border: 2px solid var(--ui-steel);
+    color: var(--ui-steel);
+  }
+
+  .form-control-outline:focus {
+    border-color: var(--ui-navy);
+    box-shadow: none;
+  }
+
+  /* ===== Projects: page header ===== */
+  .project-subtitle {
+    max-width: 42rem;
+    margin-top: .75rem;
+    color: rgba(1, 42, 74, .7);
+    font-size: 1rem;
+  }
+
+  /* ===== Projects: status switch ===== */
+  .project-tabs {
+    position: relative;
+    display: inline-grid;
+    flex-shrink: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: hidden;
+    border: 2px solid rgba(82, 123, 141, .4);
+    border-radius: var(--ui-pill-radius);
+    background: #fff;
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .project-tab-thumb {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 50%;
+    border-radius: var(--ui-pill-radius);
+    background: var(--ui-navy);
+    pointer-events: none;
+    transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .project-tab {
+    position: relative;
+    z-index: 1;
+    padding: .625rem 1.25rem;
+    border-radius: var(--ui-pill-radius);
+    color: var(--ui-navy);
+    text-align: center;
+    transition: color .3s ease;
+  }
+
+  .project-tab.is-active {
+    color: #fff;
+  }
+
+  /* ===== Projects: search / sort ===== */
+  .project-search {
+    position: relative;
+  }
+
+  .project-search-input {
+    padding-right: 2.75rem !important;
+  }
+
+  @media (min-width: 640px) {
+    .project-search-input {
+      width: 18rem;
+    }
+  }
+
+  .project-search-icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    color: var(--ui-steel);
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: color .2s ease;
+  }
+
+  .project-search:hover .project-search-icon,
+  .project-search:focus-within .project-search-icon {
+    color: var(--ui-navy);
+  }
+
+  .project-control-button {
+    display: flex;
+    width: 100%;
+    height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-inline: 1.25rem;
+    border: 2px solid var(--ui-steel);
+    border-radius: var(--ui-pill-radius);
+    background: #fff;
+    color: var(--ui-navy);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color .2s ease;
+  }
+
+  .project-control-button:hover,
+  .project-control-button:focus-visible {
+    border-color: var(--ui-navy);
+  }
+
+  @media (min-width: 640px) {
+    .project-control-button {
+      width: auto;
+    }
+  }
+
+  .project-sort-menu {
+    left: 0;
+    z-index: 20;
+    width: 100%;
+    margin-top: .5rem;
+    overflow: hidden;
+    border: 2px solid rgba(1, 42, 74, .3);
+    border-radius: var(--ui-pill-radius);
+    background: #fff;
+    padding: .25rem;
+    box-shadow: var(--ui-menu-shadow);
+  }
+
+  @media (min-width: 640px) {
+    .project-sort-menu {
+      right: 0;
+      left: auto;
+      width: 14rem;
+    }
+  }
+
+  .project-sort-option {
+    display: block;
+    width: 100%;
+    padding: .625rem 1rem;
+    border-radius: var(--ui-pill-radius);
+    color: var(--ui-navy);
+    font-size: 1rem;
+    text-align: left;
+    transition: background-color .2s ease;
+  }
+
+  .project-sort-option:hover {
+    background: var(--ui-sky);
+  }
+
+  /* ===== Projects: empty state ===== */
+  .project-empty-state {
+    padding: 5rem 1.5rem;
+    text-align: center;
+  }
+
+  .project-empty-text {
+    color: rgba(1, 42, 74, .7);
+  }
+
+  /* ===== Projects: active rows ===== */
+  .project-table-head {
+    display: none;
+    padding-bottom: 1rem;
+  }
+
+  .project-active-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+    overflow: hidden;
+    padding: 1.25rem 1.5rem;
+    color: var(--ui-navy);
+    font-size: 1rem;
+    transition: opacity .2s ease;
+  }
+
+  .project-row-cell {
+    color: var(--ui-navy);
+  }
+
+  .project-progress {
+    width: 100%;
+    max-width: 11.25rem;
+    margin-top: .5rem;
+  }
+
+  .project-progress-track {
+    width: 100%;
+    height: .625rem;
+    margin-top: .25rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: rgba(82, 123, 141, .2);
+  }
+
+  .project-progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--ui-navy);
+  }
+
+  @media (min-width: 1024px) {
+    .project-table-head {
+      display: grid;
+      grid-template-columns: 170px 1fr 230px 210px;
+    }
+
+    .project-active-row {
+      grid-template-columns: 170px 1fr 230px 210px;
+      align-items: stretch;
+      gap: 0;
+      padding: 0;
+    }
+
+    .project-row-cell {
+      display: flex;
+      padding: 1.5rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-row-cell--details {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      border-left: 2px solid var(--ui-steel);
+    }
+
+    .project-row-cell--center {
+      flex-direction: column;
+      border-left: 2px solid var(--ui-steel);
+    }
+
+    .project-progress {
+      margin-top: 0;
+    }
+  }
+
+  /* ===== Projects: completed cards ===== */
+  .project-completed-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .project-card-content {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: 1.25rem;
+    pointer-events: none;
+  }
+
+  .project-card-title {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  @media (min-width: 768px) {
+    .project-card-title {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+
+  .project-complete-status {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    color: var(--ui-steel);
+    font-size: 1rem;
+  }
+</style>
+
+
 <%
 var SUB_ACTIVE =
   'Тут ви можете відстежувати статуси заявок, з якими ми працюємо';
@@ -50,37 +595,37 @@ function visInit(project) {
 %>
 <script>document.documentElement.classList.add('reveal-ready');</script>
 
-<div class="min-h-screen bg-sky font-sans text-navy antialiased">
-  <main class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+<div class="projects-page">
+  <main class="site-container section-space">
 
     <% /* Header & filters */ %>
     <section>
-      <h1 class="font-display text-h1 font-normal text-navy">Заявки</h1>
-      <p data-subtitle class="mt-3 max-w-2xl text-base text-navy/70"><%= status === 'completed' ? SUB_COMPLETED : SUB_ACTIVE %></p>
+      <h1 class="heading-1">Заявки</h1>
+      <p data-subtitle class="project-subtitle"><%= status === 'completed' ? SUB_COMPLETED : SUB_ACTIVE %></p>
 
       <div class="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div data-toggle class="relative inline-grid shrink-0 grid-cols-2 overflow-hidden rounded-pill border-2 border-steel/40 bg-white font-display text-base font-bold">
-          <span data-toggle-thumb class="pointer-events-none absolute inset-y-0 left-0 w-1/2 rounded-pill bg-navy transition-transform duration-300" style="transition-timing-function: cubic-bezier(.16,1,.3,1); transform: translateX(<%= status === 'completed' ? '100%' : '0%' %>);"></span>
-          <button type="button" data-status-tab="active" class="relative z-10 rounded-pill px-5 py-2.5 text-center transition-colors duration-300 <%= status === 'active' ? 'text-white' : 'text-navy' %>">Активні</button>
-          <button type="button" data-status-tab="completed" class="relative z-10 rounded-pill px-5 py-2.5 text-center transition-colors duration-300 <%= status === 'completed' ? 'text-white' : 'text-navy' %>">Завершені</button>
+        <div data-toggle class="project-tabs">
+          <span data-toggle-thumb class="project-tab-thumb" style="transform: translateX(<%= status === 'completed' ? '100%' : '0%' %>);"></span>
+          <button type="button" data-status-tab="active" class="project-tab <%= status === 'active' ? 'is-active' : '' %>">Активні</button>
+          <button type="button" data-status-tab="completed" class="project-tab <%= status === 'completed' ? 'is-active' : '' %>">Завершені</button>
         </div>
 
         <div class="flex flex-col gap-3 sm:flex-row">
-          <div class="group relative">
-            <input type="text" data-search-input value="<%= q %>" placeholder="Пошук за номером, назвою або обладнанням" class="h-12 w-full rounded-pill border-2 border-steel bg-white pl-4 pr-11 text-base text-steel placeholder:text-steel/70 outline-none transition focus:border-navy sm:w-72">
-            <span class="pointer-events-none absolute right-4 top-1/2 flex -translate-y-1/2 items-center text-steel transition group-hover:text-navy group-focus-within:text-navy">
+          <div class="project-search">
+            <input type="text" data-search-input value="<%= q %>" placeholder="Пошук за номером, назвою або обладнанням" class="form-control form-control-outline project-search-input">
+            <span class="project-search-icon">
               <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
             </span>
           </div>
 
           <div class="relative" data-sort>
-            <button type="button" data-sort-toggle class="flex h-12 w-full items-center justify-between gap-6 rounded-pill border-2 border-steel bg-white pl-5 pr-5 text-base text-navy outline-none transition hover:border-navy sm:w-auto">
+            <button type="button" data-sort-toggle class="project-control-button">
               <span data-sort-label>Сортувати за</span>
               <svg class="sort-chevron h-4 w-4 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div class="sort-menu absolute left-0 z-20 mt-2 w-full overflow-hidden rounded-pill border-2 border-navy/30 bg-white p-1 shadow-[0_16px_42px_rgba(7,49,78,0.12)] sm:left-auto sm:right-0 sm:w-56">
-              <button type="button" data-sort-opt="new" class="block w-full rounded-pill px-4 py-2.5 text-left text-base text-navy transition hover:bg-sky">Спочатку новіші</button>
-              <button type="button" data-sort-opt="old" class="block w-full rounded-pill px-4 py-2.5 text-left text-base text-navy transition hover:bg-sky">Спочатку старіші</button>
+            <div class="sort-menu project-sort-menu absolute">
+              <button type="button" data-sort-opt="new" class="project-sort-option">Спочатку новіші</button>
+              <button type="button" data-sort-opt="old" class="project-sort-option">Спочатку старіші</button>
             </div>
           </div>
         </div>
@@ -89,8 +634,8 @@ function visInit(project) {
 
     <div id="views-wrap" class="mt-8">
 
-      <section data-empty class="rounded-card bg-white px-6 py-20 text-center <%= matchTotal > 0 ? 'hidden' : '' %>">
-        <p class="font-display text-h3 font-normal text-navy/70" data-empty-text>
+      <section data-empty class="card project-empty-state <%= matchTotal > 0 ? 'hidden' : '' %>">
+        <p class="heading-3 project-empty-text" data-empty-text>
           <%= q ? 'За вашим запитом заявок не знайдено.' : (status === 'completed' ? 'Поки що немає завершених проєктів.' : 'Наразі немає активних заявок.') %>
         </p>
       </section>
@@ -98,7 +643,7 @@ function visInit(project) {
       <% /* Active table */ %>
       <div data-view="active" class="<%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>">
         <div class="reveal-item">
-        <div class="hidden pb-4 font-display text-h2 font-normal text-navy lg:grid lg:grid-cols-[170px_1fr_230px_210px]">
+        <div class="project-table-head heading-2">
           <div class="text-center">Номер</div>
           <div class="text-center">Проєкт</div>
           <div class="text-center">Стан</div>
@@ -108,31 +653,30 @@ function visInit(project) {
         <div class="space-y-4">
           <% activeRows.forEach(function (p) { %>
             <a href="/projects/<%= p.requestNumber %>" data-project-item data-status="active" data-number="<%= p.requestNumber %>" data-search="<%= p.searchText %>" data-sort-value="<%= p.sortTimestamp %>"
-                class="project-card group relative grid grid-cols-1 gap-3 overflow-hidden rounded-card bg-white px-6 py-5 text-base shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition lg:grid-cols-[170px_1fr_230px_210px] lg:items-stretch lg:gap-0 lg:px-0 lg:py-0 <%= visInit(p) ? '' : 'hidden' %>">
-              <div class="text-navy lg:flex lg:items-center lg:justify-center lg:px-6 lg:py-6">№<%= p.requestNumber %></div>
-              <div class="text-navy lg:flex lg:flex-col lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6">
-                <p class="font-display text-h3 font-normal text-navy"><%= p.title %></p>
+                class="card card-elevated interactive-card project-active-row group <%= visInit(p) ? '' : 'hidden' %>">
+              <div class="project-row-cell">№<%= p.requestNumber %></div>
+              <div class="project-row-cell project-row-cell--details">
+                <p class="heading-3"><%= p.title %></p>
                 <p class="mt-2 text-base text-navy"><span class="font-display font-normal">Обладнання:</span> <%= p.equipment %></p>
                 <p class="mt-1 text-base text-navy"><span class="font-display font-normal">Вид ремонту:</span> <%= p.repairType %></p>
               </div>
-              <div class="text-navy lg:flex lg:flex-col lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6">
+              <div class="project-row-cell project-row-cell--center">
                 <span class="font-bold lg:hidden">Стан: </span>
-                <div class="mt-2 w-full max-w-[180px] lg:mt-0">
+                <div class="project-progress">
                   <div class="flex items-end justify-between gap-2">
                     <p class="text-base text-navy"><%= p.statusText %></p>
                     <p class="text-base text-navy"><%= p.progress %>%</p>
                   </div>
-                  <div class="mt-1 h-2.5 w-full overflow-hidden rounded-full bg-steel/20">
-                    <div class="h-full rounded-full bg-navy" style="width: <%= p.progress %>%"></div>
+                  <div class="project-progress-track">
+                    <div class="project-progress-bar" style="width: <%= p.progress %>%"></div>
                   </div>
                 </div>
               </div>
-              <div class="text-navy lg:flex lg:flex-col lg:items-center lg:justify-center lg:border-l-2 lg:border-[#527B8D] lg:px-6 lg:py-6">
+              <div class="project-row-cell project-row-cell--center">
                 <span class="font-bold lg:hidden">Оновлено: </span>
                 <p class="whitespace-nowrap text-base text-navy"><%= p.updatedDate %></p>
                 <p class="mt-1 whitespace-nowrap text-base text-steel">Створено: <%= p.createdDate %></p>
               </div>
-              <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
             </a>
           <% }); %>
         </div>
@@ -150,7 +694,7 @@ function visInit(project) {
           data-number="<%= p.requestNumber %>"
           data-search="<%= p.searchText %>"
           data-sort-value="<%= p.sortTimestamp %>"
-          class="reveal-item project-card group relative flex flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] <%= visInit(p) ? '' : 'hidden' %>"
+          class="reveal-item card card-elevated interactive-card project-completed-card group <%= visInit(p) ? '' : 'hidden' %>"
         >
 
           <!-- Photo -->
@@ -171,7 +715,7 @@ function visInit(project) {
           </div>
 
           <!-- Content -->
-          <div class="pointer-events-none relative z-20 flex flex-1 flex-col p-5">
+          <div class="project-card-content">
             <div class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3">
               <% if (p.imageMain && p.imageHover) { %>
                 <button type="button" class="cp-toggle pointer-events-auto col-start-2 row-start-1 mb-2 shrink-0 justify-self-end md:mb-0" data-cp-toggle aria-pressed="false" aria-label="Показати фото після ремонту">
@@ -181,7 +725,7 @@ function visInit(project) {
                 </button>
               <% } %>
 
-              <h3 class="project-title-clamp col-span-2 row-start-2 font-display text-h3 font-normal text-navy md:col-span-1 md:col-start-1 md:row-start-1">
+              <h3 class="heading-3 line-clamp-2 project-card-title">
                 <%= p.title %>
               </h3>
 
@@ -195,14 +739,14 @@ function visInit(project) {
             </p>
 
             <div class="mt-4 flex items-center justify-between">
-              <span class="flex items-center gap-1 text-base text-steel">
+              <span class="project-complete-status">
                 <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/>
                 </svg>
                 Завершено
               </span>
 
-              <span class="flex items-center gap-1 font-display text-base font-bold text-navy transition group-hover:text-steel">
+              <span class="action-link">
                 Детальніше
                 <img class="h-3 w-auto -rotate-90 object-contain" src="/images/icons/icon-chevron-inactive.svg" alt="">
               </span>
@@ -212,14 +756,13 @@ function visInit(project) {
           <!-- Whole-card link -->
           <a class="absolute inset-0 z-10" href="/projects/<%= p.requestNumber %>" aria-label="Відкрити проєкт: <%= p.title %>"></a>
 
-          <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
         </article>
         <% }); %>
       </div>
     </div>
 
     <div data-load-more-wrap class="mt-10 flex justify-center <%= matchTotal > 6 ? '' : 'hidden' %>">
-      <button type="button" data-load-more class="rounded-pill bg-navy px-8 py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]">Завантажити ще</button>
+      <button type="button" data-load-more class="btn btn-primary btn-wide">Завантажити ще</button>
     </div>
 
   </main>
@@ -326,8 +869,7 @@ function visInit(project) {
 
       tabs.forEach(function (t) {
         var on = t.getAttribute('data-status-tab') === state.status;
-        t.classList.toggle('text-white', on);
-        t.classList.toggle('text-navy', !on);
+        t.classList.toggle('is-active', on);
       });
       moveThumb();
       if (sortLabel) { sortLabel.textContent = SORT_LABELS[state.sort]; }

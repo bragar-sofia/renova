@@ -1,3 +1,570 @@
+<style>
+  /* =========================================================
+     PROJECT DETAIL UI FOUNDATION
+     Temporary local component layer.
+     Shared primitives intentionally match Home / Services / Projects.
+     ========================================================= */
+
+  .project-page {
+    --ui-navy: #012a4a;
+    --ui-navy-hover: #0b527b;
+    --ui-sky: #eff6f9;
+    --ui-steel: #527b8d;
+    --ui-card-radius: 1.875rem;
+    --ui-pill-radius: 0.5rem;
+    --ui-card-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
+
+    min-height: 100vh;
+    background: var(--ui-sky);
+    color: var(--ui-navy);
+    font-family: 'Open Sans', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== Shared: layout ===== */
+  .site-container {
+    width: 100%;
+    max-width: 122rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .section-space {
+    padding-block: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .site-container {
+      padding-inline: 2rem;
+    }
+
+    .section-space {
+      padding-block: 3.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .site-container {
+      padding-inline: 4rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .site-container {
+      padding-inline: 6rem;
+    }
+  }
+
+  /* ===== Shared: typography ===== */
+  .heading-1,
+  .heading-2,
+  .heading-3,
+  .heading-4 {
+    margin: 0;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-weight: 400;
+  }
+
+  .heading-1 {
+    font-size: clamp(2rem, 0.5rem + 3.125vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-2 {
+    font-size: clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-3 {
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-4 {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .body-copy {
+    color: var(--ui-navy);
+    font-size: 1rem;
+    line-height: 1.75rem;
+  }
+
+  .text-muted {
+    color: var(--ui-steel);
+  }
+
+  /* ===== Shared: buttons ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--ui-pill-radius);
+    padding: 0.75rem 1.5rem;
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    text-align: center;
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--ui-steel);
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    border: 0;
+    background: var(--ui-navy);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--ui-navy-hover);
+  }
+
+  .btn-sm {
+    padding: .625rem 1.25rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
+  }
+
+  /* ===== Shared: cards / surfaces ===== */
+  .card {
+    border-radius: var(--ui-card-radius);
+    background: #fff;
+  }
+
+  .card-elevated {
+    box-shadow: var(--ui-card-shadow);
+  }
+
+  /* ===== Project: breadcrumb / meta ===== */
+  .project-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: color .2s ease;
+  }
+
+  .project-back-link:hover {
+    color: var(--ui-steel);
+  }
+
+  .project-back-link img {
+    width: auto;
+    height: .75rem;
+    transform: rotate(90deg);
+    object-fit: contain;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    color: var(--ui-steel);
+    font-size: 1rem;
+  }
+
+  .project-meta-status {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+  }
+
+  .project-status-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  /* ===== Project: main layout ===== */
+  .project-detail-grid {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .project-detail-grid {
+      grid-template-columns: 1.15fr .85fr;
+      grid-template-rows: auto 1fr;
+      column-gap: 3.5rem;
+      row-gap: 1.75rem;
+    }
+
+    .project-content {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .project-content.has-hero {
+      grid-row: 1 / span 2;
+    }
+
+    .project-hero {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+    }
+
+    .project-stages {
+      grid-column: 2;
+      align-self: start;
+    }
+
+    .project-stages.has-hero {
+      grid-row: 2;
+    }
+
+    .project-stages:not(.has-hero) {
+      grid-row: 1;
+    }
+  }
+
+  .project-hero-frame,
+  .project-hero-image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--ui-card-radius);
+  }
+
+  .project-hero-frame {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to bottom right, var(--ui-sky), #fff);
+  }
+
+  .project-hero-frame > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-hero-image {
+    object-fit: cover;
+  }
+
+  .project-fact-title {
+    margin-top: 1.5rem;
+  }
+
+  .project-fact-value {
+    margin-top: .25rem;
+    color: var(--ui-navy);
+    font-size: 1rem;
+  }
+
+  /* ===== Project: server-rendered rich content ===== */
+  .rich-text {
+    margin-top: 2rem;
+    color: var(--ui-navy);
+    font-size: 1rem;
+    line-height: 1.75rem;
+  }
+
+  .rich-text h2 {
+    margin-top: 2rem;
+    margin-bottom: .75rem;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .rich-text h3 {
+    margin-top: 1.5rem;
+    margin-bottom: .75rem;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.75rem;
+  }
+
+  .rich-text p {
+    margin-bottom: 1rem;
+    text-align: justify;
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  .rich-text ul {
+    list-style: disc;
+  }
+
+  .rich-text ol {
+    list-style: decimal;
+  }
+
+  .rich-text li + li {
+    margin-top: .5rem;
+  }
+
+  .rich-text strong {
+    font-weight: 700;
+  }
+
+  /* ===== Project: before / after gallery ===== */
+  .project-gallery-title {
+    margin-top: 2rem;
+  }
+
+  .project-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: .75rem;
+  }
+
+  .project-gallery-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--ui-card-radius);
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  /* ===== Project: stages timeline ===== */
+  .project-stages {
+    padding: 1.5rem;
+  }
+
+  .project-stages-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .project-stages-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .project-stages-summary .stages-chevron {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    color: var(--ui-steel);
+    transition: transform .2s ease;
+  }
+
+  .project-timeline {
+    padding-top: 1.5rem;
+  }
+
+  .project-stage {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .project-stage-track {
+    display: flex;
+    width: 1.25rem;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .project-stage-marker {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    margin-top: .25rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background: rgba(82, 123, 141, .3);
+  }
+
+  .project-stage-marker.is-finished {
+    background: var(--ui-navy);
+  }
+
+  .project-stage-marker.is-current {
+    border: 4px solid var(--ui-navy);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(1, 42, 74, .1);
+  }
+
+  .project-stage-line {
+    width: .125rem;
+    flex: 1;
+    background: rgba(82, 123, 141, .3);
+  }
+
+  .project-stage-line.is-finished {
+    background: var(--ui-navy);
+  }
+
+  .project-stage-content {
+    min-width: 0;
+  }
+
+  .project-stage-content:not(.is-last) {
+    padding-bottom: 1.75rem;
+  }
+
+  .project-stage-content.is-future {
+    opacity: .45;
+  }
+
+  .project-stage-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .project-stage-label {
+    color: var(--ui-navy);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .status-badge {
+    border-radius: 9999px;
+    padding: .125rem .625rem;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+
+  .status-badge-current {
+    background: var(--ui-sky);
+    color: var(--ui-navy);
+  }
+
+  .status-badge-completed {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  .project-stage-note {
+    margin-top: .375rem;
+    color: rgba(1, 42, 74, .7);
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .project-stage-date {
+    margin-top: .375rem;
+    color: var(--ui-steel);
+    font-size: .875rem;
+    line-height: 1.25rem;
+  }
+
+  /* ===== Project: before / after lightbox shell ===== */
+  .project-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, .85);
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+
+  .project-lightbox.is-open {
+    display: flex;
+  }
+
+  .project-lightbox.is-visible {
+    opacity: 1;
+  }
+
+  .lightbox-close,
+  .lightbox-nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 9999px;
+    background: var(--ui-navy);
+    color: #fff;
+    transition: background-color .2s ease;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-nav-button:hover {
+    background: var(--ui-navy-hover);
+  }
+
+  .lightbox-close:focus-visible,
+  .lightbox-nav-button:focus-visible,
+  .lightbox-toggle:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, .6);
+    outline-offset: 2px;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .lightbox-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .lightbox-toggle {
+    padding: .625rem 1.25rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
+  }
+
+  .lightbox-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    color: #fff;
+  }
+
+  .lightbox-nav-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .lightbox-counter {
+    min-width: 3.5rem;
+    text-align: center;
+    font-size: .875rem;
+    font-weight: 700;
+  }
+</style>
+
 <script>
   document.documentElement.classList.add('reveal-ready');
 </script>
@@ -5,212 +572,158 @@
 <%
 function statusSvg(completed) {
   return completed
-    ? '<svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>'
-    : '<svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692a1.875 1.875 0 00.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.082a7.49 7.49 0 00-.985-.57c-.183-.089-.277-.228-.297-.35l-.179-1.07C15.62 2.912 14.836 2.25 13.92 2.25h-1.843zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd"/></svg>';
+    ? '<svg viewBox="0 0 24 24" class="project-status-icon" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd"/></svg>'
+    : '<svg viewBox="0 0 24 24" class="project-status-icon" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692a1.875 1.875 0 00.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.082a7.49 7.49 0 00-.985-.57c-.183-.089-.277-.228-.297-.35l-.179-1.07C15.62 2.912 14.836 2.25 13.92 2.25h-1.843zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd"/></svg>';
 }
 %>
 
-<div class="min-h-screen bg-sky font-sans text-navy antialiased">
-  <main class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-
+<div class="project-page">
+  <main class="site-container section-space">
     <section>
+      <% /* Breadcrumb & status */ %>
+      <a href="/projects<%= completed ? '?status=completed' : '' %>" class="project-back-link">
+        <img src="/images/icons/icon-chevron-inactive.svg" alt="">
+        Усі заявки
+      </a>
 
-    <% /* Breadcrumb & status */ %>
-    <a href="/projects<%= completed ? '?status=completed' : '' %>" class="inline-flex items-center gap-2 text-base font-display font-bold text-navy transition hover:text-steel">
-      <img class="h-3 w-auto rotate-90 object-contain" src="/images/icons/icon-chevron-inactive.svg" alt="">
-      Усі заявки
-    </a>
-
-    <div class="mt-5 flex items-center gap-4 text-base text-steel">
-      <span class="flex items-center gap-1"><%- statusSvg(completed) %> <%= statusLabel %></span>
-      <span>№<%= project.requestNumber %></span>
-    </div>
-
-    <%
-      var afterFirst = (Array.isArray(after) && after[0] && after[0].path) ? after[0].path : null;
-      var beforeFirst = (Array.isArray(before) && before[0] && before[0].path) ? before[0].path : null;
-      var heroBase = beforeFirst || mainPhoto;
-      var heroSwap = (afterFirst && afterFirst !== heroBase) ? afterFirst : null;
-      var hasHero = mainPhoto && completed;
-    %>
-    <% /* Content grid */ %>
-    <div class="mt-6 grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:grid-rows-[auto_1fr] lg:gap-x-14 lg:gap-y-7">
-
-      <% if (hasHero) { %>
-        <div class="lg:col-start-2 lg:row-start-1 lg:self-start">
-          <% if (heroSwap) { %>
-            <div class="card-photo relative aspect-[16/10] w-full overflow-hidden rounded-card bg-gradient-to-br from-sky to-white" data-cp-auto>
-              <img class="absolute inset-0 h-full w-full object-cover" src="<%= heroBase %>" alt="<%= project.title %> — до ремонту">
-              <img class="cp-after absolute inset-0 h-full w-full object-cover" src="<%= heroSwap %>" alt="<%= project.title %> — після ремонту">
-              <span class="cp-beam" aria-hidden="true"></span>
-            </div>
-          <% } else { %>
-            <img class="aspect-[16/10] w-full rounded-card object-cover" src="<%= mainPhoto %>" alt="<%= project.title %>">
-          <% } %>
-        </div>
-      <% } %>
-
-      <div class="lg:col-start-1 lg:row-start-1 <%= hasHero ? 'lg:row-span-2' : '' %>">
-        <h1 class="font-display text-h1 font-normal text-navy"><%= project.title %></h1>
-
-        <h3 class="mt-6 font-display text-h3 font-normal text-navy">Обладнання:</h3>
-        <p class="mt-1 text-base text-navy"><%= project.equipment %></p>
-
-        <h3 class="mt-6 font-display text-h3 font-normal text-navy">Тип робіт:</h3>
-        <p class="mt-1 text-base text-navy"><%= project.repairType %></p>
-
-        <% if (project.description && project.description.trim()) { %>
-          <div
-            class="
-      mt-8 text-base leading-7 text-navy
-
-      [&_h2]:mb-3
-      [&_h2]:mt-8
-      [&_h2]:font-display
-      [&_h2]:text-h3
-      [&_h2]:font-normal
-      [&_h2]:text-navy
-
-      [&_h3]:mb-3
-      [&_h3]:mt-6
-      [&_h3]:font-display
-      [&_h3]:text-xl
-      [&_h3]:font-normal
-      [&_h3]:text-navy
-
-      [&_p]:mb-4
-      [&_p]:text-justify
-
-      [&_ul]:mb-4
-      [&_ul]:list-disc
-      [&_ul]:space-y-2
-      [&_ul]:pl-6
-
-      [&_ol]:mb-4
-      [&_ol]:list-decimal
-      [&_ol]:space-y-2
-      [&_ol]:pl-6
-
-      [&_strong]:font-bold
-    "
-          >
-            <%- project.description %>
-          </div>
-        <% } %>
-
-        <% if (completed && before.length) { %>
-          <h3 class="mt-8 font-display text-h3 font-normal text-navy">До:</h3>
-          <div class="mt-3 grid grid-cols-2 gap-4">
-            <% before.forEach(function (ph, i) { %>
-              <img data-zoom data-pair="<%= i %>" data-side="before" class="aspect-[4/3] w-full cursor-pointer rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото до ремонту' %>" loading="lazy">
-            <% }); %>
-          </div>
-        <% } %>
-
-        <% if (completed && after.length) { %>
-          <h3 class="mt-8 font-display text-h3 font-normal text-navy">Після:</h3>
-          <div class="mt-3 grid grid-cols-2 gap-4">
-            <% after.forEach(function (ph, i) { %>
-              <img data-zoom data-pair="<%= i %>" data-side="after" class="aspect-[4/3] w-full cursor-pointer rounded-card object-cover" src="<%= ph.path %>" alt="<%= ph.alt || 'Фото після ремонту' %>" loading="lazy">
-            <% }); %>
-          </div>
-        <% } %>
+      <div class="project-meta">
+        <span class="project-meta-status"><%- statusSvg(completed) %> <%= statusLabel %></span>
+        <span>№<%= project.requestNumber %></span>
       </div>
 
-      <details id="stages-details" open class="is-expanded lg:col-start-2 lg:self-start <%= hasHero ? 'lg:row-start-2' : 'lg:row-start-1' %> rounded-card bg-white p-6 shadow-[0_16px_42px_rgba(7,49,78,0.07)]">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
-            <span class="font-display text-h3 font-normal text-navy">Етапи роботи</span>
-            <svg class="stages-chevron h-5 w-5 shrink-0 text-steel transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      <%
+        var afterFirst = (Array.isArray(after) && after[0] && after[0].path) ? after[0].path : null;
+        var beforeFirst = (Array.isArray(before) && before[0] && before[0].path) ? before[0].path : null;
+        var heroBase = beforeFirst || mainPhoto;
+        var heroSwap = (afterFirst && afterFirst !== heroBase) ? afterFirst : null;
+        var hasHero = mainPhoto && completed;
+      %>
+
+      <% /* Content grid */ %>
+      <div class="project-detail-grid">
+        <% if (hasHero) { %>
+          <div class="project-hero">
+            <% if (heroSwap) { %>
+              <div class="project-hero-frame card-photo" data-cp-auto>
+                <img src="<%= heroBase %>" alt="<%= project.title %> — до ремонту">
+                <img class="cp-after" src="<%= heroSwap %>" alt="<%= project.title %> — після ремонту">
+                <span class="cp-beam" aria-hidden="true"></span>
+              </div>
+            <% } else { %>
+              <img class="project-hero-image" src="<%= mainPhoto %>" alt="<%= project.title %>">
+            <% } %>
+          </div>
+        <% } %>
+
+        <div class="project-content<%= hasHero ? ' has-hero' : '' %>">
+          <h1 class="heading-1"><%= project.title %></h1>
+
+          <h3 class="heading-3 project-fact-title">Обладнання:</h3>
+          <p class="project-fact-value"><%= project.equipment %></p>
+
+          <h3 class="heading-3 project-fact-title">Тип робіт:</h3>
+          <p class="project-fact-value"><%= project.repairType %></p>
+
+          <% if (project.description && project.description.trim()) { %>
+            <div class="rich-text">
+              <%- project.description %>
+            </div>
+          <% } %>
+
+          <% if (completed && before.length) { %>
+            <h3 class="heading-3 project-gallery-title">До:</h3>
+            <div class="project-gallery">
+              <% before.forEach(function (ph, i) { %>
+                <img
+                  data-zoom
+                  data-pair="<%= i %>"
+                  data-side="before"
+                  class="project-gallery-image"
+                  src="<%= ph.path %>"
+                  alt="<%= ph.alt || 'Фото до ремонту' %>"
+                  loading="lazy"
+                >
+              <% }); %>
+            </div>
+          <% } %>
+
+          <% if (completed && after.length) { %>
+            <h3 class="heading-3 project-gallery-title">Після:</h3>
+            <div class="project-gallery">
+              <% after.forEach(function (ph, i) { %>
+                <img
+                  data-zoom
+                  data-pair="<%= i %>"
+                  data-side="after"
+                  class="project-gallery-image"
+                  src="<%= ph.path %>"
+                  alt="<%= ph.alt || 'Фото після ремонту' %>"
+                  loading="lazy"
+                >
+              <% }); %>
+            </div>
+          <% } %>
+        </div>
+
+        <details id="stages-details" open class="project-stages card card-elevated is-expanded<%= hasHero ? ' has-hero' : '' %>">
+          <summary class="project-stages-summary">
+            <span class="heading-3">Етапи роботи</span>
+            <svg class="stages-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </summary>
 
           <div data-stages-content>
             <div class="stages-inner">
-            <ol class="pt-6">
-              <% timeline.forEach(function (stage) { %>
-                <%
-                  const isFuture = !stage.reached;
+              <ol class="project-timeline">
+                <% timeline.forEach(function (stage) { %>
+                  <%
+                    var isFuture = !stage.reached;
+                    var isCurrentActive = stage.isCurrent && !completed;
+                    var isFinished = stage.done;
+                  %>
 
-                  const isCurrentActive =
-                    stage.isCurrent &&
-                    !completed;
-
-                  const isFinished =
-                    stage.done;
-                %>
-
-                <li class="flex gap-4">
-                  <div
-                    class="flex w-5 shrink-0 flex-col items-center self-stretch"
-                  >
-          <span
-            class="<%=
-              isFinished
-                ? 'bg-navy'
-                : isCurrentActive
-                  ? 'border-[4px] border-navy bg-white ring-4 ring-navy/10'
-                  : 'bg-steel/30'
-            %> mt-1 block h-4 w-4 shrink-0 rounded-full"
-            aria-hidden="true"
-          ></span>
-
-                    <% if (!stage.isLast) { %>
+                  <li class="project-stage">
+                    <div class="project-stage-track">
                       <span
-                        class="<%=
-                          isFinished
-                            ? 'bg-navy'
-                            : 'bg-steel/30'
-                        %> w-0.5 flex-1"
+                        class="project-stage-marker<%= isFinished ? ' is-finished' : (isCurrentActive ? ' is-current' : '') %>"
                         aria-hidden="true"
                       ></span>
-                    <% } %>
-                  </div>
 
-                  <div
-                    class="<%= stage.isLast ? '' : 'pb-7' %> min-w-0 <%= isFuture ? 'opacity-45' : '' %>"
-                  >
-                    <div class="flex flex-wrap items-center gap-2">
-                      <p class="text-base font-medium text-navy">
-                        <%= stage.label %>
-                      </p>
-
-                      <% if (stage.isCurrent && !completed) { %>
+                      <% if (!stage.isLast) { %>
                         <span
-                          class="rounded-full bg-sky px-2.5 py-0.5 text-xs font-bold text-navy"
-                        >
-                Поточний етап
-              </span>
-                      <% } %>
-
-                      <% if (stage.isCurrent && completed) { %>
-                        <span
-                          class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-700"
-                        >
-                Завершено
-              </span>
+                          class="project-stage-line<%= isFinished ? ' is-finished' : '' %>"
+                          aria-hidden="true"
+                        ></span>
                       <% } %>
                     </div>
 
-                    <% if (stage.reached && stage.note) { %>
-                      <p class="mt-1.5 text-base leading-6 text-navy/70">
-                        <%= stage.note %>
-                      </p>
-                    <% } %>
+                    <div class="project-stage-content<%= stage.isLast ? ' is-last' : '' %><%= isFuture ? ' is-future' : '' %>">
+                      <div class="project-stage-heading">
+                        <p class="project-stage-label"><%= stage.label %></p>
 
-                    <% if (stage.reached && stage.date) { %>
-                      <p class="mt-1.5 text-sm text-steel">
-                        <%= stage.date %>
-                      </p>
-                    <% } %>
-                  </div>
-                </li>
-              <% }); %>
-            </ol>
+                        <% if (stage.isCurrent && !completed) { %>
+                          <span class="status-badge status-badge-current">Поточний етап</span>
+                        <% } %>
+
+                        <% if (stage.isCurrent && completed) { %>
+                          <span class="status-badge status-badge-completed">Завершено</span>
+                        <% } %>
+                      </div>
+
+                      <% if (stage.reached && stage.note) { %>
+                        <p class="project-stage-note"><%= stage.note %></p>
+                      <% } %>
+
+                      <% if (stage.reached && stage.date) { %>
+                        <p class="project-stage-date"><%= stage.date %></p>
+                      <% } %>
+                    </div>
+                  </li>
+                <% }); %>
+              </ol>
             </div>
           </div>
         </details>
-
-    </div>
-
+      </div>
     </section>
   </main>
 
@@ -227,9 +740,10 @@ function statusSvg(completed) {
     }
   %>
     <script>window.__baPairs = <%- JSON.stringify(baPairs) %>;</script>
+
     <% /* Before/after lightbox */ %>
-    <div id="photo-lightbox" class="fixed inset-0 z-[100] hidden flex-col items-center justify-center gap-5 bg-black/85 p-4 opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-label="Перегляд до та після">
-      <button type="button" data-lightbox-close class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-navy text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60" aria-label="Закрити">
+    <div id="photo-lightbox" class="project-lightbox" role="dialog" aria-modal="true" aria-label="Перегляд до та після">
+      <button type="button" data-lightbox-close class="lightbox-close" aria-label="Закрити">
         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
 
@@ -244,18 +758,18 @@ function statusSvg(completed) {
         </div>
       </div>
 
-      <div class="flex flex-col items-center gap-4">
-        <button type="button" data-ba-toggle class="inline-flex items-center gap-2 rounded-pill bg-navy px-5 py-2.5 text-sm font-display font-bold text-white transition hover:bg-[#0b527b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+      <div class="lightbox-controls">
+        <button type="button" data-ba-toggle class="btn btn-primary btn-sm lightbox-toggle">
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M6 8l-3 4 3 4M18 8l3 4-3 4"/></svg>
           <span data-ba-toggle-label>Порівняти До / Після</span>
         </button>
 
-        <div class="flex items-center gap-5 text-white" data-ba-nav>
-          <button type="button" data-ba-prev class="flex h-10 w-10 items-center justify-center rounded-full bg-navy transition hover:bg-[#0b527b]" aria-label="Попередня пара">
+        <div class="lightbox-nav" data-ba-nav>
+          <button type="button" data-ba-prev class="lightbox-nav-button" aria-label="Попередня пара">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
           </button>
-          <span class="min-w-[3.5rem] text-center text-sm font-bold" data-ba-counter>1 / 1</span>
-          <button type="button" data-ba-next class="flex h-10 w-10 items-center justify-center rounded-full bg-navy transition hover:bg-[#0b527b]" aria-label="Наступна пара">
+          <span class="lightbox-counter" data-ba-counter>1 / 1</span>
+          <button type="button" data-ba-next class="lightbox-nav-button" aria-label="Наступна пара">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
           </button>
         </div>
@@ -411,20 +925,18 @@ function statusSvg(completed) {
       compare = false;
       render();
       if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-      lb.classList.remove('hidden');
-      lb.classList.add('flex');
+      lb.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       window.requestAnimationFrame(function () {
-        lb.classList.remove('opacity-0');
+        lb.classList.add('is-visible');
       });
     }
 
     function close() {
-      lb.classList.add('opacity-0');
+      lb.classList.remove('is-visible');
       document.body.style.overflow = '';
       hideTimer = setTimeout(function () {
-        lb.classList.add('hidden');
-        lb.classList.remove('flex');
+        lb.classList.remove('is-open');
       }, 300);
     }
 
@@ -473,7 +985,7 @@ function statusSvg(completed) {
       if (e.target === lb) { close(); }
     });
     document.addEventListener('keydown', function (e) {
-      if (lb.classList.contains('hidden')) { return; }
+      if (!lb.classList.contains('is-open')) { return; }
       if (e.key === 'Escape') { close(); }
       else if (e.key === 'ArrowLeft') { go(-1); }
       else if (e.key === 'ArrowRight') { go(1); }

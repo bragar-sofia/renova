@@ -1,8 +1,517 @@
+<style>
+  /* =========================================================
+     HOME UI FOUNDATION
+     Temporary local component layer.
+     Later this block can be moved almost 1:1 into Tailwind CSS.
+     ========================================================= */
+
+  .home-page {
+    --ui-navy: #012a4a;
+    --ui-navy-hover: #0b527b;
+    --ui-sky: #eff6f9;
+    --ui-steel: #527b8d;
+    --ui-card-radius: 1.875rem;
+    --ui-pill-radius: 0.5rem;
+    --ui-hero-radius: 2.1875rem;
+    --ui-card-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
+
+    min-height: 100vh;
+    background: var(--ui-sky);
+    color: var(--ui-navy);
+    font-family: 'Open Sans', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ===== Layout ===== */
+  .site-container {
+    width: 100%;
+    max-width: 122rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .section-space {
+    padding-block: 2.5rem;
+  }
+
+  .site-container-contact {
+    padding: 1.5rem 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    .site-container {
+      padding-inline: 2rem;
+    }
+
+    .section-space {
+      padding-block: 3.5rem;
+    }
+
+    .site-container-contact {
+      padding-top: 3.5rem;
+      padding-bottom: 3.5rem;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .site-container-contact {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-container-contact {
+      padding: 3.5rem 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .site-container {
+      padding-inline: 4rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .site-container {
+      padding-inline: 6rem;
+    }
+  }
+
+  /* ===== Typography ===== */
+  .heading-1,
+  .heading-2,
+  .heading-3,
+  .heading-4 {
+    margin: 0;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-weight: 400;
+  }
+
+  .heading-1 {
+    font-size: clamp(2rem, 0.5rem + 3.125vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-2 {
+    font-size: clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-3 {
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-4 {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  /* Hero intentionally uses a slightly tighter display scale than generic h1. */
+  .hero-slogan.heading-1 {
+    font-size: clamp(2rem, 0.4rem + 2.7vw, 3.4rem);
+    line-height: 1.08;
+  }
+
+  .body-copy {
+    color: var(--ui-navy);
+    font-size: 1rem;
+    line-height: 1.75rem;
+  }
+
+  .text-muted {
+    color: var(--ui-steel);
+  }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--ui-pill-radius);
+    padding: 0.75rem 1.5rem;
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    text-align: center;
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--ui-steel);
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    border: 0;
+    background: var(--ui-navy);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--ui-navy-hover);
+  }
+
+  .btn-outline {
+    border: 2px solid var(--ui-navy);
+    background: transparent;
+    color: var(--ui-navy);
+  }
+
+  .btn-outline:hover {
+    background: #fff;
+  }
+
+  .btn-wide {
+    padding-inline: 2rem;
+  }
+
+  .btn-block {
+    width: 100%;
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: .6;
+  }
+
+  /* ===== Cards / surfaces ===== */
+  .card {
+    border-radius: var(--ui-card-radius);
+    background: #fff;
+  }
+
+  .card-elevated {
+    box-shadow: var(--ui-card-shadow);
+  }
+
+  .interactive-card {
+    position: relative;
+  }
+
+  .interactive-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    border: 2px solid var(--ui-steel);
+    border-radius: inherit;
+    clip-path: inset(0 50% 0 50% round var(--ui-card-radius));
+    pointer-events: none;
+    transition: clip-path .5s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .interactive-card:hover::before,
+  .interactive-card:focus-visible::before,
+  .interactive-card:focus-within::before {
+    clip-path: inset(0 0 0 0 round var(--ui-card-radius));
+  }
+
+  /* Keep the existing before/after feature working after renaming project-card. */
+  .interactive-card.is-after .cp-after {
+    --cp-x: 130%;
+  }
+
+  .interactive-card.is-after .cp-beam {
+    left: 130%;
+  }
+
+  .interactive-card.is-switching .cp-beam {
+    opacity: 1;
+  }
+
+  .interactive-card.is-after .cp-toggle-thumb {
+    transform: translateX(calc(100% + 3px));
+    background: var(--ui-steel);
+  }
+
+  @media (hover: hover) {
+    .interactive-card:hover .cp-after,
+    .interactive-card:focus-within .cp-after {
+      --cp-x: 130%;
+    }
+
+    .interactive-card:hover .cp-beam,
+    .interactive-card:focus-within .cp-beam {
+      left: 130%;
+      opacity: 1;
+    }
+  }
+
+  .empty-card {
+    border: 1px solid rgba(82, 123, 141, .3);
+    color: var(--ui-steel);
+  }
+
+  /* ===== Small reusable UI ===== */
+  .number-badge {
+    display: flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--ui-navy);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .chip {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: .25rem;
+    padding: .375rem .75rem;
+    border: 2px solid var(--ui-steel);
+    border-radius: var(--ui-pill-radius);
+    color: var(--ui-navy);
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .chip img {
+    width: auto;
+    height: 1.75rem;
+    object-fit: contain;
+  }
+
+  .action-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: color .2s ease;
+  }
+
+  .action-link:hover {
+    color: var(--ui-steel);
+  }
+
+  .action-link img {
+    width: auto;
+    height: .75rem;
+    transform: rotate(-90deg);
+    object-fit: contain;
+    transition: transform .2s ease;
+  }
+
+  .group:hover .action-link img {
+    transform: translateX(4px) rotate(-90deg);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  /* ===== About tabs ===== */
+  .about-card {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .about-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -1px;
+    margin-left: -1px;
+    border-bottom: 1px solid rgba(82, 123, 141, .3);
+    color: var(--ui-navy);
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    font-weight: 400;
+  }
+
+  .about-tab {
+    flex: 1 1 0;
+    padding: .75rem 1.25rem;
+    border-top: 1px solid rgba(82, 123, 141, .3);
+    border-left: 1px solid rgba(82, 123, 141, .3);
+    background: #fff;
+    color: var(--ui-navy);
+    text-align: center;
+    white-space: nowrap;
+    transition: background-color .2s ease, color .2s ease;
+  }
+
+  .about-tab:hover,
+  .about-tab.is-active {
+    background: var(--ui-navy);
+    color: #fff;
+  }
+
+  .about-tab.is-active:hover {
+    background: var(--ui-navy-hover);
+  }
+
+
+  /* ===== Contact panel ===== */
+  .contact-title,
+  .contact-subtitle,
+  .contact-links {
+    font-family: 'Geologica', Arial, sans-serif;
+    font-weight: 400;
+  }
+
+  .contact-title {
+    font-size: clamp(2rem, 0.5rem + 3.125vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .contact-subtitle,
+  .contact-links {
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  /* ===== Contact form ===== */
+  .form-control {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: var(--ui-pill-radius);
+    background: #fff;
+    color: var(--ui-navy);
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow .2s ease;
+  }
+
+  input.form-control {
+    height: 3rem;
+    padding-inline: 1rem;
+  }
+
+  textarea.form-control {
+    height: 10.125rem;
+    padding: 1rem;
+    resize: none;
+  }
+
+  .form-control::placeholder {
+    color: rgba(82, 123, 141, .7);
+  }
+
+  .form-control:focus {
+    box-shadow: 0 0 0 2px rgba(1, 42, 74, .4);
+  }
+
+  .form-status {
+    border-radius: var(--ui-pill-radius);
+    padding: .75rem 1rem;
+    text-align: center;
+    font-size: .875rem;
+    font-weight: 500;
+  }
+
+  .form-status.is-success {
+    background: #ecfdf5;
+    color: #065f46;
+  }
+
+  .form-status.is-error {
+    background: #fef2f2;
+    color: #991b1b;
+  }
+
+  /* ===== FAQ visual layer ===== */
+  .faq-panel {
+    border-radius: var(--ui-card-radius);
+    background: #fff;
+    padding: 1.5rem;
+    color: var(--ui-navy);
+  }
+
+  .faq-item-local {
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--ui-steel);
+  }
+
+  .faq-item-local:first-child {
+    padding-top: .5rem;
+  }
+
+  .faq-item-local:last-child {
+    padding-bottom: .5rem;
+    border-bottom: 0;
+  }
+
+  .faq-summary {
+    display: flex;
+    min-height: 2.1em;
+    cursor: pointer;
+    list-style: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    font-family: 'Geologica', Arial, sans-serif;
+    font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+    font-weight: 400;
+    transition: color .2s ease;
+  }
+
+  .faq-summary:hover {
+    color: var(--ui-steel);
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-summary .faq-chevron {
+    width: auto;
+    height: .75rem;
+    flex-shrink: 0;
+    object-fit: contain;
+    transition: transform .2s ease;
+  }
+
+  .faq-summary:hover .faq-chevron {
+    transform: scale(1.25);
+  }
+
+  @media (min-width: 768px) {
+    .about-card {
+      width: fit-content;
+    }
+
+    .faq-item-local:first-child {
+      padding-top: 0;
+    }
+
+    .faq-item-local:last-child {
+      padding-bottom: 0;
+    }
+  }
+</style>
+
 <%
 var activeProjects = (typeof activeProjects !== 'undefined' && activeProjects) ? activeProjects : [];
 var completedProjects = (typeof completedProjects !== 'undefined' && completedProjects) ? completedProjects : [];
 %>
-<div class="min-h-screen bg-sky font-sans text-navy antialiased">
+<div class="home-page">
   <main id="home">
     <%
     var heroSlogans = [
@@ -16,9 +525,9 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
     <% /* Hero */ %>
     <section class="relative w-full overflow-hidden">
-      <div class="hero-inner relative z-10 mx-auto flex w-full max-w-shell items-center px-6 pb-10 pt-8 md:min-h-[560px] md:flex-row md:items-center lg:px-8 lg:pb-14 xl:px-16 2xl:min-h-[700px] 2xl:px-24">
+      <div class="hero-inner site-container relative z-10 flex items-center pb-10 pt-8 md:min-h-[560px] md:flex-row md:items-center lg:pb-14 2xl:min-h-[700px]">
         <div class="hero-text-col w-full max-w-none md:max-w-[56%] 2xl:max-w-[52%]">
-          <h1 class="hero-slogan font-display text-h1 font-normal text-navy">
+          <h1 class="hero-slogan heading-1">
             <% heroSlogans.forEach(function (slogan, index) { %>
               <span class="hero-slogan-text<%= index === 0 ? ' is-active' : '' %>" data-hero-slogan aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
                 <%= slogan %>
@@ -26,14 +535,14 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             <% }); %>
           </h1>
 
-          <p class="mt-5 max-w-[32rem] font-sans text-base leading-7 text-navy md:text-[1.05rem]">Відновлюємо, обслуговуємо, модернізуємо та запускаємо металообробне і пресове обладнання по всій Україні</p>
+          <p class="body-copy mt-5 max-w-[32rem] md:text-[1.05rem]">Відновлюємо, обслуговуємо, модернізуємо та запускаємо металообробне і пресове обладнання по всій Україні</p>
 
           <div class="hero-cta-grid mt-7 flex flex-col items-start gap-3 min-[1201px]:grid min-[1201px]:w-full min-[1201px]:max-w-[480px] min-[1201px]:grid-cols-2">
-            <a class="hero-cta-btn inline-flex w-auto items-center justify-center rounded-pill bg-navy px-6 py-3 text-center font-display font-bold text-white transition hover:bg-[#0b527b] min-[1201px]:w-full" href="#contacts">
+            <a class="btn btn-primary w-auto min-[1201px]:w-full" href="#contacts">
               Замовити діагностику
             </a>
 
-            <a class="hero-cta-btn inline-flex w-auto items-center justify-center rounded-pill border-2 border-navy px-6 py-3 text-center font-display font-bold text-navy transition hover:bg-white min-[1201px]:w-full" href="/services">
+            <a class="btn btn-outline w-auto min-[1201px]:w-full" href="/services">
               Деталі про послуги
             </a>
           </div>
@@ -61,100 +570,93 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     </div>
 
     <% /* Services */ %>
-    <section id="services" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-      <h2 class="mb-8 font-display text-h1 font-normal text-navy">Наші послуги</h2>
+    <section id="services" class="site-container section-space">
+      <h2 class="heading-1 mb-8">Наші послуги</h2>
 
-      <a href="/services#restoration" class="services-primary-card project-card group relative block overflow-hidden rounded-card bg-white p-5 transition md:grid md:grid-cols-[300px_1fr] md:items-center md:gap-8">
-        <span class="absolute left-5 top-5 z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">1</span>
+      <a href="/services#restoration" class="services-primary-card card interactive-card group relative block overflow-hidden p-5 transition md:grid md:grid-cols-[300px_1fr] md:items-center md:gap-8">
+        <span class="number-badge absolute left-5 top-5 z-20">1</span>
         <div class="relative z-10 mx-auto block h-20 w-auto aspect-[259/221] md:h-auto md:w-48" data-lottie="/images/lottie/restoration.json" aria-hidden="true"></div>
 
         <div class="relative z-10">
-          <h3 class="font-display text-h2 font-normal text-navy">Відновлення обладнання</h3>
+          <h3 class="heading-2">Відновлення обладнання</h3>
 
-          <p class="mt-3 max-w-[62rem] text-left font-display text-h4 text-navy">Комплексно відновлюємо металорізальне та пресове обладнання незалежно від його типу, виробника та року випуску — від діагностики й усунення несправностей до капітального ремонту та модернізації.</p>
+          <p class="heading-4 mt-3 max-w-[62rem] text-left">Комплексно відновлюємо металорізальне та пресове обладнання незалежно від його типу, виробника та року випуску — від діагностики й усунення несправностей до капітального ремонту та модернізації.</p>
 
           <div class="mt-3 flex flex-wrap gap-2 text-base text-navy">
-            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-diagnostics.svg" alt="">Діагностика</span>
-            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-capital-repair.svg" alt="">Капітальний ремонт</span>
-            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-emergency-repair.svg" alt="">Аварійний ремонт</span>
-            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-modernization.svg" alt="">Модернізація</span>
-            <span class="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-pill border-2 border-steel px-3 py-1.5"><img class="h-7 w-auto object-contain" src="/images/icons/icon-parts-replacement.svg" alt="">Заміна вузлів</span>
+            <span class="chip"><img class="h-7 w-auto object-contain" src="/images/icons/icon-diagnostics.svg" alt="">Діагностика</span>
+            <span class="chip"><img class="h-7 w-auto object-contain" src="/images/icons/icon-capital-repair.svg" alt="">Капітальний ремонт</span>
+            <span class="chip"><img class="h-7 w-auto object-contain" src="/images/icons/icon-emergency-repair.svg" alt="">Аварійний ремонт</span>
+            <span class="chip"><img class="h-7 w-auto object-contain" src="/images/icons/icon-modernization.svg" alt="">Модернізація</span>
+            <span class="chip"><img class="h-7 w-auto object-contain" src="/images/icons/icon-parts-replacement.svg" alt="">Заміна вузлів</span>
           </div>
 
-          <span class="mt-3 flex items-center justify-end gap-2 font-display text-base font-bold text-navy transition group-hover:text-steel">
+          <span class="action-link mt-3">
             Детальніше
-            <img class="h-3 w-auto -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+            <img src="/images/icons/icon-chevron-inactive.svg" alt="">
           </span>
         </div>
-
-        <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
       </a>
 
       <div data-stagger class="mt-3 grid gap-4 md:grid-cols-2">
-        <a href="/services#service" class="services-secondary-card project-card group relative flex flex-col overflow-hidden rounded-card bg-white p-5 transition">
-          <span class="absolute left-5 top-5 z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">2</span>
+        <a href="/services#service" class="services-secondary-card card interactive-card group relative flex flex-col overflow-hidden p-5 transition">
+          <span class="number-badge absolute left-5 top-5 z-20">2</span>
 
           <div class="relative z-10 mx-auto h-20 w-auto aspect-[214/150]" data-lottie="/images/lottie/maintenance.json" aria-hidden="true"></div>
-          <h3 class="relative z-10 mt-2 font-display text-h2 font-normal text-navy">Сервісне обслуговування</h3>
-          <p class="relative z-10 mt-2 text-left font-display text-h4 text-navy">Планове обслуговування, діагностика та профілактика несправностей для стабільної роботи обладнання, продовження його ресурсу й скорочення незапланованих простоїв.</p>
+          <h3 class="heading-2 relative z-10 mt-2">Сервісне обслуговування</h3>
+          <p class="heading-4 relative z-10 mt-2 text-left">Планове обслуговування, діагностика та профілактика несправностей для стабільної роботи обладнання, продовження його ресурсу й скорочення незапланованих простоїв.</p>
 
-          <span class="relative z-10 mt-auto flex items-center justify-end gap-2 pt-3 font-display text-base font-bold text-navy transition group-hover:text-steel">
+          <span class="action-link relative z-10 mt-auto pt-3">
             Детальніше
-            <img class="h-3 w-auto -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+            <img src="/images/icons/icon-chevron-inactive.svg" alt="">
           </span>
-
-          <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
         </a>
 
-        <a href="/services#supply" class="services-secondary-card project-card group relative flex flex-col overflow-hidden rounded-card bg-white p-5 transition">
-          <span class="absolute left-5 top-5 z-20 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy text-base font-bold leading-none text-white">3</span>
+        <a href="/services#supply" class="services-secondary-card card interactive-card group relative flex flex-col overflow-hidden p-5 transition">
+          <span class="number-badge absolute left-5 top-5 z-20">3</span>
 
           <div class="relative z-10 mx-auto h-20 w-auto aspect-[206/151]" data-lottie="/images/lottie/supply.json" aria-hidden="true"></div>
-          <h3 class="relative z-10 mt-2 font-display text-h2 font-normal text-navy">Постачання обладнання</h3>
-          <p class="relative z-10 mt-2 text-left font-display text-h4 text-navy">Підбираємо нове обладнання відповідно до технологічних завдань виробництва та супроводжуємо його впровадження — від комерційної пропозиції до запуску.</p>
+          <h3 class="heading-2 relative z-10 mt-2">Постачання обладнання</h3>
+          <p class="heading-4 relative z-10 mt-2 text-left">Підбираємо нове обладнання відповідно до технологічних завдань виробництва та супроводжуємо його впровадження — від комерційної пропозиції до запуску.</p>
 
-          <span class="relative z-10 mt-auto flex items-center justify-end gap-2 pt-3 font-display text-base font-bold text-navy transition group-hover:text-steel">
+          <span class="action-link relative z-10 mt-auto pt-3">
             Детальніше
-            <img class="h-3 w-auto -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
+            <img src="/images/icons/icon-chevron-inactive.svg" alt="">
           </span>
-
-          <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
         </a>
       </div>
     </section>
 
     <% /* Projects */ %>
-    <section id="projects-preview" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-      <h2 class="font-display text-h1 font-normal text-navy">Наші проекти</h2>
+    <section id="projects-preview" class="site-container section-space">
+      <h2 class="heading-1">Наші проекти</h2>
 
       <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-0">
         <div class="md:pr-8 lg:pr-12">
-          <h3 class="font-display text-h2 font-normal text-navy">Активні</h3>
+          <h3 class="heading-2">Активні</h3>
           <ul class="mt-5 space-y-3">
             <% activeProjects.forEach(function (p) { %>
               <li>
-                <a href="/projects/<%= p.requestNumber %>" class="project-card group relative flex items-center justify-between gap-4 rounded-card bg-white p-4 shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition">
+                <a href="/projects/<%= p.requestNumber %>" class="card card-elevated interactive-card group relative flex items-center justify-between gap-4 p-4 transition">
                   <span class="min-w-0">
-                    <h3 class="block truncate font-display text-h3 font-normal text-navy"><%= p.title %></h3>
-                    <p class="mt-1 block text-base text-steel" data-status-line><span data-num>№<%= p.requestNumber %></span><span data-sep> · </span><span data-stat>Статус:&nbsp;<%= p.statusText %></span></p>
+                    <h3 class="heading-3 block truncate"><%= p.title %></h3>
+                    <p class="text-muted mt-1 block text-base" data-status-line><span data-num>№<%= p.requestNumber %></span><span data-sep> · </span><span data-stat>Статус:&nbsp;<%= p.statusText %></span></p>
                   </span>
                   <img class="h-3 w-auto shrink-0 -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
-                  <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
                 </a>
               </li>
             <% }); %>
             <% if (!activeProjects.length) { %>
-              <li class="rounded-card border border-steel/30 bg-white p-4 text-base text-steel">Наразі немає активних заявок.</li>
+              <li class="card empty-card p-4 text-base">Наразі немає активних заявок.</li>
             <% } %>
           </ul>
         </div>
 
         <div class="border-t-2 border-steel/30 pt-8 md:flex md:flex-col md:border-t-0 md:border-l-2 md:pl-8 md:pt-0 lg:pl-12">
-          <h3 class="font-display text-h2 font-normal text-navy">Завершені</h3>
+          <h3 class="heading-2">Завершені</h3>
           <ul class="mt-5 grid grid-cols-1 gap-3 min-[680px]:grid-cols-2 md:min-h-0 md:flex-1 md:[grid-auto-rows:1fr]">
             <% completedProjects.forEach(function (p) { %>
               <li>
-                <article class="project-card group relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] transition" data-project-card>
+                <article class="card card-elevated interactive-card group relative flex h-full flex-col overflow-hidden transition" data-project-card>
                   <!-- Photo -->
                   <div class="card-photo relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-sky to-white md:aspect-auto md:min-h-0 md:flex-1">
                     <% if (p.imageMain) { %>
@@ -182,30 +684,29 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                       </button>
                     <% } %>
 
-                    <h3 class="project-title-clamp col-span-2 row-start-2 font-display text-h3 font-normal text-navy md:col-span-1 md:col-start-1 md:row-start-1">
+                    <h3 class="line-clamp-2 heading-3 col-span-2 row-start-2 md:col-span-1 md:col-start-1 md:row-start-1">
                       <%= p.title %>
                     </h3>
 
-                    <p class="col-span-2 row-start-3 mt-1 truncate text-base text-steel md:row-start-2">
+                    <p class="text-muted col-span-2 row-start-3 mt-1 truncate text-base md:row-start-2">
                       №<%= p.requestNumber %> · <%= p.equipment %>
                     </p>
                   </div>
 
                   <!-- Whole-card link -->
                   <a class="absolute inset-0 z-10" href="/projects/<%= p.requestNumber %>" aria-label="Відкрити проєкт: <%= p.title %>"></a>
-                  <span class="project-card-border pointer-events-none absolute inset-0" aria-hidden="true"></span>
                 </article>
               </li>
             <% }); %>
             <% if (!completedProjects.length) { %>
-              <li class="col-span-2 rounded-card border border-steel/30 bg-white p-4 text-base text-steel">Поки що немає завершених проектів.</li>
+              <li class="card empty-card col-span-2 p-4 text-base">Поки що немає завершених проектів.</li>
             <% } %>
           </ul>
         </div>
       </div>
 
       <div class="mt-6 flex justify-center">
-        <a href="/projects" class="group inline-flex items-center gap-3 rounded-pill bg-navy px-8 py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b]">
+        <a href="/projects" class="btn btn-primary btn-wide">
           Перейти до всіх проектів
         </a>
       </div>
@@ -213,20 +714,20 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
     <% /* About */ %>
     <section id="about">
-      <div class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+      <div class="site-container section-space">
         <div class="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
           <div>
-            <h2 class="font-display text-h1 font-normal text-navy">Про нас</h2>
-            <div class="mt-8 w-full overflow-hidden rounded-card bg-white shadow-[0_16px_42px_rgba(7,49,78,0.07)] md:w-fit">
-            <nav class="-ml-px -mt-px flex flex-wrap border-b border-steel/30 font-display text-h3 font-normal text-navy" aria-label="Інформація про компанію">
-              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-navy px-5 py-3 text-center text-white transition hover:bg-[#0b527b]" href="#about">Хто ми?</a>
-              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Наш досвід</a>
-              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Спеціалісти</a>
-              <a class="flex-1 whitespace-nowrap border-l border-t border-steel/30 bg-white px-5 py-3 text-center transition hover:bg-navy hover:text-white" href="#about">Інструменти</a>
+            <h2 class="heading-1">Про нас</h2>
+            <div class="about-card card card-elevated mt-8">
+            <nav class="about-tabs" aria-label="Інформація про компанію">
+              <a class="about-tab is-active" href="#about">Хто ми?</a>
+              <a class="about-tab" href="#about">Наш досвід</a>
+              <a class="about-tab" href="#about">Спеціалісти</a>
+              <a class="about-tab" href="#about">Інструменти</a>
             </nav>
 
             <div class="p-5 md:p-7 lg:p-8">
-              <div class="max-w-[34rem] space-y-3 text-left text-base leading-7 text-navy xl:max-w-[44rem] 2xl:max-w-[52rem]">
+              <div class="body-copy max-w-[34rem] space-y-3 text-left xl:max-w-[44rem] 2xl:max-w-[52rem]">
                 <p>
                   RENOVA — це команда професіоналів, фахівців у сфері
                   постачання, ремонту й обслуговування складного обладнання.
@@ -256,20 +757,20 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     </section>
 
     <% /* Contacts & form */ %>
-    <section id="contacts" class="mx-auto max-w-shell px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
+    <section id="contacts" class="site-container site-container-contact">
       <div class="relative overflow-hidden rounded-hero bg-steel p-5 text-white sm:p-7 lg:grid lg:grid-cols-2 lg:gap-12 lg:p-14">
         <img class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100" src="/images/tools.png" alt="" loading="lazy" decoding="async">
 
         <div class="relative">
-          <h2 class="font-display text-h1 font-normal">
+          <h2 class="contact-title">
             Потрібна допомога?
           </h2>
 
-          <p class="mt-4 font-display text-h3 font-normal">
+          <p class="contact-subtitle mt-4">
             Зв'яжіться з нами за номером, поштою або&nbsp;заповніть&nbsp;форму
           </p>
 
-          <div class="mt-7 space-y-3 font-display text-h3">
+          <div class="contact-links mt-7 space-y-3">
             <a class="copy-link flex items-center gap-3 transition hover:text-navy" href="tel:+380756787784" title="Натисніть, щоб скопіювати">
               <img class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">
               <span class="copy-text">
@@ -292,26 +793,26 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           <% } %>
 
           <div class="grid gap-3 sm:grid-cols-2">
-            <input id="contact-name" class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" type="text" name="name" autocomplete="name" placeholder="Ваше ім'я" maxlength="80" required>
-            <input id="contact-phone" class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="Номер телефону" maxlength="30" required>
+            <input id="contact-name" class="form-control" type="text" name="name" autocomplete="name" placeholder="Ваше ім'я" maxlength="80" required>
+            <input id="contact-phone" class="form-control" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="Номер телефону" maxlength="30" required>
           </div>
 
-          <input id="contact-email" class="block h-12 w-full rounded-pill border-0 px-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" type="email" name="email" autocomplete="email" placeholder="Електронна пошта" maxlength="254" required>
-          <textarea id="contact-message" class="block h-[10.125rem] w-full resize-none rounded-pill border-0 p-4 text-base text-navy outline-none transition placeholder:text-steel/70 focus:ring-2 focus:ring-navy/40" name="message" placeholder="Опишіть ваш запит" maxlength="3000" required></textarea>
+          <input id="contact-email" class="form-control" type="email" name="email" autocomplete="email" placeholder="Електронна пошта" maxlength="254" required>
+          <textarea id="contact-message" class="form-control" name="message" placeholder="Опишіть ваш запит" maxlength="3000" required></textarea>
 
-          <button class="w-full rounded-pill bg-navy py-3 font-display text-base font-bold text-white transition hover:bg-[#0b527b] disabled:cursor-not-allowed disabled:opacity-60" type="submit" data-contact-submit>
+          <button class="btn btn-primary btn-block" type="submit" data-contact-submit>
             Надіслати форму
           </button>
 
-          <div class="hidden rounded-pill px-4 py-3 text-center text-sm font-medium" data-contact-status role="status" aria-live="polite"></div>
+          <div class="form-status hidden" data-contact-status role="status" aria-live="polite"></div>
         </form>
       </div>
     </section>
 
     <% /* FAQ */ %>
-    <section id="faq" class="mx-auto max-w-shell px-6 py-10 lg:px-8 lg:py-14 xl:px-16 2xl:px-24">
-      <h2 class="font-display text-h1 font-normal text-navy">Часті запитання</h2>
-      <div class="mt-8 rounded-card bg-white px-6 py-6 text-navy">
+    <section id="faq" class="site-container section-space">
+      <h2 class="heading-1">Часті запитання</h2>
+      <div class="faq-panel mt-8">
         <%
           var faqItems = [
             { q: 'Що потрібно для розрахунку вартості постачання обладнання?', a: 'Технічне завдання та реквізити компанії — на основі цього фахівці прорахують вартість поставки, монтажу та пусконалагодки.' },
@@ -323,12 +824,14 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           ];
         %>
         <% faqItems.forEach(function (item) { %>
-          <details class="faq-item group border-b border-steel py-4 first:pt-2 last:border-b-0 last:pb-2 md:first:pt-0 md:last:pb-0">
-            <summary class="flex min-h-[2.1em] cursor-pointer list-none items-center justify-between gap-3 text-h3 font-display font-normal transition-colors hover:text-steel">
+          <details class="faq-item faq-item-local group">
+            <summary class="faq-summary">
               <span><%= item.q %></span>
-              <img class="faq-chevron h-3 w-auto shrink-0 object-contain transition-transform group-hover:scale-125" src="/images/icons/icon-chevron-down.svg" alt=""></summary><div class="faq-answer">
+              <img class="faq-chevron" src="/images/icons/icon-chevron-down.svg" alt="">
+            </summary>
+            <div class="faq-answer">
               <div class="faq-answer-inner">
-                <p class="mt-3 text-base leading-7 text-navy"><%- item.a %></p>
+                <p class="body-copy mt-3"><%- item.a %></p>
               </div>
             </div>
           </details>
@@ -538,12 +1041,12 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
 
     function showStatus(type, message) {
       statusElement.textContent = message;
-      statusElement.className = 'rounded-pill px-4 py-3 text-center text-sm font-medium';
+      statusElement.className = 'form-status';
 
       if (type === 'success') {
-        statusElement.classList.add('bg-emerald-50', 'text-emerald-800');
+        statusElement.classList.add('is-success');
       } else {
-        statusElement.classList.add('bg-red-50', 'text-red-800');
+        statusElement.classList.add('is-error');
       }
     }
 
