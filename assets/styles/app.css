@@ -4,10 +4,14 @@
 @import "./base/motion.css";
 
 /* Components */
-@import "./components/header.css";
-@import "./components/footer.css";
+@import "./components/before-after.css";
+@import "./components/buttons.css";
+@import "./components/cards.css";
 @import "./components/faq.css";
-@import "./components/project-card.css";
+@import "./components/footer.css";
+@import "./components/forms.css";
+@import "./components/header.css";
+@import "./components/ui.css";
 
 /* Pages */
 @import "./pages/home.css";

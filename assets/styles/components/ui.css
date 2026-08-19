@@ -1,0 +1,78 @@
+.number-badge {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--ui-navy);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: .25rem;
+  padding: .375rem .75rem;
+  border: 2px solid var(--ui-steel);
+  border-radius: var(--ui-pill-radius);
+  color: var(--ui-navy);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.chip img {
+  width: auto;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.action-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .5rem;
+  color: var(--ui-navy);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: color .2s ease;
+}
+
+.action-link:hover {
+  color: var(--ui-steel);
+}
+
+.action-link img {
+  width: auto;
+  height: .75rem;
+  transform: rotate(-90deg);
+  object-fit: contain;
+  transition: transform .2s ease;
+}
+
+.group:hover .action-link img {
+  transform: translateX(4px) rotate(-90deg);
+}
+
+.status-badge {
+  border-radius: 9999px;
+  padding: .125rem .625rem;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.status-badge-current {
+  background: var(--ui-sky);
+  color: var(--ui-navy);
+}
+
+.status-badge-completed {
+  background: #d1fae5;
+  color: #047857;
+}

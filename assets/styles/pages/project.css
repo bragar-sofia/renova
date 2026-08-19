@@ -49,96 +49,404 @@
   }
 }
 
-/* ===== Project before / after viewer ===== */
-.ba-stage {
-  position: relative;
-  width: min(92vw, 1100px);
-  aspect-ratio: 3 / 2;
-  max-height: 82vh;
-  overflow: hidden;
-  border-radius: 0.75rem;
-  background: #0b0b0b;
-  touch-action: none;
+/* ===== Project: breadcrumb / meta ===== */
+.project-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--ui-navy);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: color .2s ease;
 }
 
-.ba-stage img {
+.project-back-link:hover {
+  color: var(--ui-steel);
+}
+
+.project-back-link img {
+  width: auto;
+  height: .75rem;
+  transform: rotate(90deg);
+  object-fit: contain;
+}
+
+.project-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  color: var(--ui-steel);
+  font-size: 1rem;
+}
+
+.project-meta-status {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.project-status-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ===== Project: main layout ===== */
+.project-detail-grid {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .project-detail-grid {
+    grid-template-columns: 1.15fr .85fr;
+    grid-template-rows: auto 1fr;
+    column-gap: 3.5rem;
+    row-gap: 1.75rem;
+  }
+
+  .project-content {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .project-content.has-hero {
+    grid-row: 1 / span 2;
+  }
+
+  .project-hero {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+  }
+
+  .project-stages {
+    grid-column: 2;
+    align-self: start;
+  }
+
+  .project-stages.has-hero {
+    grid-row: 2;
+  }
+
+  .project-stages:not(.has-hero) {
+    grid-row: 1;
+  }
+}
+
+.project-hero-frame,
+.project-hero-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--ui-card-radius);
+}
+
+.project-hero-frame {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(to bottom right, var(--ui-sky), #fff);
+}
+
+.project-hero-frame > img {
   position: absolute;
   inset: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
   object-fit: cover;
-  -webkit-user-drag: none;
-  user-select: none;
 }
 
-/* ===== Before / after image reveal ===== */
-.ba-stage .ba-before {
-  clip-path: inset(0 calc(100% - var(--ba-pos, 50%)) 0 0);
+.project-hero-image {
+  object-fit: cover;
 }
 
-/* ===== Before / after divider ===== */
-.ba-divider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--ba-pos, 50%);
-  width: 3px;
-  background: #eff6f9;
-  transform: translateX(-1.5px);
-  pointer-events: none;
-  box-shadow: 0 0 0 1px rgba(7, 49, 78, 0.18);
+.project-fact-title {
+  margin-top: 1.5rem;
 }
 
-/* ===== Before / after handle ===== */
-.ba-handle {
-  position: absolute;
-  top: 50%;
-  left: var(--ba-pos, 50%);
-  transform: translate(-50%, -50%);
-  height: 44px;
-  width: 44px;
+.project-fact-value {
+  margin-top: .25rem;
+  color: var(--ui-navy);
+  font-size: 1rem;
+}
+
+/* ===== Project: server-rendered rich content ===== */
+.rich-text {
+  margin-top: 2rem;
+  color: var(--ui-navy);
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+
+.rich-text h2 {
+  margin-top: 2rem;
+  margin-bottom: .75rem;
+  color: var(--ui-navy);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.rich-text h3 {
+  margin-top: 1.5rem;
+  margin-bottom: .75rem;
+  color: var(--ui-navy);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.75rem;
+}
+
+.rich-text p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.rich-text ul,
+.rich-text ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.rich-text ul {
+  list-style: disc;
+}
+
+.rich-text ol {
+  list-style: decimal;
+}
+
+.rich-text li + li {
+  margin-top: .5rem;
+}
+
+.rich-text strong {
+  font-weight: 700;
+}
+
+/* ===== Project: before / after gallery ===== */
+.project-gallery-title {
+  margin-top: 2rem;
+}
+
+.project-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: .75rem;
+}
+
+.project-gallery-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--ui-card-radius);
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* ===== Project: stages timeline ===== */
+.project-stages {
+  padding: 1.5rem;
+}
+
+.project-stages-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.project-stages-summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-stages-summary .stages-chevron {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: var(--ui-steel);
+  transition: transform .2s ease;
+}
+
+.project-timeline {
+  padding-top: 1.5rem;
+}
+
+.project-stage {
+  display: flex;
+  gap: 1rem;
+}
+
+.project-stage-track {
+  display: flex;
+  width: 1.25rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+}
+
+.project-stage-marker {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  margin-top: .25rem;
+  flex-shrink: 0;
   border-radius: 9999px;
-  background: #012a4a;
-  color: #fff;
+  background: rgba(82, 123, 141, .3);
+}
+
+.project-stage-marker.is-finished {
+  background: var(--ui-navy);
+}
+
+.project-stage-marker.is-current {
+  border: 4px solid var(--ui-navy);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(1, 42, 74, .1);
+}
+
+.project-stage-line {
+  width: .125rem;
+  flex: 1;
+  background: rgba(82, 123, 141, .3);
+}
+
+.project-stage-line.is-finished {
+  background: var(--ui-navy);
+}
+
+.project-stage-content {
+  min-width: 0;
+}
+
+.project-stage-content:not(.is-last) {
+  padding-bottom: 1.75rem;
+}
+
+.project-stage-content.is-future {
+  opacity: .45;
+}
+
+.project-stage-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
+.project-stage-label {
+  color: var(--ui-navy);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+
+
+.project-stage-note {
+  margin-top: .375rem;
+  color: rgba(1, 42, 74, .7);
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.project-stage-date {
+  margin-top: .375rem;
+  color: var(--ui-steel);
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+/* ===== Project: before / after lightbox shell ===== */
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, .85);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.project-lightbox.is-open {
+  display: flex;
+}
+
+.project-lightbox.is-visible {
+  opacity: 1;
+}
+
+.lightbox-close,
+.lightbox-nav-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0 3px #eff6f9, 0 2px 10px rgba(7, 49, 78, 0.45);
-  cursor: ew-resize;
-}
-
-.ba-stage.ba-dragging .ba-handle {
-  cursor: grabbing;
-}
-
-/* ===== Before / after labels ===== */
-.ba-tag {
-  position: absolute;
-  top: 14px;
-  padding: 4px 12px;
+  border: 0;
   border-radius: 9999px;
-  background: rgba(1, 42, 74, 0.72);
+  background: var(--ui-navy);
   color: #fff;
-  font-size: 0.8rem;
+  transition: background-color .2s ease;
+}
+
+.lightbox-close:hover,
+.lightbox-nav-button:hover {
+  background: var(--ui-navy-hover);
+}
+
+.lightbox-close:focus-visible,
+.lightbox-nav-button:focus-visible,
+.lightbox-toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, .6);
+  outline-offset: 2px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.lightbox-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lightbox-toggle {
+  padding: .625rem 1.25rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+.lightbox-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: #fff;
+}
+
+.lightbox-nav-button {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.lightbox-counter {
+  min-width: 3.5rem;
+  text-align: center;
+  font-size: .875rem;
   font-weight: 700;
-  pointer-events: none;
-}
-
-.ba-tag-before {
-  left: 14px;
-}
-
-.ba-tag-after {
-  right: 14px;
-}
-
-/* ===== Single image mode ===== */
-.ba-stage.ba-view {
-  cursor: default;
-}
-
-.ba-stage.ba-view .ba-divider,
-.ba-stage.ba-view .ba-handle,
-.ba-stage.ba-view .ba-tag {
-  display: none;
 }

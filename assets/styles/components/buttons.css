@@ -1,0 +1,58 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--ui-pill-radius);
+  padding: 0.75rem 1.5rem;
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5rem;
+  text-align: center;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ui-steel);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  border: 0;
+  background: var(--ui-navy);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--ui-navy-hover);
+}
+
+.btn-outline {
+  border: 2px solid var(--ui-navy);
+  background: transparent;
+  color: var(--ui-navy);
+}
+
+.btn-outline:hover {
+  background: #fff;
+}
+
+.btn-sm {
+  padding: .625rem 1.25rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
+.btn-wide {
+  padding-inline: 2rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}

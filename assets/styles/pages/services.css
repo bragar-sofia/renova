@@ -310,3 +310,73 @@
 #services .svc-repair-title {
   white-space: normal;
 }
+
+/* ===== Services: composition helpers ===== */
+.service-number-badge {
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem);
+  font-weight: 400;
+}
+
+.service-number-badge-lg {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.service-copy-first {
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .service-copy-first {
+    margin-top: 1.5rem;
+  }
+}
+
+.service-cta {
+  margin-top: 1.75rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.service-type-card {
+  height: 100%;
+  padding: 1.5rem;
+}
+
+.service-card-copy {
+  margin-top: .5rem;
+  flex-grow: 1;
+  color: var(--ui-navy);
+  font-size: 1rem;
+  text-align: left;
+}
+
+/* Keep the existing service feature selectors available while we migrate. */
+.service-desktop-number {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .service-desktop-number {
+    display: flex;
+  }
+}
+
+/* Mobile sticky heading layout remains local to Services. */
+.service-mobile-heading {
+  position: sticky;
+  top: 5.125rem;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .service-mobile-heading {
+    display: none;
+  }
+}

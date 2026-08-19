@@ -3,3 +3,114 @@ html {
   scroll-padding-top: 5rem;
   --reveal-ease: cubic-bezier(.16, 1, .3, 1);
 }
+
+:root {
+  --ui-navy: #012a4a;
+  --ui-navy-hover: #0b527b;
+  --ui-sky: #eff6f9;
+  --ui-steel: #527b8d;
+
+  --ui-card-radius: 1.875rem;
+  --ui-pill-radius: 0.5rem;
+  --ui-hero-radius: 2.1875rem;
+
+  --ui-card-shadow: 0 16px 42px rgba(7, 49, 78, 0.07);
+
+  --ui-menu-shadow: 0 16px 42px rgba(7, 49, 78, 0.12);
+}
+
+.home-page,
+.services-page,
+.projects-page,
+.project-page {
+  min-height: 100vh;
+  background: var(--ui-sky);
+  color: var(--ui-navy);
+  font-family: 'Open Sans', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.site-container {
+  width: 100%;
+  max-width: 122rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.section-space {
+  padding-block: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .site-container {
+    padding-inline: 2rem;
+  }
+
+  .section-space {
+    padding-block: 3.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .site-container {
+    padding-inline: 4rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .site-container {
+    padding-inline: 6rem;
+  }
+}
+
+.heading-1,
+.heading-2,
+.heading-3,
+.heading-4 {
+  margin: 0;
+  color: var(--ui-navy);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-weight: 400;
+}
+
+.heading-1 {
+  font-size: clamp(2rem, 0.5rem + 3.125vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.heading-2 {
+  font-size: clamp(1.25rem, 0.3125rem + 1.953125vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.heading-3 {
+  font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.heading-4 {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.body-copy {
+  color: var(--ui-navy);
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+
+.text-muted {
+  color: var(--ui-steel);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
