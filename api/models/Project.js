@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const { keys: PROJECT_STAGES } = require('../../lib/projectStages');
 const { generateUniqueRequestNumber, normalizePhotos, isValidTimestamp, getRequestCreatedAtFromStages, getLastActivityAtFromStages } = require('../../lib/utils');
 

@@ -1,6 +1,5 @@
 <%
 var active = (typeof active !== 'undefined') ? active : '';
-
 var footerNav = [
   {
     label: 'Головна',
@@ -35,136 +34,68 @@ var footerNav = [
 ];
 %>
 
-<footer class="border-t-2 border-steel bg-white">
-  <div class="mx-auto max-w-7xl px-6 py-6 font-display text-navy md:px-8 lg:py-7">
-
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:items-center lg:gap-0">
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
 
       <!-- Brand -->
-      <div class="flex flex-col items-start lg:pr-10">
-        <a
-          href="<%= base %>#home"
-          aria-label="RENOVA — головна"
-        >
-          <img
-            class="h-auto w-[clamp(7rem,8vw,9rem)] object-contain"
-            src="/images/renova-brand.png"
-            alt="RENOVA"
-          >
+      <div class="footer-brand">
+        <a href="<%= base %>#home" class="footer-brand-link" aria-label="RENOVA — головна">
+          <img src="/images/renova-brand.png" alt="RENOVA">
         </a>
 
-        <p class="mt-1 max-w-[13rem] text-xs leading-snug text-[#6c95a6]">
+        <p class="footer-brand-text">
           Повертаємо промислове обладнання до роботи
         </p>
       </div>
 
-
       <!-- Navigation -->
-      <nav
-        class="grid grid-cols-2 gap-x-10 gap-y-2 text-sm lg:border-l lg:border-steel/20 lg:px-10 lg:text-base"
-        aria-label="Навігація у футері"
-      >
-
-        <div class="flex flex-col items-start gap-2.5">
+      <nav class="footer-nav" aria-label="Навігація у футері">
+        <div class="footer-nav-column">
           <% footerNav.slice(0, 3).forEach(function (item) { %>
-            <a
-              class="nav-link<%= active === item.page ? ' is-active' : '' %>"
-              href="<%= item.href %>"
-            >
+            <a class="footer-nav-link<%= active === item.page ? ' is-active' : '' %>" href="<%= item.href %>">
               <%= item.label %>
             </a>
           <% }); %>
         </div>
 
-        <div class="flex flex-col items-start gap-2.5">
+        <div class="footer-nav-column">
           <% footerNav.slice(3).forEach(function (item) { %>
-            <a
-              class="nav-link"
-              data-spy="<%= item.spy %>"
-              href="<%= item.href %>"
-            >
+            <a class="footer-nav-link" data-spy="<%= item.spy %>" href="<%= item.href %>">
               <%= item.label %>
             </a>
           <% }); %>
         </div>
-
       </nav>
 
-
       <!-- Contacts -->
-      <div
-        class="flex min-w-0 flex-col items-start gap-3 text-sm sm:col-span-2 lg:col-span-1 lg:border-l lg:border-steel/20 lg:pl-10 lg:text-base"
-      >
-
-        <a
-          class="flex items-center gap-3 whitespace-nowrap transition-colors hover:text-steel"
-          href="tel:+380756787784"
-        >
-          <span class="relative flex h-9 w-9 shrink-0 items-center justify-center">
-            <img
-              class="absolute inset-0 h-full w-full object-contain"
-              src="/images/icons/icon-circle-bg.svg"
-              alt=""
-            >
-
-            <img
-              class="relative h-5 w-5 object-contain"
-              src="/images/icons/icon-phone-footer.png"
-              alt=""
-            >
+      <div class="footer-contacts">
+        <a class="footer-contact-link" href="tel:+380756787784">
+          <span class="footer-contact-icon" aria-hidden="true">
+            <img class="footer-contact-icon-bg" src="/images/icons/icon-circle-bg.svg" alt="">
+            <img class="footer-contact-icon-symbol" src="/images/icons/icon-phone-footer.png" alt="">
           </span>
 
           <span>+38 (075) 678 77 84</span>
         </a>
 
-
-        <a
-          class="flex min-w-0 items-center gap-3 transition-colors hover:text-steel"
-          href="mailto:commerce.renova@gmail.com"
-        >
-          <span class="relative flex h-9 w-9 shrink-0 items-center justify-center">
-            <img
-              class="absolute inset-0 h-full w-full object-contain"
-              src="/images/icons/icon-circle-bg.svg"
-              alt=""
-            >
-
-            <img
-              class="relative h-5 w-5 object-contain"
-              src="/images/icons/icon-at-sign-footer.png"
-              alt=""
-            >
+        <a class="footer-contact-link" href="mailto:commerce.renova@gmail.com">
+          <span class="footer-contact-icon" aria-hidden="true">
+            <img class="footer-contact-icon-bg" src="/images/icons/icon-circle-bg.svg" alt="">
+            <img class="footer-contact-icon-symbol" src="/images/icons/icon-at-sign-footer.png" alt="">
           </span>
 
-          <span>
+          <span class="footer-contact-text">
             commerce.renova@gmail.com
           </span>
         </a>
-
       </div>
-
     </div>
-
   </div>
 </footer>
 
-
-<button
-  type="button"
-  data-to-top
-  aria-label="Догори"
-  class="to-top fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white shadow-lg transition hover:bg-[#0b527b] md:hidden"
->
-  <svg
-    viewBox="0 0 24 24"
-    class="h-5 w-5"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2.5"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
+<button type="button" class="to-top" data-to-top aria-label="Догори">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M6 15l6-6 6 6"></path>
   </svg>
 </button>
@@ -173,35 +104,23 @@ var footerNav = [
 <script>
   (function () {
     var button = document.querySelector('[data-to-top]');
-
     if (!button) {
       return;
     }
 
     function update() {
-      button.classList.toggle(
-        'is-visible',
-        window.scrollY > 400
-      );
+      button.classList.toggle('is-visible', window.scrollY > 400);
     }
 
     button.addEventListener('click', function () {
-      var reduceMotion = window.matchMedia(
-        '(prefers-reduced-motion: reduce)'
-      ).matches;
-
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       window.scrollTo({
         top: 0,
         behavior: reduceMotion ? 'auto' : 'smooth'
       });
     });
 
-    window.addEventListener(
-      'scroll',
-      update,
-      { passive: true }
-    );
-
+    window.addEventListener('scroll', update, { passive: true });
     update();
   })();
 </script>

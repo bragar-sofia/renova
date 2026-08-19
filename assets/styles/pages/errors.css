@@ -1,0 +1,209 @@
+/* ===== Page shell ===== */
+.error-page {
+  min-height: 100vh;
+  background: var(--ui-sky);
+  color: var(--ui-navy);
+  font-family: 'Open Sans', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Section ===== */
+.error-page-section {
+  display: flex;
+  min-height: calc(100svh - 5rem);
+  align-items: center;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .error-page-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+/* ======= Main card ============ */
+.error-card {
+  position: relative;
+  display: grid;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--ui-hero-radius);
+}
+
+@media (min-width: 1024px) {
+  .error-card {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(380px, .8fr);
+  }
+}
+
+/* ========= Content ========= */
+.error-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .error-content {
+    padding: 4rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .error-content {
+    padding: 5rem 3.5rem;
+  }
+}
+
+/* ===== Error code ===== */
+.error-code {
+  color: rgba(82, 123, 141, .3);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: clamp(5rem, 15vw, 11rem);
+  font-weight: 400;
+  line-height: .8;
+}
+
+/* ===== Text ===== */
+.error-title {
+  max-width: 42rem;
+  margin-top: 1.5rem;
+}
+
+.error-description {
+  max-width: 36rem;
+  margin-top: 1rem;
+  color: var(--ui-steel);
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+
+/* ======== Main actions ============ */
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  margin-top: 2rem;
+}
+
+.error-action {
+  min-height: 3rem;
+  padding-right: 1.75rem;
+  padding-left: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .error-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* ========== Secondary links ============ */
+.error-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1.5rem;
+  row-gap: .75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(82, 123, 141, .2);
+  font-size: .875rem;
+}
+
+.error-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--ui-navy);
+  font-weight: 600;
+  transition: color .2s ease;
+}
+
+.error-link:hover {
+  color: var(--ui-steel);
+}
+
+.error-link img {
+  width: auto;
+  height: .75rem;
+  object-fit: contain;
+  transform: rotate(-90deg);
+  transition: transform .2s ease;
+}
+
+.error-link:hover img {
+  transform: translateX(4px) rotate(-90deg);
+}
+
+/* ======== Visual =========== */
+.error-visual {
+  position: relative;
+  min-height: 300px;
+  overflow: hidden;
+  background: var(--ui-steel);
+}
+
+@media (min-width: 1024px) {
+  .error-visual {
+    min-height: 560px;
+  }
+}
+
+/* ===== Gradient ===== */
+.error-visual-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--ui-steel) 0%, var(--ui-steel) 50%, rgba(1, 42, 74, .8) 100%);
+}
+
+/* ===== Machine image ===== */
+.error-visual-machine {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: .7;
+  mix-blend-mode: multiply;
+}
+
+/* ===== Tools decoration ===== */
+.error-visual-tools {
+  position: absolute;
+  right: -3rem;
+  bottom: -3rem;
+  width: 95%;
+  max-width: 620px;
+  opacity: .35;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* ===== Large background code ===== */
+.error-visual-code-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-visual-code {
+  color: rgba(255, 255, 255, .1);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: clamp(8rem, 20vw, 17rem);
+  font-weight: 400;
+  line-height: 1;
+  user-select: none;
+}

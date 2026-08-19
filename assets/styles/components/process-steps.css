@@ -1,0 +1,152 @@
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1.5rem;
+  row-gap: 2.5rem;
+}
+
+/* ===== Step ===== */
+.process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.process-step-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+}
+
+/* ===== Number ===== */
+.process-step-number {
+  background: var(--ui-steel);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+/* ===== Icon ===== */
+.process-step-icon {
+  display: flex;
+  height: 2.5rem;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.process-step-icon--lg {
+  height: 3rem;
+}
+
+.process-step-icon img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ===== Caption ===== */
+.process-step-caption {
+  min-height: var(--process-caption-min-height, 0);
+  margin-top: .75rem;
+  color: var(--ui-navy);
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.process-step-caption--compact {
+  margin-top: .5rem;
+}
+
+/* ===== Connector ===== */
+.process-step-connector {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  padding-top: 1.25rem;
+}
+
+.process-step-connector-line {
+  height: .125rem;
+  flex: 1;
+  background: var(--ui-navy);
+}
+
+.process-step-connector-arrow {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 9px solid var(--ui-navy);
+}
+
+@media (min-width: 1024px) {
+  .process-steps--compact {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .process-steps--compact .process-step {
+    width: 12.5rem;
+    flex-shrink: 1;
+    padding-inline: .5rem;
+  }
+
+  .process-steps--compact.process-steps--full .process-step {
+    width: auto;
+    flex: 1 1 0;
+  }
+
+  .process-steps--compact .process-step-connector {
+    display: flex;
+    width: 3.125rem;
+  }
+
+  .process-steps--compact .process-step-number {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .process-steps--many {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .process-steps--many .process-step {
+    width: 12.5rem;
+    flex-shrink: 1;
+    padding-inline: .5rem;
+  }
+
+  .process-steps--many.process-steps--full .process-step {
+    width: auto;
+    flex: 1 1 0;
+  }
+
+  .process-steps--many .process-step-connector {
+    display: flex;
+    width: 1.5rem;
+  }
+
+  .process-steps--many .process-step-number {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .process-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .process-steps--many {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

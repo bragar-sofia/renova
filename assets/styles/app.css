@@ -11,9 +11,11 @@
 @import "./components/footer.css";
 @import "./components/forms.css";
 @import "./components/header.css";
+@import './components/process-steps.css';
 @import "./components/ui.css";
 
 /* Pages */
+@import "./pages/errors.css";
 @import "./pages/home.css";
 @import "./pages/services.css";
 @import "./pages/projects.css";
