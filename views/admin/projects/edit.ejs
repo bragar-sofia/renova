@@ -38,6 +38,7 @@ stageHistory.forEach((stage) => {
 
 const formErrors = Array.isArray(errors) ? errors : [];
 const successMessage = successMessages[success] || '';
+const shouldAutoDownload = ['created', 'updated', 'stage-advanced'].includes(success);
 const progress = currentStageIndex >= 0 && projectStages.length > 0 ? Math.round(((currentStageIndex + 1) / projectStages.length) * 100) : 0;
 const isCompleted = project.currentStage === 'completed';
 const beforePhotos = project.photos && Array.isArray(project.photos.before) ? project.photos.before : [];
@@ -492,6 +493,22 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
         .catch(function (error) {
           console.error('CKEditor initialization error:', error);
         });
+    }
+
+    const shouldAutoDownload = <%= shouldAutoDownload ? 'true' : 'false' %>;
+    if (shouldAutoDownload) {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = '/admin/projects/export-json?download=1';
+      downloadLink.style.display = 'none';
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete('success');
+
+      window.history.replaceState({}, '', url.pathname + url.search + url.hash);
     }
 
     const advanceStageForm = document.querySelector('[data-advance-stage-form]');

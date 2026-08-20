@@ -217,8 +217,20 @@ module.exports = {
       res.type('application/json');
 
       if (req.query.download === '1') {
-        const date = new Date().toISOString().slice(0, 10);
-        res.set('Content-Disposition', `attachment; filename="projects-${date}.json"`);
+        const now = new Date();
+        const pad = (value) => String(value).padStart(2, '0');
+
+        const timestamp = [
+          now.getFullYear(),
+          pad(now.getMonth() + 1),
+          pad(now.getDate())
+        ].join('-') + '_' + [
+          pad(now.getHours()),
+          pad(now.getMinutes()),
+          pad(now.getSeconds())
+        ].join('-');
+
+        res.set('Content-Disposition', `attachment; filename="projects-${timestamp}.json"`);
       }
 
       return res.send(json);
