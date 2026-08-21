@@ -37,7 +37,7 @@ var footerNav = [
 
         <div class="footer-nav-column">
           <% footerNav.slice(3).forEach(function (item) { %>
-            <a class="footer-nav-link" data-spy="<%= item.spy %>" href="<%= item.href %>">
+            <a class="footer-nav-link" href="<%= item.href %>">
               <%= item.label %>
             </a>
           <% }); %>

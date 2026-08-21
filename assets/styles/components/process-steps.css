@@ -98,6 +98,7 @@
   .process-steps--compact.process-steps--full .process-step {
     width: auto;
     flex: 1 1 0;
+    min-width: 0;
   }
 
   .process-steps--compact .process-step-connector {
@@ -127,6 +128,7 @@
   .process-steps--many.process-steps--full .process-step {
     width: auto;
     flex: 1 1 0;
+    min-width: 0;
   }
 
   .process-steps--many .process-step-connector {
