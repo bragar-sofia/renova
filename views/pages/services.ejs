@@ -61,7 +61,7 @@ var supplyCatalog = [
 var serviceNav = [
   { id: 'restoration', title: 'Відновлення обладнання', subs: [
     { id: 'restoration-types', title: 'Види робіт' },
-    { id: 'restoration-stages', title: 'Етапи ремонту' },
+    { id: 'restoration-stages', title: 'Етапи проведення ремонту' },
     { id: 'restoration-capital', title: 'Капітальний ремонт' },
     { id: 'restoration-cost', title: 'Вартість і терміни' }
   ] },
@@ -144,7 +144,7 @@ var serviceNav = [
 
       <% /* ---------- Repair stages ---------- */ %>
       <section class="site-container">
-        <h2 id="restoration-stages" class="heading-2 scroll-mt-28">Етапи ремонту</h2>
+        <h2 id="restoration-stages" class="heading-2 scroll-mt-28">Етапи проведення ремонтних робіт</h2>
         <div class="mt-4 lg:mt-6">
           <%- include('../partials/process-steps', { steps: repairSteps, captionLines: 3 }) %>
         </div>
