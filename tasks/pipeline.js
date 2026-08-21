@@ -31,16 +31,7 @@
 // > Note: if you're using built-in LESS support with default settings,
 // > you'll want to change `assets/styles/importer.less` instead.
 //
-var cssFilesToInject = [
-
-  // Bring in `.css` files for themes and style guides (e.g. Bootstrap, Foundation)
-  'dependencies/**/*.css',
-
-  // All of the rest of your custom `.css` files will be injected here,
-  // in no particular order.  To customize the ordering, add additional
-  // items here, _above_ this one.
-  'styles/**/*.css'
-];
+var cssFilesToInject = [];
 
 
 //   ██████╗██╗     ██╗███████╗███╗   ██╗████████╗   ███████╗██╗██████╗ ███████╗
@@ -59,21 +50,7 @@ var cssFilesToInject = [
 //
 // Client-side javascript files to inject as <script> tags, in order.
 //
-var jsFilesToInject = [
-
-  // Load `sails.io` before everything else.
-  'dependencies/sails.io.js',
-
-  // Bring in `.js` files for any other client-side JavaScript dependencies.
-  // (e.g. Lodash, Vue.js, jQuery, Bootstrap, Ember, Angular, etc.)
-  // > Be sure to list dependencies that depend on each other in the right order!
-  'dependencies/**/*.js',
-
-  // All of the rest of your custom client-side js files will be injected here,
-  // in no particular order.  To customize the ordering, add additional items
-  // here, _above_ this one.
-  'js/**/*.js'
-];
+var jsFilesToInject = [];
 
 
 //   ██████╗██╗     ██╗███████╗███╗   ██╗████████╗   ███████╗██╗██████╗ ███████╗
@@ -101,9 +78,7 @@ var jsFilesToInject = [
 // > to check out:
 // >   https://sailsjs.com/docs/concepts/assets/task-automation
 //
-var templateFilesToInject = [
-  'templates/**/*.html'
-];
+var templateFilesToInject = [];
 
 
 

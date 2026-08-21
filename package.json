@@ -15,9 +15,12 @@
     "sails": "^1.5.18",
     "sails-hook-grunt": "^5.0.0",
     "sails-hook-orm": "^4.0.3",
-    "sails-hook-sockets": "^3.0.0"
+    "sails-hook-sockets": "^3.0.0",
+    "sails-postgresql": "^5.0.1"
   },
   "devDependencies": {
+    "db-migrate": "^0.11.14",
+    "db-migrate-pg": "^1.5.2",
     "autoprefixer": "^10.4.22",
     "eslint": "5.16.0",
     "postcss": "^8.4.49",
