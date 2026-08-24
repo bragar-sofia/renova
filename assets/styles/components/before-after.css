@@ -1,17 +1,3 @@
-/* ===== Project card border ===== */
-.project-card-border {
-  border: 2px solid #527b8d;
-  border-radius: 1.875rem;
-  clip-path: inset(0 50% 0 50% round 1.875rem);
-  transition: clip-path .5s cubic-bezier(.16, 1, .3, 1);
-}
-
-.project-card:hover .project-card-border,
-.project-card:focus-visible .project-card-border,
-.project-card:focus-within .project-card-border {
-  clip-path: inset(0 0 0 0 round 1.875rem);
-}
-
 /* ===== Before / after photo ===== */
 @property --cp-x {
   syntax: '<percentage>';
@@ -57,33 +43,6 @@
   box-shadow: 0 0 10px 2px rgba(210, 240, 255, .9);
 }
 
-/* ===== Before / after state ===== */
-.project-card.is-after .cp-after {
-  --cp-x: 130%;
-}
-
-.project-card.is-after .cp-beam {
-  left: 130%;
-}
-
-.project-card.is-switching .cp-beam {
-  opacity: 1;
-}
-
-/* ===== Desktop before / after ===== */
-@media (hover: hover) {
-  .project-card:hover .cp-after,
-  .project-card:focus-within .cp-after {
-    --cp-x: 130%;
-  }
-
-  .project-card:hover .cp-beam,
-  .project-card:focus-within .cp-beam {
-    left: 130%;
-    opacity: 1;
-  }
-}
-
 /* ===== Before / after toggle ===== */
 .cp-toggle {
   display: none;
@@ -116,11 +75,6 @@
   transition: transform .38s var(--reveal-ease, cubic-bezier(.16, 1, .3, 1)), background-color .25s ease;
 }
 
-.project-card.is-after .cp-toggle-thumb {
-  transform: translateX(calc(100% + 3px));
-  background: #527b8d;
-}
-
 .cp-toggle:focus-visible {
   outline: 2px solid #527b8d;
   outline-offset: 2px;
@@ -149,13 +103,6 @@
 }
 
 /* ===== Project card title ===== */
-.project-title-clamp {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
 
 .interactive-card.is-after .cp-after {
   --cp-x: 130%;

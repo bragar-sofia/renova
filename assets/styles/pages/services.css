@@ -14,7 +14,6 @@
   padding-block: 2.5rem;
 }
 
-
 .service-section > * + * {
   margin-top: 2.5rem;
 }
@@ -138,86 +137,10 @@
   background: #527b8d;
 }
 
-
-/* ===== Services intro ===== */
-.services-intro {
-  isolation: isolate;
-}
-
-.services-intro::after {
-  content: "";
-  position: absolute;
-  top: -12rem;
-  right: -10rem;
-  width: 34rem;
-  height: 34rem;
-  border: 1px solid rgba(43, 109, 151, 0.12);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.services-intro::before {
-  content: "";
-  position: absolute;
-  top: -5rem;
-  right: -3rem;
-  width: 22rem;
-  height: 22rem;
-  border: 1px solid rgba(43, 109, 151, 0.16);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.services-intro-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.08;
-
-  background-image: linear-gradient(
-      rgba(43, 109, 151, 0.55) 1px,
-      transparent 1px
-  ),
-  linear-gradient(
-      90deg,
-      rgba(43, 109, 151, 0.55) 1px,
-      transparent 1px
-  );
-
-  background-size: 42px 42px;
-
-  -webkit-mask-image: linear-gradient(
-      to left,
-      #000 0%,
-      rgba(0, 0, 0, 0.75) 40%,
-      transparent 75%
-  );
-
-  mask-image: linear-gradient(
-      to left,
-      #000 0%,
-      rgba(0, 0, 0, 0.75) 40%,
-      transparent 75%
-  );
-}
-
 /* ===== Service responsive ===== */
 @media (max-width: 767px) {
   .service-image::after {
     opacity: 0.07;
-  }
-
-  .services-intro::before {
-    top: -6rem;
-    right: -8rem;
-  }
-
-  .services-intro::after {
-    display: none;
-  }
-
-  .services-intro-grid {
-    opacity: 0.055;
   }
 }
 
@@ -415,11 +338,9 @@
   margin-bottom: 1rem;
 }
 
-
 .service-desktop-title {
   display: none;
 }
-
 
 .service-mobile-heading {
   position: sticky;

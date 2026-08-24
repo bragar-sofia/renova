@@ -60,19 +60,3 @@
   transform: translateX(4px) rotate(-90deg);
 }
 
-.status-badge {
-  border-radius: 9999px;
-  padding: .125rem .625rem;
-  font-size: .75rem;
-  font-weight: 700;
-}
-
-.status-badge-current {
-  background: var(--ui-sky);
-  color: var(--ui-navy);
-}
-
-.status-badge-completed {
-  background: #d1fae5;
-  color: #047857;
-}

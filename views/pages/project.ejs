@@ -154,18 +154,6 @@ var hasHero = mainPhoto && completed;
                         <p class="project-stage-label">
                           <%= stage.label %>
                         </p>
-
-                        <% if (stage.isCurrent && !completed) { %>
-                          <span class="status-badge status-badge-current">
-                            Поточний етап
-                          </span>
-                        <% } %>
-
-                        <% if (stage.isCurrent && completed) { %>
-                          <span class="status-badge status-badge-completed">
-                            Завершено
-                          </span>
-                        <% } %>
                       </div>
 
                       <% if (stage.reached && stage.note) { %>

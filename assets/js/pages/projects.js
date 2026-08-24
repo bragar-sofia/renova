@@ -21,8 +21,7 @@
     var sortWrap = root.querySelector('[data-sort]');
     var sortToggle = sortWrap ? sortWrap.querySelector('[data-sort-toggle]') : null;
     var sortLabel = root.querySelector('[data-sort-label]');
-    var loadWrap = root.querySelector('[data-load-more-wrap]');
-    var loadButton = root.querySelector('[data-load-more]');
+    var pagination = root.querySelector('[data-pagination]');
     var emptyElement = root.querySelector('[data-empty]');
     var emptyText = root.querySelector('[data-empty-text]');
     var subtitle = root.querySelector('[data-subtitle]');
@@ -45,7 +44,7 @@
       status: params.get('status') === 'completed' ? 'completed' : 'active',
       q: (params.get('q') || '').trim(),
       sort: params.get('sort') === 'old' ? 'old' : 'new',
-      shown: PER_PAGE
+      page: 1
     };
 
     /* ==== Helpers ====== */
@@ -114,6 +113,130 @@
       });
     }
 
+    function currentView() {
+      return state.status === 'active' ? viewActive : viewCompleted;
+    }
+
+    var cancelSwitch = null;
+
+    function switchPage(next) {
+
+      if (cancelSwitch) {
+        cancelSwitch();
+      }
+
+      var container = currentView();
+
+      if (reduceMotion || !container) {
+        state.page = next;
+        apply();
+
+        return;
+      }
+
+      var startHeight = container.offsetHeight;
+      var swapTimer = null;
+      var releaseTimer = null;
+
+      cancelSwitch = function () {
+        clearTimeout(swapTimer);
+        clearTimeout(releaseTimer);
+        container.style.minHeight = '';
+        wrap.classList.remove('is-swapping');
+        cancelSwitch = null;
+      };
+
+
+      wrap.classList.add('is-swapping');
+
+      swapTimer = setTimeout(function () {
+        state.page = next;
+        apply();
+
+
+        var endHeight = container.offsetHeight;
+
+        container.style.minHeight = startHeight + 'px';
+        void container.offsetHeight;
+        container.style.minHeight = endHeight + 'px';
+
+        wrap.classList.remove('is-swapping');
+
+        releaseTimer = setTimeout(function () {
+          container.style.minHeight = '';
+          cancelSwitch = null;
+        }, 560);
+      }, 200);
+    }
+
+    /* ===== Pagination ===== */
+    function pageWindow(current, total) {
+      var list = [];
+      var index;
+
+      if (total <= 7) {
+        for (index = 1; index <= total; index += 1) {
+          list.push(index);
+        }
+
+        return list;
+      }
+
+      var from = Math.max(2, current - 1);
+      var to = Math.min(total - 1, current + 1);
+
+      list.push(1);
+
+      if (from > 2) {
+        list.push('gap');
+      }
+
+      for (index = from; index <= to; index += 1) {
+        list.push(index);
+      }
+
+      if (to < total - 1) {
+        list.push('gap');
+      }
+
+      list.push(total);
+
+      return list;
+    }
+
+    function renderPagination(total) {
+      if (!pagination) {
+        return;
+      }
+
+      setHidden(pagination, total <= 1);
+
+      if (total <= 1) {
+        pagination.innerHTML = '';
+
+        return;
+      }
+
+      var html = '<button type="button" class="pagination-arrow" data-page="' + (state.page - 1) + '"'
+        + (state.page === 1 ? ' disabled' : '') + ' aria-label="Попередня сторінка">‹</button>';
+
+      pageWindow(state.page, total).forEach(function (entry) {
+        if (entry === 'gap') {
+          html += '<span class="pagination-gap" aria-hidden="true">…</span>';
+
+          return;
+        }
+
+        html += '<button type="button" class="pagination-page' + (entry === state.page ? ' is-active' : '')
+          + '" data-page="' + entry + '"' + (entry === state.page ? ' aria-current="page"' : '') + '>' + entry + '</button>';
+      });
+
+      html += '<button type="button" class="pagination-arrow" data-page="' + (state.page + 1) + '"'
+        + (state.page === total ? ' disabled' : '') + ' aria-label="Наступна сторінка">›</button>';
+
+      pagination.innerHTML = html;
+    }
+
     /* ==== URL ==== */
     function updateUrl() {
       var params = new URLSearchParams();
@@ -141,6 +264,13 @@
         return (item.getAttribute('data-status') === state.status);
       });
 
+      items.forEach(function (item) {
+        if (item.getAttribute('data-status') !== state.status) {
+          item.hidden = true;
+          item.classList.remove('reveal-in');
+        }
+      });
+
       /* ===== Sort ===== */
       current.sort(function (a, b) {
         var firstTimestamp = getNumber(a, 'sort-value');
@@ -155,20 +285,29 @@
 
       /* ===== Search / pagination ===== */
       var normalizedQuery = state.q.toLocaleLowerCase('uk-UA');
-      var matched = 0;
+
+      var matchedItems = current.filter(function (item) {
+        var searchText = item.getAttribute('data-search') || '';
+
+        return !normalizedQuery || searchText.indexOf(normalizedQuery) !== -1;
+      });
+
+      var matched = matchedItems.length;
+      var pageCount = Math.max(1, Math.ceil(matched / PER_PAGE));
+
+      if (state.page > pageCount) {
+        state.page = pageCount;
+      }
 
       current.forEach(function (item) {
-        var searchText = item.getAttribute('data-search') || '';
-        var matchesQuery = !normalizedQuery || searchText.indexOf(normalizedQuery) !== -1;
-
-        if (!matchesQuery) {
-          item.hidden = true;
-          return;
-        }
-
-        item.hidden = matched >= state.shown;
-        matched += 1;
+        item.hidden = true;
       });
+
+      matchedItems
+        .slice((state.page - 1) * PER_PAGE, state.page * PER_PAGE)
+        .forEach(function (item) {
+          item.hidden = false;
+        });
 
       /* ===== Views ===== */
       setHidden(viewActive, !(isActive && matched > 0));
@@ -185,8 +324,8 @@
 
       setHidden(emptyElement, matched > 0);
 
-      /* ===== Load more ===== */
-      setHidden(loadWrap, matched <= state.shown);
+      /* ===== Pagination ===== */
+      renderPagination(pageCount);
 
       /* ===== Subtitle ===== */
       if (subtitle) {
@@ -212,22 +351,20 @@
 
     /* ====== Animated status switch ======= */
     function fadeApply() {
-      wrap.style.opacity = '0';
+      wrap.classList.add('is-swapping');
 
       if (subtitle) {
-        subtitle.style.opacity = '0';
-        subtitle.style.transform = 'translateY(6px)';
+        subtitle.classList.add('is-swapping');
       }
 
       setTimeout(function () {
         apply();
         staggerReveal();
 
-        wrap.style.opacity = '1';
+        wrap.classList.remove('is-swapping');
 
         if (subtitle) {
-          subtitle.style.opacity = '1';
-          subtitle.style.transform = 'none';
+          subtitle.classList.remove('is-swapping');
         }
       }, 170);
     }
@@ -243,7 +380,7 @@
           }
 
           state.status = status;
-          state.shown = PER_PAGE;
+          state.page = 1;
           fadeApply();
         });
       }
@@ -254,7 +391,7 @@
       searchInput.value = state.q;
       searchInput.addEventListener('input', function () {
         state.q = searchInput.value.trim();
-        state.shown = PER_PAGE;
+        state.page = 1;
         apply();
       });
     }
@@ -311,11 +448,41 @@
     }
 
     /* ===== Load more ======== */
-    if (loadButton) {
-      loadButton.addEventListener('click', function () {
-        state.shown += PER_PAGE;
-        apply();
-        staggerReveal();
+    if (pagination) {
+      pagination.addEventListener('click', function (event) {
+        var button = event.target.closest('[data-page]');
+        if (!button || button.disabled) {
+          return;
+        }
+
+        var next = parseInt(button.getAttribute('data-page'), 10);
+        if (!next || next === state.page) {
+          return;
+        }
+
+        scrollToListTop();
+        switchPage(next);
+      });
+    }
+
+    function scrollToListTop() {
+      var anchor = currentView();
+      if (!anchor) {
+        return;
+      }
+
+      var offset = anchor.getBoundingClientRect().top;
+
+
+      if (offset >= 0) {
+        return;
+      }
+
+      var top = offset + window.scrollY - 120;
+
+      window.scrollTo({
+        top: top < 0 ? 0 : top,
+        behavior: reduceMotion ? 'auto' : 'smooth'
       });
     }
 

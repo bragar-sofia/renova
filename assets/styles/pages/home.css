@@ -207,11 +207,6 @@
 }
 
 /* ===== Hero CTA ===== */
-.hero-cta-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
 
 /* ===== Hero photo & decor ===== */
 .hero-photo-fade {
@@ -491,9 +486,6 @@
 }
 
 /* ===== Hero CTA ===== */
-.hero-cta-btn {
-  font-size: 1rem;
-}
 
 /* ===== Hero reveal override ===== */
 #home > section:first-child {
@@ -743,34 +735,6 @@
   mask-image: radial-gradient(circle at bottom right, #000 0%, transparent 82%);
 }
 
-.service-feature-list {
-  display: grid;
-  gap: 0.65rem;
-}
-
-.service-feature-list li {
-  position: relative;
-  padding-left: 1.7rem;
-  line-height: 1.35;
-}
-
-.service-feature-list li::before {
-  content: "✓";
-  position: absolute;
-  top: 0.05rem;
-  left: 0;
-  display: flex;
-  width: 1.1rem;
-  height: 1.1rem;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #527b8d;
-  border-radius: 999px;
-  color: #527b8d;
-  font-size: 0.7rem;
-  font-weight: 700;
-}
-
 @media (max-width: 767px) {
   .services-primary-card::after {
     width: 55%;
@@ -852,7 +816,6 @@
 .about-tab.is-active:hover {
   background: var(--ui-navy-hover);
 }
-
 
 /* ===== Contact panel ===== */
 .contact-title,

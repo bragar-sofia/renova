@@ -54,7 +54,7 @@ function visInit(project) {
         <div class="flex flex-col gap-3 sm:flex-row">
           <!-- Search -->
           <div class="project-search">
-            <input type="text" class="form-control form-control-outline project-search-input" data-search-input value="<%= q %>" placeholder="Пошук за номером, назвою або обладнанням">
+            <input type="text" class="form-control form-control-outline project-search-input" data-search-input value="<%= q %>" placeholder="Пошук">
             <span class="project-search-icon">
               <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="7"></circle>
@@ -137,7 +137,7 @@ function visInit(project) {
               >
 
                 <!-- Number -->
-                <div class="project-row-cell">
+                <div class="project-row-cell project-row-cell--number">
                   №<%= p.requestNumber %>
                 </div>
 
@@ -163,7 +163,7 @@ function visInit(project) {
                 </div>
 
                 <!-- Progress -->
-                <div class="project-row-cell project-row-cell--center">
+                <div class="project-row-cell project-row-cell--center project-row-cell--progress">
                   <span class="font-bold lg:hidden">
                     Стан:
                   </span>
@@ -189,7 +189,7 @@ function visInit(project) {
                 </div>
 
                 <!-- Dates -->
-                <div class="project-row-cell project-row-cell--center">
+                <div class="project-row-cell project-row-cell--center project-row-cell--dates">
                   <span class="font-bold lg:hidden">
                     Оновлено:
                   </span>
@@ -209,7 +209,7 @@ function visInit(project) {
       </div>
 
       <% /* ======== Completed projects ======== */ %>
-      <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3" data-view="completed" <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>>
+      <div class="projects-completed-grid" data-view="completed" <%= (status === 'completed' && matchTotal > 0) ? '' : 'hidden' %>>
         <% projects.forEach(function (p) {
           if (!p.completed) {
             return;
@@ -293,11 +293,7 @@ function visInit(project) {
     </div>
 
     <% /* ===== Load more ======= */ %>
-    <div class="mt-10 flex justify-center" data-load-more-wrap <%= matchTotal > 6 ? '' : 'hidden' %>>
-      <button type="button" class="btn btn-primary btn-wide" data-load-more>
-        Завантажити ще
-      </button>
-    </div>
+    <nav class="projects-pagination" data-pagination aria-label="Сторінки заявок" <%= matchTotal > 6 ? '' : 'hidden' %>></nav>
   </main>
 </div>
 
