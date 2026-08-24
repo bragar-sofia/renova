@@ -9,11 +9,13 @@ module.exports = {
     },
 
     requestCreatedAt: {
-      type: 'number'
+      type: 'number',
+      columnType: 'double precision'
     },
 
     lastActivityAt: {
-      type: 'number'
+      type: 'number',
+      columnType: 'double precision'
     },
 
     title: {
@@ -65,6 +67,18 @@ module.exports = {
     isVisible: {
       type: 'boolean',
       defaultsTo: true
+    },
+
+    createdAt: {
+      type: 'number',
+      autoCreatedAt: true,
+      columnType: 'double precision'
+    },
+
+    updatedAt: {
+      type: 'number',
+      autoUpdatedAt: true,
+      columnType: 'double precision'
     }
   },
 

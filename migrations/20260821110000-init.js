@@ -28,11 +28,11 @@ exports.up = function(db, callback) {
         },
 
         requestCreatedAt: {
-          type: 'bigint'
+          type: 'double precision'
         },
 
         lastActivityAt: {
-          type: 'bigint'
+          type: 'double precision'
         },
 
         title: {
@@ -81,11 +81,11 @@ exports.up = function(db, callback) {
         },
 
         createdAt: {
-          type: 'bigint'
+          type: 'double precision'
         },
 
         updatedAt: {
-          type: 'bigint'
+          type: 'double precision'
         }
       }, cb);
     }
