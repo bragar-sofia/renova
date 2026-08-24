@@ -1,4 +1,8 @@
 /* ===== Projects view ===== */
+.projects-page [hidden] {
+  display: none !important;
+}
+
 #views-wrap {
   transition: opacity .18s ease;
 }
