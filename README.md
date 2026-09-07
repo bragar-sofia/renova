@@ -1,7 +1,7 @@
 # RENOVA
 
 ### development styles build
-npm run css:watch
+npm run dev:css
 
 ### production styles build
-npm run css:build
+npm run build:css

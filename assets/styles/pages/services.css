@@ -254,15 +254,15 @@
 
 /* ===== Services headings ===== */
 @media (min-width: 1024px) {
-  #services h2.scroll-mt-28,
-  #services h3 {
+  .services-page #services h2.scroll-mt-28,
+  .services-page #services h3 {
     white-space: nowrap;
   }
 }
 
-#services #service-prevent,
-#services #supply-catalog,
-#services .svc-repair-title {
+.services-page #services #service-prevent,
+.services-page #services #supply-catalog,
+.services-page #services .svc-repair-title {
   white-space: normal;
 }
 

@@ -13,23 +13,26 @@
   line-height: 1;
 }
 
+.number-badge-lg {
+  width: clamp(2.25rem, 0.0625rem + 2.734375vw, 3.125rem);
+  height: clamp(2.25rem, 0.0625rem + 2.734375vw, 3.125rem);
+  font-family: 'Geologica', Arial, sans-serif;
+  font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
 .chip {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   gap: .25rem;
-  padding: .375rem .75rem;
+  padding: .625rem .9375rem;
   border: 2px solid var(--ui-steel);
   border-radius: var(--ui-pill-radius);
   color: var(--ui-navy);
   font-size: 1rem;
   white-space: nowrap;
-}
-
-.chip img {
-  width: auto;
-  height: 1.75rem;
-  object-fit: contain;
 }
 
 .action-link {
