@@ -1,6 +1,6 @@
 // api/controllers/ProjectController.js
 
-const { keys: PROJECT_STAGES, labels: STAGE_LABELS } = require('../../lib/projectStages');
+const { keys: PROJECT_STAGES, labels: STAGE_LABELS } = require('../../lib/projectWorkflows');
 const { stripHtml, normalizeText, truncate, pad, formatDate, formatDateShort, sortPhotos, getProjectPhotos, firstPhoto } = require('../../lib/utils');
 
 module.exports = {

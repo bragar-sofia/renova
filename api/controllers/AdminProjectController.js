@@ -1,10 +1,22 @@
 // api/controllers/AdminProjectController.js
 
-const { keys: PROJECT_STAGES, labels: PROJECT_STAGE_LABELS } = require('../../lib/projectStages');
-const { normalizeText, normalizeBoolean, validateProjectPayload, buildProjectPayload } = require('../../lib/utils');
+const {
+  keys: PROJECT_WORK_TYPES,
+  labels: PROJECT_WORK_TYPE_LABELS
+} = require('../../lib/projectWorkflows');
+
+const {
+  normalizeText,
+  validateProjectPayload,
+  buildProjectPayload,
+  buildEditViewData,
+  prepareProjectForAdminList
+} = require('../../lib/utils');
 
 module.exports = {
-  /** GET /admin/projects */
+  /**
+   * GET /admin/projects
+   */
   index: async function (req, res) {
     try {
       const requestedPage = Number.parseInt(req.query.page, 10);
@@ -15,23 +27,22 @@ module.exports = {
       const totalPages = Math.max(Math.ceil(totalProjects / perPage), 1);
       const currentPage = Math.min(page, totalPages);
 
-      const projects = await Project.find()
+      const foundProjects = await Project.find()
         .sort('lastActivityAt DESC')
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
 
+      const projects = foundProjects.map(prepareProjectForAdminList);
+
       return res.view('admin/projects/index', {
         pageTitle: 'Проєкти та заявки',
         projects,
-        projectStages: PROJECT_STAGES,
-        projectStageLabels: PROJECT_STAGE_LABELS,
         pagination: {
           page: currentPage,
           perPage,
           totalProjects,
           totalPages
         },
-
         success: normalizeText(req.query.success)
       });
     } catch (error) {
@@ -40,28 +51,34 @@ module.exports = {
     }
   },
 
-  /** GET /admin/projects/new */
+
+  /**
+   * GET /admin/projects/new
+   */
   createPage: function (req, res) {
     return res.view('admin/projects/create', {
       pageTitle: 'Нова заявка',
       project: {
         title: '',
         equipment: '',
+        workType: '',
         repairType: '',
         currentStageNote: '',
         description: '',
         isVisible: true
       },
-      projectStages: PROJECT_STAGES,
-      projectStageLabels: PROJECT_STAGE_LABELS,
+      projectWorkTypes: PROJECT_WORK_TYPES,
+      projectWorkTypeLabels: PROJECT_WORK_TYPE_LABELS,
       errors: []
     });
   },
 
-  /** POST /admin/projects */
+  /**
+   * POST /admin/projects
+   */
   create: async function (req, res) {
-    const payload = buildProjectPayload(req.body);
-    const errors = validateProjectPayload(payload);
+    const payload = buildProjectPayload(req.body, {includeWorkType: true});
+    const errors = validateProjectPayload(payload, {requireWorkType: true});
 
     if (errors.length > 0) {
       res.status(400);
@@ -69,8 +86,8 @@ module.exports = {
       return res.view('admin/projects/create', {
         pageTitle: 'Нова заявка',
         project: payload,
-        projectStages: PROJECT_STAGES,
-        projectStageLabels: PROJECT_STAGE_LABELS,
+        projectWorkTypes: PROJECT_WORK_TYPES,
+        projectWorkTypeLabels: PROJECT_WORK_TYPE_LABELS,
         errors
       });
     }
@@ -85,8 +102,8 @@ module.exports = {
       return res.view('admin/projects/create', {
         pageTitle: 'Нова заявка',
         project: payload,
-        projectStages: PROJECT_STAGES,
-        projectStageLabels: PROJECT_STAGE_LABELS,
+        projectWorkTypes: PROJECT_WORK_TYPES,
+        projectWorkTypeLabels: PROJECT_WORK_TYPE_LABELS,
         errors: [
           'Не вдалося створити проєкт. Перевірте введені дані.'
         ]
@@ -94,7 +111,9 @@ module.exports = {
     }
   },
 
-  /** GET /admin/projects/:id/edit */
+  /**
+   * GET /admin/projects/:id/edit
+   */
   edit: async function (req, res) {
     try {
       const project = await Project.findOne({id: req.params.id});
@@ -102,26 +121,16 @@ module.exports = {
         return res.notFound();
       }
 
-      const currentStageIndex = PROJECT_STAGES.indexOf(project.currentStage);
-      const nextStage = currentStageIndex >= 0 ? PROJECT_STAGES[currentStageIndex + 1] || null : null;
-
-      return res.view('admin/projects/edit', {
-        pageTitle: `Редагування заявки №${project.requestNumber}`,
-        project,
-        projectStages: PROJECT_STAGES,
-        projectStageLabels: PROJECT_STAGE_LABELS,
-        currentStageIndex,
-        nextStage,
-        errors: [],
-        success: normalizeText(req.query.success)
-      });
+      return res.view('admin/projects/edit', buildEditViewData(project, {success: normalizeText(req.query.success)}));
     } catch (error) {
       sails.log.error('AdminProjectController.edit error:', error);
       return res.serverError(error);
     }
   },
 
-  /** POST /admin/projects/:id */
+  /**
+   * POST /admin/projects/:id
+   */
   update: async function (req, res) {
     const payload = buildProjectPayload(req.body);
     const errors = validateProjectPayload(payload);
@@ -136,19 +145,12 @@ module.exports = {
       if (errors.length > 0) {
         res.status(400);
 
-        return res.view('admin/projects/edit', {
-          pageTitle: `Редагування заявки №${project.requestNumber}`,
-          project: {
-            ...project,
-            ...payload
-          },
-          projectStages: PROJECT_STAGES,
-          projectStageLabels: PROJECT_STAGE_LABELS,
-          currentStageIndex: PROJECT_STAGES.indexOf(project.currentStage),
-          nextStage: PROJECT_STAGES[PROJECT_STAGES.indexOf(project.currentStage) + 1] || null,
-          errors,
-          success: ''
-        });
+        const projectForView = {
+          ...project,
+          ...payload
+        };
+
+        return res.view('admin/projects/edit', buildEditViewData(projectForView, {errors, success: ''}));
       }
 
       const updatedProject = await Project.updateOne({id: project.id}).set(payload);
@@ -159,12 +161,14 @@ module.exports = {
     }
   },
 
-  /** POST /admin/projects/:id/advance-stage */
+  /**
+   * POST /admin/projects/:id/advance-stage
+   */
   advanceStage: async function (req, res) {
     const projectId = req.params.id;
 
     try {
-      const project = await Project.findOne({ id: projectId });
+      const project = await Project.findOne({id: projectId});
       if (!project) {
         return res.notFound();
       }
@@ -174,8 +178,9 @@ module.exports = {
       }
 
       const nextStageNote = normalizeText(req.body && req.body.nextStageNote);
-      await Project.advanceStage(project.id, nextStageNote);
+      const branchKey = normalizeText(req.body && req.body.branchKey);
 
+      await Project.advanceStage(project.id, nextStageNote, branchKey);
       return res.redirect(`/admin/projects/${project.id}/edit?success=stage-advanced`);
     } catch (error) {
       sails.log.error('AdminProjectController.advanceStage error:', error);
@@ -185,26 +190,19 @@ module.exports = {
         return res.notFound();
       }
 
-      const currentStageIndex = PROJECT_STAGES.indexOf(project.currentStage);
-      const nextStage = currentStageIndex >= 0 ? PROJECT_STAGES[currentStageIndex + 1] || null : null;
-
       res.status(409);
 
-      return res.view('admin/projects/edit', {
-        pageTitle: `Редагування заявки №${project.requestNumber}`,
-        project,
-        projectStages: PROJECT_STAGES,
-        projectStageLabels: PROJECT_STAGE_LABELS,
-        currentStageIndex,
-        nextStage,
-        errors: [error.message || 'Не вдалося перевести проєкт на наступний етап.'],
-        success: ''
-      });
+      return res.view('admin/projects/edit', buildEditViewData(project, {
+          errors: [error.message || 'Не вдалося перевести проєкт на наступний етап.'],
+          success: ''
+        })
+      );
     }
   },
 
   /**
    * GET /admin/projects/export-json
+   *
    * For downloading:
    * /admin/projects/export-json?download=1
    */

@@ -25,7 +25,7 @@ const formatDate = (value) => {
 };
 
 const getStageLabel = (key) => {
-  return (projectStageLabels[key] || key || 'Не визначено');
+  return projectStageLabels[key] || key || 'Не визначено';
 };
 
 const stageHistory = Array.isArray(project.stages) ? project.stages : [];
@@ -39,10 +39,13 @@ stageHistory.forEach((stage) => {
 const formErrors = Array.isArray(errors) ? errors : [];
 const successMessage = successMessages[success] || '';
 const shouldAutoDownload = ['created', 'updated', 'stage-advanced'].includes(success);
-const progress = currentStageIndex >= 0 && projectStages.length > 0 ? Math.round(((currentStageIndex + 1) / projectStages.length) * 100) : 0;
 const isCompleted = project.currentStage === 'completed';
 const beforePhotos = project.photos && Array.isArray(project.photos.before) ? project.photos.before : [];
 const afterPhotos = project.photos && Array.isArray(project.photos.after) ? project.photos.after : [];
+const isBranchPending = Boolean(workflow && workflow.branch && !activeBranch && !isCompleted);
+const progress = !isBranchPending && currentStageIndex >= 0 && projectStages.length > 0 ? Math.round(
+      ((currentStageIndex + 1) / projectStages.length) * 100
+    ) : null;
 %>
 
 <section class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
@@ -71,6 +74,10 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
 
           <span class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 font-mono text-sm font-semibold text-slate-700">
             №<%= project.requestNumber %>
+          </span>
+
+          <span class="inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">
+            <%= workTypeLabel %>
           </span>
         </div>
 
@@ -142,7 +149,7 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
             </h2>
 
             <p class="mt-1 text-sm leading-6 text-slate-500">
-              Назва проєкту, обладнання та основний вид ремонтних робіт.
+              Назва проєкту, обладнання та основний вид запланованих робіт.
             </p>
           </div>
 
@@ -168,12 +175,28 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
 
               <div>
                 <label for="repairType" class="block text-sm font-semibold text-slate-700">
-                  Вид ремонту
+                  Вид робіт
                   <span class="text-red-500">*</span>
                 </label>
 
                 <input id="repairType" type="text" name="repairType" value="<%= project.repairType || '' %>" required class="mt-2 block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Наприклад: Капітальний ремонт">
               </div>
+            </div>
+
+            <div>
+              <span class="block text-sm font-semibold text-slate-700">
+                Тип робіт
+              </span>
+
+              <div class="mt-2 flex min-h-12 items-center rounded-xl border border-slate-200 bg-slate-50 px-4">
+                <span class="text-sm font-medium text-slate-700">
+                  <%= workTypeLabel %>
+                </span>
+              </div>
+
+              <p class="mt-2 text-xs leading-5 text-slate-500">
+                Тип робіт визначено під час створення заявки та задає маршрут проходження етапів.
+              </p>
             </div>
           </div>
         </div>
@@ -202,21 +225,29 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
             <textarea id="currentStageNote" name="currentStageNote" rows="4" class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Опишіть, що зараз відбувається з обладнанням"><%= project.currentStageNote || '' %></textarea>
           </div>
 
-          <div class="mt-5">
-            <div class="flex items-center justify-between gap-4">
-              <span class="text-sm font-medium text-slate-600">
-                Загальний прогрес
-              </span>
+          <% if (progress !== null) { %>
+            <div class="mt-5">
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-sm font-medium text-slate-600">
+                  Загальний прогрес
+                </span>
 
-              <span class="text-sm font-semibold text-slate-900">
-                <%= progress %>%
-              </span>
-            </div>
+                <span class="text-sm font-semibold text-slate-900">
+                  <%= progress %>%
+                </span>
+              </div>
 
-            <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= progress %>">
-              <div class="<%= isCompleted ? 'bg-emerald-500' : 'bg-navy' %> h-full rounded-full transition-all" style="width: <%= progress %>%"></div>
+              <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= progress %>">
+                <div class="<%= isCompleted ? 'bg-emerald-500' : 'bg-navy' %> h-full rounded-full transition-all" style="width: <%= progress %>%"></div>
+              </div>
             </div>
-          </div>
+          <% } else { %>
+            <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+              <p class="text-xs leading-5 text-slate-500">
+                Загальний прогрес буде розраховано після вибору маршруту виконання робіт.
+              </p>
+            </div>
+          <% } %>
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -289,6 +320,16 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
 
               <dd class="font-mono font-semibold text-slate-900">
                 №<%= project.requestNumber %>
+              </dd>
+            </div>
+
+            <div class="flex items-start justify-between gap-4">
+              <dt class="text-slate-500">
+                Тип робіт
+              </dt>
+
+              <dd class="max-w-[210px] text-right font-medium text-slate-700">
+                <%= workTypeLabel %>
               </dd>
             </div>
 
@@ -373,6 +414,66 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
                 </p>
               </div>
             </div>
+          <% } else if (requiresBranchSelection) { %>
+            <!-- Restoration branch selection -->
+            <h2 class="text-base font-semibold text-slate-900">
+              Варіант виконання робіт
+            </h2>
+
+            <p class="mt-2 text-sm leading-6 text-slate-500">
+              Пропозицію погоджено. Оберіть, де виконуватимуться подальші роботи.
+            </p>
+
+            <form action="/admin/projects/<%= project.id %>/advance-stage" method="post" class="mt-5" data-advance-stage-form>
+              <fieldset>
+                <legend class="sr-only">
+                  Варіант виконання робіт
+                </legend>
+
+                <div class="space-y-3">
+                  <% branchOptions.forEach((branch) => { %>
+                    <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-slate-300 hover:bg-slate-50">
+                      <input type="radio" name="branchKey" value="<%= branch.key %>" required class="mt-0.5 h-4 w-4 shrink-0 border-slate-300 text-navy focus:ring-navy">
+                      <span>
+                        <span class="block text-sm font-semibold text-slate-900">
+                          <%= branch.label %>
+                        </span>
+
+                        <% if (branch.key === 'onsite') { %>
+                          <span class="mt-1 block text-xs leading-5 text-slate-500">
+                            Подальший ремонт виконується безпосередньо на об’єкті Замовника.
+                          </span>
+                        <% } else if (branch.key === 'workshop') { %>
+                          <span class="mt-1 block text-xs leading-5 text-slate-500">
+                            Обладнання демонтується та транспортується на сервісний майданчик.
+                          </span>
+                        <% } %>
+                      </span>
+                    </label>
+                  <% }) %>
+                </div>
+              </fieldset>
+
+              <div class="mt-5">
+                <label for="branchNextStageNote" class="block text-sm font-semibold text-slate-700">
+                  Коментар до нового етапу
+                </label>
+                <textarea id="branchNextStageNote" name="nextStageNote" rows="4" class="mt-2 block w-full resize-y rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm leading-5 text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/10" placeholder="Необов’язковий коментар"></textarea>
+              </div>
+
+              <p class="mt-3 text-xs leading-5 text-slate-500">
+                Після вибору маршруту змінити його через звичайний перехід між етапами буде неможливо.
+              </p>
+
+              <button type="submit" class="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b527b]">
+                Продовжити роботи
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14"></path>
+                  <path d="m13 5 7 7-7 7"></path>
+                </svg>
+              </button>
+            </form>
+
           <% } else if (nextStage) { %>
             <h2 class="text-base font-semibold text-slate-900">
               Наступний етап
@@ -418,13 +519,19 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
             </h2>
 
             <span class="text-xs text-slate-500">
-              <%= currentStageIndex + 1 %> / <%= projectStages.length %>
+              <% if (isBranchPending) { %>
+                <%= currentStageIndex + 1 %> / <%= projectStages.length %> до вибору маршруту
+              <% } else { %>
+                <%= currentStageIndex + 1 %> / <%= projectStages.length %>
+              <% } %>
             </span>
           </div>
 
           <ol class="mt-6">
-            <% projectStages.forEach((stageKey, index) => { %>
+            <% projectStages.forEach((stageConfig, index) => { %>
               <%
+                const stageKey = stageConfig.key;
+                const stageLabel = stageConfig.label;
                 const stage = stageHistoryMap[stageKey];
                 const isCurrent = stageKey === project.currentStage;
                 const isReached = index <= currentStageIndex;
@@ -437,7 +544,7 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
                   <span class="absolute left-[15px] top-8 h-[calc(100%-1rem)] w-px <%= index < currentStageIndex ? 'bg-navy' : 'bg-slate-200' %>" aria-hidden="true"></span>
                 <% } %>
 
-                <span class="<%=isCurrent? 'border-navy bg-navy text-white': isReached ? 'border-navy bg-white text-navy' : 'border-slate-300 bg-white text-slate-300' %> relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2">
+                <span class="<%= isCurrent ? 'border-navy bg-navy text-white' : isReached ? 'border-navy bg-white text-navy' : 'border-slate-300 bg-white text-slate-300' %> relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2">
                   <% if (isReached && !isCurrent) { %>
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
                       <path d="M20 6 9 17l-5-5"></path>
@@ -452,7 +559,7 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
                 <div class="min-w-0 pt-1">
                   <div class="flex flex-wrap items-center gap-2">
                     <p class="<%= isReached ? 'text-slate-900' : 'text-slate-400' %> text-sm font-semibold">
-                      <%= getStageLabel(stageKey) %>
+                      <%= stageLabel %>
                     </p>
 
                     <% if (isCurrent) { %>
@@ -477,6 +584,14 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
               </li>
             <% }) %>
           </ol>
+
+          <% if (requiresBranchSelection) { %>
+            <div class="mt-5 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3">
+              <p class="text-xs leading-5 text-slate-500">
+                Подальша хронологія з’явиться після вибору варіанта виконання робіт.
+              </p>
+            </div>
+          <% } %>
         </div>
       </aside>
     </div>
@@ -511,14 +626,20 @@ const afterPhotos = project.photos && Array.isArray(project.photos.after) ? proj
       window.history.replaceState({}, '', url.pathname + url.search + url.hash);
     }
 
-    const advanceStageForm = document.querySelector('[data-advance-stage-form]');
-    if (advanceStageForm) {
-      advanceStageForm.addEventListener('submit', function (event) {
-        const confirmed = window.confirm('Перевести проєкт на наступний етап? Повернення до попереднього етапу поки не передбачено.');
+    const advanceStageForms = document.querySelectorAll('[data-advance-stage-form]');
+
+    advanceStageForms.forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        const branchInput = form.querySelector('input[name="branchKey"]:checked');
+        const message = branchInput
+              ? 'Підтвердити вибраний маршрут виконання робіт? Повернення до вибору маршруту поки не передбачено.'
+              : 'Перевести проєкт на наступний етап? Повернення до попереднього етапу поки не передбачено.';
+
+        const confirmed = window.confirm(message);
         if (!confirmed) {
           event.preventDefault();
         }
       });
-    }
+    });
   });
 </script>

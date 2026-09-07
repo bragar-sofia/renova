@@ -1,5 +1,14 @@
-const { keys: PROJECT_STAGES } = require('../../lib/projectStages');
-const { generateUniqueRequestNumber, normalizePhotos, isValidTimestamp, getRequestCreatedAtFromStages, getLastActivityAtFromStages } = require('../../lib/utils');
+const {keys: PROJECT_WORK_TYPES, getWorkflow} = require('../../lib/projectWorkflows');
+const {
+  generateUniqueRequestNumber,
+  normalizePhotos,
+  isValidTimestamp,
+  getRequestCreatedAtFromStages,
+  getLastActivityAtFromStages,
+  isStageInWorkflow,
+  isKnownProjectStage,
+  getNextStage
+} = require('../../lib/utils');
 
 module.exports = {
   // ===== Attributes =====
@@ -28,6 +37,12 @@ module.exports = {
       required: true
     },
 
+    workType: {
+      type: 'string',
+      required: true,
+      isIn: PROJECT_WORK_TYPES
+    },
+
     repairType: {
       type: 'string',
       required: true
@@ -35,7 +50,6 @@ module.exports = {
 
     currentStage: {
       type: 'string',
-      isIn: PROJECT_STAGES,
       defaultsTo: 'request-received'
     },
 
@@ -87,12 +101,22 @@ module.exports = {
     try {
       const now = Date.now();
 
+      const workflow = getWorkflow(valuesToSet.workType);
+      if (!workflow) {
+        throw new Error(`Невідомий тип робіт: "${valuesToSet.workType}".`);
+      }
+
+      const initialStage = workflow.stages[0];
+      if (!initialStage) {
+        throw new Error(`Для типу робіт "${valuesToSet.workType}" не визначено початковий етап.`);
+      }
+
       if (!valuesToSet.requestNumber) {
         valuesToSet.requestNumber = await generateUniqueRequestNumber();
       }
 
-      if (!valuesToSet.currentStage || !PROJECT_STAGES.includes(valuesToSet.currentStage)) {
-        valuesToSet.currentStage = PROJECT_STAGES[0];
+      if (!valuesToSet.currentStage || !isStageInWorkflow(workflow, valuesToSet.currentStage)) {
+        valuesToSet.currentStage = initialStage.key;
       }
 
       if (typeof valuesToSet.currentStageNote !== 'string') {
@@ -129,7 +153,7 @@ module.exports = {
 
   beforeUpdate: function (valuesToSet, proceed) {
     try {
-      if (Object.prototype.hasOwnProperty.call(valuesToSet, 'currentStage') && !PROJECT_STAGES.includes(valuesToSet.currentStage)) {
+      if (Object.prototype.hasOwnProperty.call(valuesToSet, 'currentStage') && !isKnownProjectStage(valuesToSet.currentStage)) {
         throw new Error(`Невідомий етап проєкту: ${valuesToSet.currentStage}`);
       }
 
@@ -152,7 +176,12 @@ module.exports = {
   },
 
   // ===== Methods =====
-  advanceStage: async function (projectId, nextStageNote = '') {
+  /**
+   * branchKey is only for restoration:
+   * - onsite
+   * - workshop
+   */
+  advanceStage: async function (projectId, nextStageNote = '', branchKey = '') {
     if (!projectId) {
       throw new Error('Для переходу на наступний етап необхідно передати ID проєкту.');
     }
@@ -166,12 +195,16 @@ module.exports = {
       return project;
     }
 
-    const currentStageIndex = PROJECT_STAGES.indexOf(project.currentStage);
-    if (currentStageIndex === -1) {
-      throw new Error(`Невідомий поточний етап проєкту: "${project.currentStage}".`);
+    const workflow = getWorkflow(project.workType);
+    if (!workflow) {
+      throw new Error(`Невідомий тип робіт проєкту: "${project.workType}".`);
     }
 
-    const nextStage = PROJECT_STAGES[currentStageIndex + 1];
+    if (!isStageInWorkflow(workflow, project.currentStage)) {
+      throw new Error(`Етап "${project.currentStage}" не належить типу робіт "${project.workType}".`);
+    }
+
+    const nextStage = getNextStage(workflow, project.currentStage, branchKey);
     if (!nextStage) {
       return project;
     }
@@ -179,7 +212,7 @@ module.exports = {
     const transitionDate = Date.now();
     const currentNote = typeof project.currentStageNote === 'string' ? project.currentStageNote.trim() : '';
     const normalizedNextStageNote = typeof nextStageNote === 'string' ? nextStageNote.trim() : '';
-    const stages = Array.isArray(project.stages) ? project.stages.map(stage => ({ ...stage })) : [];
+    const stages = Array.isArray(project.stages) ? project.stages.map((stage) => ({ ...stage })) : [];
     const lastStageIndex = stages.length - 1;
     const lastStage = stages[lastStageIndex];
 
@@ -193,7 +226,7 @@ module.exports = {
     };
 
     stages.push({
-      key: nextStage,
+      key: nextStage.key,
       enteredAt: transitionDate,
       note: normalizedNextStageNote
     });
@@ -202,7 +235,7 @@ module.exports = {
       id: project.id,
       currentStage: project.currentStage
     }).set({
-      currentStage: nextStage,
+      currentStage: nextStage.key,
       currentStageNote: normalizedNextStageNote,
       stages,
       lastActivityAt: transitionDate
@@ -213,5 +246,5 @@ module.exports = {
     }
 
     return updatedProject;
-  },
+  }
 };

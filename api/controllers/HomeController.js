@@ -1,6 +1,6 @@
 // api/controllers/HomeController.js
 
-const STAGE_LABELS = require('../../lib/projectStages').labels;
+const STAGE_LABELS = require('../../lib/projectWorkflows').labels;
 
 module.exports = {
   index: async function (req, res) {

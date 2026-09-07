@@ -45,6 +45,11 @@ exports.up = function(db, callback) {
           notNull: true
         },
 
+        workType: {
+          type: 'text',
+          notNull: true
+        },
+
         repairType: {
           type: 'text',
           notNull: true
