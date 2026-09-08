@@ -128,6 +128,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             <% activeProjects.forEach(function (p) { %>
               <li>
                 <a href="/projects/<%= p.requestNumber %>" class="card card-elevated interactive-card group relative flex items-center justify-between gap-4 p-4 transition">
+                  <span class="card-border" aria-hidden="true"></span>
                   <div class="min-w-0">
                     <span class="inline-flex w-fit max-w-full items-center rounded-full border border-navy/20 bg-sky px-3 py-1.5 text-xs font-bold leading-none text-navy shadow-sm">
                       <%= p.workTypeLabel %>
@@ -157,6 +158,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             <% completedProjects.forEach(function (p) { %>
               <li>
                 <article class="card card-elevated interactive-card group relative flex h-full flex-col overflow-hidden transition" data-project-card>
+                  <span class="card-border" aria-hidden="true"></span>
                   <!-- Photo -->
                   <div class="card-photo relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-sky to-white md:aspect-auto md:min-h-0 md:flex-1">
                     <% if (p.imageMain) { %>

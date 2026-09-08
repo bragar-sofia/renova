@@ -21,10 +21,12 @@
 }
 
 /* ===== Number ===== */
-.process-step-number {
+.number-badge.process-step-number {
+  width: 1.75rem;
+  height: 1.75rem;
   background: var(--ui-steel);
   font-family: 'Geologica', Arial, sans-serif;
-  font-size: 1.5rem;
+  font-size: .875rem;
   font-weight: 400;
 }
 
@@ -44,11 +46,15 @@
   width: auto;
   height: 100%;
   object-fit: contain;
+  transform: scale(var(--icon-scale, 1));
+  transform-origin: bottom center;
 }
 
 /* ===== Caption ===== */
 .process-step-caption {
+  max-width: 100%;
   min-height: var(--process-caption-min-height, 0);
+  overflow-wrap: break-word;
   margin-top: .75rem;
   color: var(--ui-navy);
   font-size: 1rem;
@@ -134,6 +140,10 @@
   .process-steps--many .process-step-connector {
     display: flex;
     width: 1.5rem;
+  }
+
+  .process-steps--no-connectors {
+    gap: 1.5rem;
   }
 
   .process-steps--many .process-step-number {

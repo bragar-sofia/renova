@@ -74,6 +74,7 @@
             return;
           }
 
+          element.classList.add('is-lottie-loaded');
           state.loaded = true;
           run(element);
         }

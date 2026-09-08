@@ -320,7 +320,7 @@ module.exports = {
     * reduce this considerably to allow more flexibility in purging the cache. *
     *                                                                          *
     ***************************************************************************/
-    cache: 365.25 * 24 * 60 * 60 * 1000, // One year
+    cache: 60 * 60 * 1000, // One hour
 
     /***************************************************************************
     *                                                                          *

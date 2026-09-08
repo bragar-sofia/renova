@@ -1,0 +1,32 @@
+<div class="service-sticky-heading service-mobile-heading">
+  <span class="number-badge"><%= section.number %></span>
+  <span class="heading-3"><%= section.title %></span>
+</div>
+
+<div class="site-container svc-intro<%= section.flip ? ' svc-intro-flip' : '' %>">
+  <div class="svc-illustration">
+    <img class="svc-illustration-static" src="/images/services/<%= section.illustration %>.svg" alt="" aria-hidden="true">
+    <span class="svc-illustration-anim" data-lottie="/images/services/<%= section.illustration %>.json" aria-hidden="true"></span>
+  </div>
+
+  <div class="svc-intro-body">
+    <div class="svc-intro-heading">
+      <span class="number-badge number-badge-lg service-desktop-number"><%= section.number %></span>
+      <h2 class="heading-1 service-desktop-title"><%= section.title %></h2>
+    </div>
+
+    <% section.paragraphs.forEach(function (paragraph) { %>
+      <p class="body-copy svc-intro-text"><%= paragraph %></p>
+    <% }); %>
+
+    <% if (section.list) { %>
+      <ul class="svc-intro-list">
+        <% section.list.forEach(function (item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    <% } %>
+
+    <a class="btn btn-primary svc-intro-cta" href="/#contacts"><%= section.cta %></a>
+  </div>
+</div>

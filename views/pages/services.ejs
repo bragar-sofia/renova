@@ -1,50 +1,260 @@
 <%
+var serviceSections = [
+  {
+    id: 'restoration',
+    number: 1,
+    title: 'Відновлення обладнання',
+    illustration: 'restoration',
+    cta: 'Замовити відновлення',
+    paragraphs: [
+      'Компанія RENOVA надає послуги з технічного обслуговування, ремонту та комплексного відновлення металообробного і пресового обладнання усіх типів, модифікацій чи року випуску. Наші виробничі потужності дають змогу виконувати повний цикл робіт: від усунення локальних несправностей і відновлення окремих вузлів до капітального ремонту, комплексної модернізації та реінжинірингу верстатних систем.',
+      'Відновлювальні роботи розпочинаються з попереднього технічного аудиту та дефектації обладнання. Наші фахівці оцінюють його загальний технічний стан, визначають причини несправностей і аналізують залишковий ресурс основних вузлів. За результатами діагностики складається дефектний акт та формується техніко-економічне обґрунтування (ТЕО) з оптимальним алгоритмом виконання робіт відповідно до вимог технічного завдання замовника.',
+      'Існують різні моделі застосовуваних систем технічного обслуговування і ремонту обладнання, основними з яких є:'
+    ],
+    list: [
+      'система планово-попереджувальних ремонтів;',
+      'ремонт після відмови обладнання (аварійний ремонт);',
+      'ремонт за технічним станом (діагностичний).'
+    ]
+  },
+  {
+    id: 'calibration',
+    number: 2,
+    title: 'Калібрування і налагодження',
+    illustration: 'calibration',
+    flip: true,
+    cta: 'Замовити калібрування',
+    paragraphs: [
+      'Комплекс періодичних або регламентних робіт, спрямованих на виявлення, компенсацію та усунення відхилень геометричної, кінематичної та позиційної точності верстата, що виникають внаслідок природного зношення вузлів, теплових деформацій або механічних навантажень під час експлуатації обладнання.',
+      'Основна мета цих робіт — підтримання паспортної точності та стабільності розмірів обробки протягом усього життєвого циклу обладнання без зупинки виробництва на капітальний ремонт.'
+    ]
+  },
+  {
+    id: 'commissioning',
+    number: 3,
+    title: 'Пусконалагоджувальні роботи',
+    illustration: 'commissioning',
+    cta: 'Замовити пусконалагодження',
+    paragraphs: [
+      'Комплекс організаційно-технічних заходів, спрямованих на підготовку обладнання до введення в експлуатацію та забезпечення його роботи згідно з паспортними характеристиками і стандартами точності.',
+      'Головна мета пусконалагоджувальних робіт — перевірка якості монтажу, виявлення та усунення дефектів підключення, випробування з перевіркою геометричної точності і жорсткості, налаштування систем керування (зокрема ЧПК), а також підтвердження готовності обладнання до експлуатації.'
+    ]
+  },
+  {
+    id: 'audit',
+    number: 4,
+    title: 'Технічний аудит і діагностика',
+    illustration: 'audit',
+    flip: true,
+    cta: 'Замовити технічний аудит',
+    paragraphs: [
+      'Комплексна оцінка технічного стану обладнання, діагностика вузлів і систем, перевірка технологічної точності, випробування, визначення причин невідповідностей обладнання заявленим характеристикам та несправностей, ступеня зносу та необхідного обсягу відновлювальних робіт.',
+      'Технічний аудит є першим етапом будь-яких відновлювальних робіт. За його результатами складається дефектний акт і формується техніко-економічне обґрунтування (ТЕО) з оптимальним алгоритмом виконання робіт відповідно до вимог технічного завдання Замовника. Саме на основі діагностики визначаються вартість, строки, обсяг і склад ремонтно-відновлювальних робіт.',
+      'Діагностика виконується як на об’єкті Замовника, так і на власному сервісному майданчику компанії RENOVA.'
+    ]
+  },
+  {
+    id: 'presale',
+    number: 5,
+    title: 'Передпродажна підготовка обладнання',
+    illustration: 'presale',
+    cta: 'Замовити передпродажну підготовку',
+    paragraphs: [
+      'Комплекс технічних, діагностичних та відновлювальних заходів, спрямованих на приведення обладнання у працездатний та належний товарний стан, перевірку його геометричної точності й функціональності, а також забезпечення його готовності до демонстрації покупцеві та подальшого введення в експлуатацію.',
+      'Головна мета передпродажної підготовки — підтвердження (або відновлення) паспортних характеристик обладнання, забезпечення його надійності при запуску та підвищення його ринкової вартості.'
+    ]
+  },
+  {
+    id: 'supply',
+    number: 6,
+    title: 'Постачання нового обладнання',
+    illustration: 'supply',
+    flip: true,
+    cta: 'Замовити нове обладнання',
+    paragraphs: [
+      'Якщо ремонт наявного обладнання технічно неможливий або економічно недоцільний, компанія RENOVA підбере та поставить нове рішення відповідно до завдань вашого виробництва.',
+      'Ми аналізуємо технічне завдання Замовника, підбираємо надійне обладнання від перевірених виробників з Європи та Азії, а також розраховуємо повний кошторис постачання «під ключ». Наші фахівці виконують монтаж, пусконалагоджувальні роботи, приймально-здавальні випробування та проводять базовий інструктаж для персоналу Замовника.'
+    ]
+  },
+  {
+    id: 'engineering',
+    number: 7,
+    title: 'Інжинірингово-консультативні послуги',
+    illustration: 'engineering',
+    cta: 'Замовити консультацію',
+    paragraphs: [
+      'Консультації з питань підбору виробничого обладнання, його раціональної експлуатації, у тому числі технічного обслуговування і ремонту.',
+      'Головна мета таких послуг — мінімізація капітальних і операційних витрат Замовника, підвищення коефіцієнта технічної готовності та коефіцієнта використання обладнання, забезпечення заданої точності обробки й подовження міжремонтного ресурсу парку обладнання.',
+      'Компанія RENOVA забезпечує як комплексний технічний супровід верстатного парку, так і виконання окремих завдань для підсилення власної ремонтної служби підприємства.'
+    ]
+  }
+];
+
+var onSiteSteps = [
+  { icon: 'icon-repair-request.svg', text: 'Прийом заявки та первинна консультація' },
+  { icon: 'icon-repair-visit.svg', text: 'Виїзд на підприємство і діагностика обладнання' },
+  { icon: 'icon-repair-worklist.svg', text: 'Формування переліку необхідних робіт' },
+  { icon: 'icon-repair-quote.svg', text: 'Узгодження комерційної пропозиції' },
+  { icon: 'icon-repair-works.svg', text: 'Виконання ремонтних робіт' },
+  { icon: 'icon-repair-commissioning.svg', text: 'Пусконалагоджувальні роботи та випробування' },
+  { icon: 'icon-repair-handover.svg', text: 'Здавання відремонтованого обладнання' }
+];
+
+var shopSteps = [
+  { icon: 'icon-shop-request.svg', text: 'Прийом заявки та первинна консультація' },
+  { icon: 'icon-shop-visit.svg', text: 'Виїзд на підприємство і діагностика обладнання' },
+  { icon: 'icon-shop-worklist.svg', text: 'Формування переліку необхідних робіт' },
+  { icon: 'icon-shop-quote.svg', text: 'Узгодження комерційної пропозиції' },
+  { icon: 'icon-shop-transport.svg', text: 'Демонтаж та транспортування обладнання' },
+  { icon: 'icon-shop-works.svg', text: 'Виконання ремонтних робіт, перевірка, випробування' },
+  { icon: 'icon-shop-delivery.svg', text: 'Передача обладнання замовнику для транспортування (або доставка на об’єкт)' },
+  { icon: 'icon-shop-install.svg', text: 'Монтажні, пусконалагоджувальні та випробувальні роботи' },
+  { icon: 'icon-shop-handover.svg', text: 'Здавання обладнання' }
+];
+
+var maintenanceSteps = [
+  { icon: 'icon-maint-diagnostics.svg', text: 'Діагностика обладнання з метою виявлення зношення й потенційних несправностей зі складанням акту' },
+  { icon: 'icon-maint-schedule.svg', text: 'Складання індивідуального графіка ППР та регламентів (технологічних карт) обслуговування' },
+  { icon: 'icon-maint-works.svg', text: 'Проведення регламентних робіт з технічного обслуговування та поточного ремонту' },
+  { icon: 'icon-maint-report.svg', text: 'Контроль та перевірка технічного стану, формування підсумкового звіту та надання рекомендацій щодо подальшої експлуатації' }
+];
+
+var repairStepGroups = [
+  { label: 'на об’єкті замовника:', steps: onSiteSteps },
+  { label: 'на сервісному майданчику:', steps: shopSteps }
+];
+
 var repairTypes = [
-  { title: 'Технічний аудит і діагностика', text: 'Комплексна оцінка технічного стану обладнання, діагностика вузлів і систем, визначення причин несправностей, ступеня зносу та необхідного обсягу відновлювальних робіт.' },
-  { title: 'Аварійний ремонт', text: 'Оперативна діагностика та усунення несправностей, відновлення або заміна вузлів і компонентів, що вийшли з ладу, для максимально швидкого повернення обладнання до роботи.' },
-  { title: 'Капітальний ремонт', text: 'Комплексне відновлення обладнання, що включає ремонт або заміну зношених вузлів для відновлення його технічних характеристик до рівня, близького до заводського.' },
-  { title: 'Модернізація обладнання', text: 'Оновлення обладнання шляхом заміни систем ЧПК, приводів, електроніки та інших морально або фізично застарілих компонентів на сучасні рішення.' }
+  {
+    title: 'Аварійний ремонт',
+    icon: 'icon-repair-emergency.svg',
+    intro: [
+      'Один із видів ремонту після відмови обладнання — виконується, коли несправність уже сталася і виробництво зупинено. Роботи починаються з оперативної діагностики для визначення причини несправності. Далі усуваємо виявлені несправності, ремонтуємо або замінюємо пошкоджені елементи, після чого проводимо пусконалагоджувальні роботи та випробування обладнання. Головне завдання — відновити працездатність і мінімізувати час простою обладнання.'
+    ],
+    listTitle: 'Склад робіт',
+    list: [
+      'оперативна діагностика та визначення причини несправності;',
+      'усунення виявлених несправностей;',
+      'ремонт або заміна пошкоджених елементів;',
+      'пусконалагоджувальні роботи та випробування обладнання.'
+    ],
+    stepsTitle: 'Етапи проведення ремонту',
+    stepGroups: repairStepGroups
+  },
+  {
+    title: 'Капітальний ремонт',
+    icon: 'icon-repair-overhaul.svg',
+    intro: [
+      'Комплекс робіт з ремонту або повної заміни зношених деталей, вузлів та базових агрегатів для відновлення технічних характеристик обладнання до початкового (паспортного) рівня. Проводиться у разі значного зношення основних вузлів, втрати геометричної точності, системних несправностей або у випадках, коли локальний ремонт не дає змоги відновити необхідні технологічні параметри.'
+    ],
+    listTitle: 'Залежно від технічного стану обладнання комплекс робіт з капітального ремонту охоплює',
+    list: [
+      'технічне діагностування, розбирання та дефектування вузлів зі складанням дефектного акту;',
+      'ремонт або заміну зношених деталей та вузлів;',
+      'шліфування базових поверхонь і відновлення напрямних;',
+      'ремонт гідравлічних і пневматичних систем;',
+      'відновлення систем охолодження та змащування;',
+      'ремонт або заміну електрообладнання;',
+      'заміну системи керування (ЧПК), приводів та електроніки;',
+      'складання та відновлення лакофарбового антикорозійного покриття металевих поверхонь обладнання;',
+      'монтажні та пусконалагоджувальні роботи;',
+      'перевірку геометричної точності;',
+      'випробування обладнання під навантаженням.'
+    ],
+    stepsTitle: 'Етапи проведення ремонту',
+    stepGroups: repairStepGroups
+  },
+  {
+    title: 'Модернізація обладнання',
+    icon: 'icon-repair-modernization.svg',
+    intro: [
+      'Комплексне оновлення морально або фізично застарілих компонентів на сучасні рішення. Охоплює заміну систем керування (ЧПК), приводів, електроніки та інших застарілих вузлів. Обсяг робіт визначається за результатами технічного аудиту й дефектації обладнання та узгоджується відповідно до вимог технічного завдання Замовника. Результат — розширений функціонал і підвищена надійність обладнання.'
+    ],
+    listTitle: 'Що оновлюємо',
+    list: [
+      'системи числового програмного керування (ЧПК);',
+      'приводи;',
+      'електроніку та електрообладнання;',
+      'інші морально або фізично застарілі компоненти.'
+    ],
+    stepsTitle: 'Етапи проведення ремонту',
+    stepGroups: repairStepGroups
+  },
+  {
+    title: 'Агрегатний ремонт',
+    icon: 'icon-repair-unit.svg',
+    intro: [
+      'Несправні або зношені вузли, агрегати чи блоки оперативно замінюються новими або заздалегідь відремонтованими з обмінного (резервного) фонду. Цей метод дає можливість виконувати ремонт безпосередньо на місці експлуатації, без повного розбирання всієї машини — а отже, без демонтажу й транспортування обладнання на сервісний майданчик.'
+    ],
+    listTitle: 'Переваги методу:',
+    list: [
+      'ремонт безпосередньо на місці експлуатації обладнання;',
+      'без повного розбирання всієї машини;',
+      'без демонтажу й транспортування на сервісний майданчик.'
+    ],
+    stepsTitle: 'Етапи проведення ремонту',
+    stepGroups: repairStepGroups
+  },
+  {
+    title: 'Технічне обслуговування',
+    icon: 'icon-repair-maintenance.svg',
+    intro: [
+      'Своєчасне і систематичне виконання комплексу робіт з технічного обслуговування обладнання забезпечує вчасне виявлення зношення й несправностей. Це дозволяє здійснювати ремонт до виникнення аварійних відмов, знижує ризик непередбачених поломок і пов’язаних із ним простоїв виробництва. Такий підхід дає змогу підтримувати обладнання у працездатному стані та мінімізує потребу в довготривалих капітальних ремонтах із демонтажем і транспортуванням на місце виконання ремонтних робіт.',
+      'Компанія RENOVA здійснює технічне обслуговування металообробного та пресового обладнання з формуванням індивідуального графіка планово-попереджувальних робіт (ППР) і регламентів обслуговування.',
+      'Графік і регламенти розробляються з урахуванням типу й кількості обладнання, його технічного стану, інтенсивності експлуатації та режиму роботи підприємства. Замовник отримує чіткий графік обслуговування, зрозумілі технічні карти та регламенти робіт, деталізований обсяг робіт та прогнозований бюджет на технічне утримання обладнання.',
+      'Компанія RENOVA забезпечує як комплексний технічний супровід верстатного парку, так і виконання окремих завдань для підсилення власної ремонтної служби підприємства.'
+    ],
+    stepsTitle: 'Етапи проведення технічного обслуговування:',
+    stepGroups: [{ steps: maintenanceSteps }]
+  }
 ];
 
-var overhaulScope = [
-  'технічне обстеження, розбирання та дефектацію вузлів;',
-  'ремонт або заміну зношених механічних вузлів;',
-  'шліфування базових поверхонь і відновлення напрямних;',
-  'ремонт гідравлічних і пневматичних систем;',
-  'відновлення систем охолодження та змащування;',
-  'ремонт або заміну електрообладнання;',
-  'заміну системи ЧПК, приводів та електроніки;',
-  'складання та фарбування обладнання;',
-  'перевірку геометрії та точності;',
-  'випробування обладнання під навантаженням.'
+var calibrationStages = [
+  { title: 'Випробування та контроль результатів', items: [
+    'Виготовлення та вимірювання контрольної (зразкової) деталі;',
+    'Складання протоколу випробувань (калібрування) із зазначенням фактичних похибок та їх відповідності паспортним допускам точності.'
+  ] },
+  { title: 'Периферійна та геометрична діагностика', items: [
+    'Перевірка перпендикулярності та паралельності осей переміщення;',
+    'Вимірювання теплових деформацій (дрейфу) шпиндельного вузла при тривалій роботі'
+  ] },
+  { title: 'Налагодження затискних та технологічних систем', items: [
+    'Налаштування та калібрування вимірювальних щупів деталі й інструменту (Renishaw, Blum тощо);',
+    'Налаштування зусилля затиску патронів, гідроприводів та пинолей задніх бабок'
+  ] },
+  { title: 'Програмна компенсація похибок (для верстатів з ЧПК)', items: [
+    'Введення та активація таблиць компенсації позиційних похибок осей (похибок кроку КВГ та люфтів);',
+    'Налаштування компенсації динамічних похибок при високошвидкісній обробці (HSM / Look-Ahead);'
+  ] }
 ];
 
-var repairSteps = [
-  {icon: 'icon-stage-request.svg', height: 'h-10', text: 'Прийом заявки та первинна консультація'},
-  {icon: 'icon-stage-site-visit.svg', height: 'h-10', text: 'Виїзд на підприємство і діагностика обладнання'},
-  {icon: 'icon-stage-worklist.svg', height: 'h-10', text: 'Формування переліку необхідних робіт'},
-  {icon: 'icon-stage-quote.svg', height: 'h-10', text: 'Формування комерційної пропозиції, термінів і вартості'},
-  {icon: 'icon-stage-repair-works.svg', height: 'h-10', text: 'Проведення ремонтних робіт'},
-  {icon: 'icon-svc-inspection.svg', height: 'h-10', text: 'Перевірка та випробування обладнання'},
-  {icon: 'icon-stage-handover.svg', height: 'h-10', text: 'Передача обладнання замовнику'},
-  {icon: 'icon-stage-commissioning.svg', height: 'h-12', captionMt: 'mt-2', text: 'Монтажні та пусконалагоджувальні роботи на території замовника'}
+var commissioningSteps = [
+  { icon: 'icon-commissioning-mounting.svg', text: 'Перевірка монтажу' },
+  { icon: 'icon-commissioning-mounting.svg', text: 'Перевірка підключення інженерних комунікацій' },
+  { icon: 'icon-commissioning-lubricants.svg', text: 'Контроль заправки мастильних матеріалів та робочих рідин' },
+  { icon: 'icon-commissioning-electrics.svg', text: 'Налаштування електричних систем, автоматики та системи числового програмного керування (ЧПК)' },
+  { icon: 'icon-commissioning-geometry.svg', scale: 1.1, text: 'Перевірка геометричної точності та жорсткості' },
+  { icon: 'icon-commissioning-idle-run.svg', scale: 1.4, text: 'Опробування на холостому ходу' },
+  { icon: 'icon-commissioning-load-test.svg', scale: 1.1, text: 'Випробування під навантаженням і виготовлення тестової деталі' },
+  { icon: 'icon-commissioning-handover.svg', text: 'Здавання обладнання із підписанням Акта введення в експлуатацію' }
 ];
 
-var serviceSteps = [
-  {icon: 'icon-svc-inspection.svg', height: 'h-10', text: 'Технічне обстеження та діагностика обладнання'},
-  {icon: 'icon-svc-schedule.svg', height: 'h-10', text: 'Формування індивідуального графіка планово-попереджувальних робіт'},
-  {icon: 'icon-svc-maintenance.svg', height: 'h-10', text: 'Проведення регламентного технічного обслуговування та поточного ремонту'},
-  {icon: 'icon-svc-report.svg', height: 'h-10', text: 'Контроль технічного стану, формування звіту та рекомендацій'}
+var auditFindings = [
+  { basis: '24.3rem', text: 'Причини невідповідностей обладнання заявленим характеристикам' },
+  { basis: '14.8rem', text: 'Причини наявних несправностей' },
+  { basis: '25.1rem', text: 'Ступінь зносу вузлів і залишковий ресурс основних агрегатів' },
+  { basis: '16.3rem', text: 'Необхідний обсяг відновлювальних робіт' },
+  { basis: '19.3rem', text: 'Відповідність технологічної точності паспортним нормам' }
 ];
 
-var supplySteps = [
-  {icon: 'icon-supply-analysis.svg', height: 'h-10', text: 'Аналіз технічного завдання замовника'},
-  {icon: 'icon-supply-selection.svg', height: 'h-10', text: 'Підбір оптимального обладнання'},
-  {icon: 'icon-supply-quote.svg', height: 'h-10', text: 'Формування комерційної пропозиції'},
-  {icon: 'icon-stage-site-visit.svg', height: 'h-10', text: 'Транспортування на об’єкт замовника'},
-  {icon: 'icon-supply-installation.svg', height: 'h-10', text: 'Монтаж та введення в експлуатацію'},
-  {icon: 'icon-supply-training.svg', height: 'h-10', text: 'Навчання персоналу роботі з обладнанням'},
-  {icon: 'icon-supply-support.svg', height: 'h-10', text: 'Сервісне обслуговування та подальша підтримка'}
+var presaleParts = [
+  { basis: '58.06rem', text: 'Діагностика та комплексна перевірка механічної частини, шпиндельного вузла, приводів подач, напрямних та систем змащення, електрообладнання, датчиків зворотного зв’язку, блоків живлення та системи ЧПК, гідравлічних та пневматичних систем та контурів охолодження на герметичність і тиск' },
+  { basis: '23.56rem', text: 'Усунення виявлених дефектів, заміна зношених швидкозношуваних деталей, ущільнень, ременів та фільтрів' },
+  { basis: '19.56rem', text: 'Промивання змащувальних та гідравлічних каналів, заміна робочих рідин і мастил' },
+  { basis: '26.56rem', text: 'Регулювання зазорів у клинах, напрямних, підшипниках та вузлах КВГ (усунення люфтів)' },
+  { basis: '40.88rem', text: 'Розконсервація, регулювання точності та перевірка функціонування вузлів на холостому ходу (обкатка шпинделя, тестування зміни інструменту)' },
+  { basis: '33.81rem', text: 'Виконання тестового оброблення деталі під навантаженням для контролю точності та шорсткості поверхні' },
+  { basis: '100%', text: 'Загальна підготовка та комплектація: очищення або відновлення лакофарбового покриття, заміна пошкоджених захисних щитків та огороджень; перевірка наявності та відновлення експлуатаційної технічної документації (паспорт, інструкція з експлуатації, схеми тощо); комплектація штатною оснасткою, ключами та затискними елементами' }
 ];
 
 var supplyCatalog = [
@@ -73,240 +283,147 @@ var supplyBrands = [
   { file: 'euromac.png', name: 'Euromac' }
 ];
 
-var serviceNav = [
-  { id: 'restoration', title: 'Відновлення обладнання', subs: [
-    { id: 'restoration-types', title: 'Види робіт' },
-    { id: 'restoration-stages', title: 'Етапи проведення ремонту' },
-    { id: 'restoration-capital', title: 'Капітальний ремонт' },
-    { id: 'restoration-cost', title: 'Вартість і терміни' }
-  ] },
-  { id: 'service', title: 'Технічне обслуговування', subs: [
-    { id: 'service-prevent', title: 'Попередження несправностей' },
-    { id: 'service-stages', title: 'Етапи обслуговування' }
-  ] },
-  { id: 'supply', title: 'Постачання обладнання', subs: [
-    { id: 'supply-catalog', title: 'Спектр обладнання' },
-    { id: 'supply-stages', title: 'Етапи постачання' }
-  ] }
+var supplySteps = [
+  { icon: 'icon-supply-analysis.svg', text: 'Аналіз технічних вимог та завдання' },
+  { icon: 'icon-supply-selection.svg', text: 'Підбір оптимального обладнання' },
+  { icon: 'icon-supply-quote.svg', text: 'Формування комерційної пропозиції' },
+  { icon: 'icon-stage-site-visit.svg', text: 'Доставка обладнання на об’єкт' },
+  { icon: 'icon-supply-installation.svg', text: 'Монтаж, пусконалагоджувальні роботи, приймально-здавальні випробування та введення в експлуатацію' },
+  { icon: 'icon-supply-training.svg', text: 'Базовий інструктаж щодо правил безпечної експлуатації обладнання для персоналу' },
+  { icon: 'icon-supply-support.svg', text: 'Сервісне обслуговування та подальша підтримка (гарантійний і післягарантійний супровід)' }
 ];
+
+var consultingAreas = [
+  'Підбір виробничого обладнання — визначення оптимального рішення відповідно до завдань і технічних вимог виробництва',
+  'Раціональна експлуатація — організація використання обладнання з дотриманням заданої точності обробки та подовженням його ресурсу',
+  'Технічне обслуговування і ремонт — вибір моделі обслуговування з урахуванням типу, стану та інтенсивності експлуатації обладнання.'
+];
+
+var pricingBasis = [
+  'для ремонтно-відновлювальних робіт, передпродажної підготовки та калібрування — результати технічної діагностики й дефектування обладнання;',
+  'для технічного обслуговування — тип, кількість і технічний стан обладнання, інтенсивність експлуатації та режим роботи підприємства, на основі яких формується графік ППР із прогнозованим річним бюджетом;',
+  'для пусконалагоджувальних робіт, інжинірингових послуг і постачання обладнання — технічне завдання Замовника та обсяг узгоджених робіт.'
+];
+
+var serviceNav = serviceSections.map(function (section) {
+  return { id: section.id, title: section.title };
+}).concat([{ id: 'pricing', title: 'Вартість і терміни' }]);
+var svc = {};
+serviceSections.forEach(function (section) { svc[section.id] = section; });
 %>
 
 <div class="services-page">
   <main id="services">
     <nav class="svc-nav" data-services-nav aria-label="Розділи послуг">
-      <% serviceNav.forEach(function (sec) { %>
-        <a class="svc-nav-item svc-nav-section" href="#<%= sec.id %>" data-services-nav-item data-target="<%= sec.id %>">
+      <% serviceNav.forEach(function (item) { %>
+        <a class="svc-nav-item svc-nav-section" href="#<%= item.id %>" data-services-nav-item data-target="<%= item.id %>">
           <span class="svc-dash" data-services-nav-dash></span>
-          <span class="svc-label"><%= sec.title %></span>
+          <span class="svc-label"><%= item.title %></span>
         </a>
-        <% sec.subs.forEach(function (sub) { %>
-          <a class="svc-nav-item svc-nav-sub" href="#<%= sub.id %>" data-services-nav-item data-target="<%= sub.id %>">
-            <span class="svc-dash" data-services-nav-dash></span>
-            <span class="svc-label"><%= sub.title %></span>
-          </a>
-        <% }); %>
       <% }); %>
     </nav>
 
-    <% /* ===================== Restoration ===================== */ %>
     <section id="restoration" class="service-section scroll-mt-24">
-      <div
-        class="service-sticky-heading service-mobile-heading">
-        <span class="service-number number-badge service-number-badge">1</span>
-        <span class="heading-1">Відновлення обладнання</span>
-      </div>
+      <%- include('../partials/service-intro', { section: svc.restoration }) %>
 
-      <% /* ---------- Equipment restoration ---------- */ %>
-      <section class="site-container grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
-        <div>
-          <span class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">1</span>
-          <h2 class="heading-1 service-desktop-title">Відновлення обладнання</h2>
-          <p class="body-copy service-copy-first text-left">
-            Компанія RENOVA здійснює технічне обслуговування, ремонт та комплексне відновлення металообробного
-            і пресового обладнання будь-яких типів, модифікацій та років випуску.
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Наші виробничо-технічні можливості дозволяють виконувати повний цикл робіт: від усунення локальних
-            несправностей і відновлення окремих вузлів до капітального ремонту, комплексної модернізації
-            та реінжинірингу верстатних систем.
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Відновлювальні роботи розпочинаються з попереднього технічного аудиту та дефектації обладнання.
-            Наші фахівці оцінюють його загальний технічний стан, визначають причини несправностей і аналізують
-            залишковий ресурс основних вузлів. За результатами діагностики складається дефектний акт та формується
-            техніко-економічне обґрунтування (ТЕО) з оптимальним алгоритмом виконання робіт відповідно до вимог
-            технічного завдання замовника.
-          </p>
-          <a href="/#contacts" class="btn btn-primary service-cta">Замовити відновлення</a>
-        </div>
-        <div class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.25rem]">
-          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/restoration-hero.png" alt="Ремонт токарного верстата у майстерні RENOVA" fetchpriority="high" decoding="async">
-        </div>
-      </section>
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">Види ремонтних робіт:</h3>
 
-      <% /* ---------- Repair types ---------- */ %>
-      <section class="site-container">
-        <h2 id="restoration-types" class="heading-2 scroll-mt-28">Види робіт</h2>
-        <div data-stagger class="service-type-grid">
-          <% repairTypes.forEach(function (card) { %>
-            <article class="card card-elevated service-type-card flex flex-col">
-              <h3 class="svc-repair-title heading-3"><%= card.title %></h3>
-              <p class="service-card-copy"><%= card.text %></p>
+        <div data-stagger class="svc-repair-grid">
+          <% repairTypes.forEach(function (card, i) { %>
+            <article class="card card-elevated interactive-card svc-repair-card" data-repair-card>
+              <span class="card-border" aria-hidden="true"></span>
+              <h4 class="svc-repair-title heading-3"><%= card.title %></h4>
+
+              <div class="svc-repair-foot">
+                <img class="svc-repair-icon" src="/images/icons/<%= card.icon %>" alt="" aria-hidden="true">
+
+                <button type="button" class="action-link svc-repair-more" data-repair-open="<%= i %>">
+                  Детальніше
+                  <img src="/images/icons/icon-chevron-inactive.svg" alt="">
+                </button>
+              </div>
             </article>
           <% }); %>
         </div>
-      </section>
-
-      <% /* ---------- Repair stages ---------- */ %>
-      <section class="site-container">
-        <h2 id="restoration-stages" class="heading-2 scroll-mt-28">Етапи проведення ремонтних робіт</h2>
-        <div class="mt-4 lg:mt-6">
-          <%- include('../partials/process-steps', { steps: repairSteps, captionLines: 3 }) %>
-        </div>
-      </section>
-
-      <% /* ---------- Major overhaul ---------- */ %>
-      <section class="site-container grid items-start gap-8 lg:grid-cols-[0.4fr_0.6fr]">
-        <div>
-          <h2 id="restoration-capital" class="heading-2 scroll-mt-28">Капітальний ремонт</h2>
-          <p class="body-copy service-copy-first text-left">
-            Капітальний ремонт проводиться у разі значного зношення основних вузлів, втрати геометричної точності,
-            системних несправностей або коли локальний ремонт уже не дозволяє відновити необхідні
-            технічні характеристики обладнання.
-          </p>
-          <div class="service-card card mt-6 p-6 md:p-8">
-            <h3 class="heading-3">Залежно від технічного стану обладнання<br> та результатів дефектації<br> комплекс робіт може включати:</h3>
-            <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
-              <% overhaulScope.forEach(function (item) { %>
-                <li><%= item %></li>
-              <% }); %>
-            </ul>
-          </div>
-        </div>
-        <div class="service-image relative -mr-6 hidden h-72 overflow-hidden md:block md:h-96 lg:-mr-8 lg:h-full lg:min-h-[36.4375rem] xl:-mr-16 2xl:-mr-24">
-          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/capital-repair.png" alt="Розбирання коробки передач під час капітального ремонту" loading="lazy" decoding="async">
-        </div>
-      </section>
-
-      <% /* ---------- Cost and timeline ---------- */ %>
-      <section class="site-container grid items-center gap-8 lg:grid-cols-[auto_1fr] lg:gap-14">
-        <div class="mx-auto h-56 w-auto max-w-full aspect-[366/300] lg:mx-0 lg:h-52" data-lottie="/images/lottie/cost-terms.json" aria-hidden="true"></div>
-        <div>
-          <h2 id="restoration-cost" class="heading-2 scroll-mt-28">Вартість і терміни</h2>
-          <p class="body-copy service-copy-first text-left">
-            Вартість і терміни виконання ремонтних робіт визначаються індивідуально за результатами технічної
-            діагностики та дефектації обладнання з урахуванням вимог технічного завдання замовника.
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Після визначення фактичного технічного стану обладнання та необхідного обсягу відновлювальних робіт
-            узгоджуються склад робіт, строки їх виконання та вартість.
-          </p>
-        </div>
-      </section>
-    </section>
-
-    <% /* ===================== Service ===================== */ %>
-    <section id="service" class="service-section scroll-mt-24">
-      <div class="service-sticky-heading service-mobile-heading">
-        <span class="service-number number-badge service-number-badge">2</span>
-        <span class="heading-1">Технічне обслуговування</span>
       </div>
-
-      <% /* ---------- Maintenance ---------- */ %>
-      <section class="site-container grid items-center gap-8 md:grid-cols-[0.8fr_1.2fr]">
-        <div class="service-image relative -ml-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-ml-8 lg:h-[26rem] xl:-ml-16 2xl:-ml-24 2xl:h-[32rem]">
-          <img class="fade-right absolute inset-0 h-full w-full object-cover" src="/images/service-maintenance.png" alt="Профілактичне обслуговування токарного верстата" loading="lazy" decoding="async">
-        </div>
-        <div>
-          <span class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">2</span>
-          <h2 class="heading-1 service-desktop-title">Технічне обслуговування</h2>
-          <p class="body-copy service-copy-first text-left">
-            RENOVA здійснює планове технічне обслуговування металообробного і пресового обладнання з формуванням
-            індивідуального графіка планово-попереджувальних робіт (ППР).
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Графік розробляється з урахуванням типу та кількості обладнання, його технічного стану, інтенсивності
-            навантаження та режиму роботи підприємства. Регулярне виконання передбачених ним робіт дозволяє своєчасно
-            виявляти зношення й несправності, проводити необхідне технічне обслуговування та поточний ремонт до
-            виникнення аварійних відмов.
-          </p>
-          <a href="/#contacts" class="btn btn-primary service-cta max-[430px]:w-min">Замовити&nbsp;технічне обслуговування</a>
-        </div>
-      </section>
-
-      <% /* ---------- Prevent failure ---------- */ %>
-      <section class="site-container grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-14">
-        <div>
-          <h2 id="service-prevent" class="heading-2 scroll-mt-28">Планове обслуговування замість аварійних простоїв</h2>
-          <p class="body-copy service-copy-first text-left">
-            Система ППР дозволяє підтримувати обладнання у працездатному стані та планувати необхідні ремонтні й
-            регламентні роботи заздалегідь. Це допомагає знизити ризик непередбачених поломок і пов’язаних із ними
-            простоїв виробництва.
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Замовник отримує чіткий графік обслуговування обладнання, розуміння майбутнього обсягу робіт та
-            можливість завчасно планувати витрати на його технічне утримання. RENOVA може забезпечити комплексний
-            технічний супровід верстатного парку або виконувати окремі роботи на доповнення до власної ремонтної
-            служби підприємства.
-          </p>
-        </div>
-        <div class="mx-auto h-44 w-auto max-w-full aspect-[374/282] lg:mx-0 lg:h-52" data-lottie="/images/lottie/prevention.json" aria-hidden="true"></div>
-      </section>
-
-      <% /* ---------- Maintenance stages ---------- */ %>
-      <section class="site-container">
-        <h2 id="service-stages" class="heading-2 scroll-mt-28">Етапи проведення технічного обслуговування</h2>
-        <div class="mt-4 lg:mt-6">
-          <%- include('../partials/process-steps', { steps: serviceSteps, fullWidth: true }) %>
-        </div>
-      </section>
     </section>
 
-    <% /* ===================== Supply ===================== */ %>
+    <section id="calibration" class="service-section scroll-mt-24">
+      <%- include('../partials/service-intro', { section: svc.calibration }) %>
+
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">Ключові етапи виконання робіт в умовах виробництва:</h3>
+
+        <div data-stagger class="svc-note-grid">
+          <% calibrationStages.forEach(function (stage) { %>
+            <article class="card card-elevated svc-note-card">
+              <h4 class="heading-3"><%= stage.title %></h4>
+
+              <ul class="svc-note-list">
+                <% stage.items.forEach(function (item) { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <section id="commissioning" class="service-section scroll-mt-24">
+      <%- include('../partials/service-intro', { section: svc.commissioning }) %>
+
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">Етапи проведення пусконалагоджувальних робіт:</h3>
+        <%- include('../partials/process-steps', { steps: commissioningSteps, captionLines: 3, fullWidth: true, connectors: false }) %>
+      </div>
+    </section>
+
+    <section id="audit" class="service-section scroll-mt-24">
+      <%- include('../partials/service-intro', { section: svc.audit }) %>
+
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">За результатами обстеження визначаємо:</h3>
+
+        <div data-stagger class="svc-plain-grid svc-plain-grid-five">
+          <% auditFindings.forEach(function (item) { %>
+            <article class="card card-elevated svc-plain-card" style="--card-basis: <%= item.basis %>"><%= item.text %></article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <section id="presale" class="service-section scroll-mt-24">
+      <%- include('../partials/service-intro', { section: svc.presale }) %>
+
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">Основні складові передпродажної підготовки:</h3>
+
+        <div data-stagger class="svc-plain-grid">
+          <% presaleParts.forEach(function (item) { %>
+            <article class="card card-elevated svc-plain-card" style="--card-basis: <%= item.basis %>"><%= item.text %></article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
     <section id="supply" class="service-section scroll-mt-24">
-      <div
-        class="service-sticky-heading service-mobile-heading">
-        <span class="service-number number-badge service-number-badge">3</span>
-        <span class="heading-1">Постачання нового обладнання</span>
-      </div>
+      <%- include('../partials/service-intro', { section: svc.supply }) %>
 
-      <% /* ---------- New equipment supply ---------- */ %>
-      <section class="site-container grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
-        <div>
-          <span class="service-number number-badge service-number-badge service-number-badge-lg service-desktop-number">3</span>
-          <h2 class="heading-1 service-desktop-title">Постачання нового обладнання</h2>
-          <p class="body-copy service-copy-first text-left">
-            Якщо ремонт обладнання технічно неможливий або економічно недоцільний, RENOVA допоможе підібрати нове
-            рішення відповідно до завдань вашого виробництва.
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Ми аналізуємо вимоги описані в технічному завданні замовника, підбираємо відповідне обладнання від
-            перевірених виробників з Європи та Азії, а також розраховуємо вартість постачання, монтажу та
-            пусконалагоджувальних робіт.
-          </p>
-          <p class="body-copy mt-4 text-left">
-            Після встановлення виконуємо налаштування та перевірку роботи обладнання,
-            а також проводимо базове навчання представників замовника.
-          </p>
-          <a href="/#contacts" class="btn btn-primary service-cta">Замовити нове обладнання</a>
-        </div>
-        <div class="service-image relative -mr-6 hidden h-64 overflow-hidden md:block md:h-80 lg:-mr-8 lg:h-[26rem] xl:-mr-16 2xl:-mr-24 2xl:h-[32.375rem]">
-          <img class="fade-left absolute inset-0 h-full w-full object-cover" src="/images/equipment-supply.png" alt="Складання нового обладнання перед відвантаженням" loading="lazy" decoding="async">
-        </div>
-      </section>
+      <div class="site-container supply-catalog">
+        <article class="card card-elevated svc-catalog-card">
+          <h3 class="heading-3">Постачаємо широкий спектр обладнання</h3>
 
-      <% /* ---------- Equipment catalog ---------- */ %>
-      <section class="site-container supply-catalog">
-        <div class="service-card card w-full max-w-2xl p-6 md:p-8">
-          <h2 id="supply-catalog" class="heading-2 relative z-10 scroll-mt-28">Постачаємо широкий спектр обладнання</h2>
-          <ul class="check-list relative z-10 mt-3 lg:mt-5 text-base text-navy">
+          <ul class="svc-catalog-list">
             <% supplyCatalog.forEach(function (item) { %>
               <li><%= item %></li>
             <% }); %>
           </ul>
-        </div>
+        </article>
+
         <div class="supply-brands-area">
-          <ul class="supply-brands" aria-label="Виробники обладнання, яке ми постачаємо">
+          <ul class="supply-brands">
             <% supplyBrands.forEach(function (brand) { %>
               <li class="supply-brand">
                 <img src="/images/brands/<%= brand.file %>" alt="<%= brand.name %>" loading="lazy" decoding="async">
@@ -314,16 +431,94 @@ var serviceNav = [
             <% }); %>
           </ul>
         </div>
-      </section>
+      </div>
 
-      <% /* ---------- Supply stages ---------- */ %>
-      <section class="site-container">
-        <h2 id="supply-stages" class="heading-2 scroll-mt-28">Етапи постачання обладнання</h2>
-        <div class="mt-4 lg:mt-6">
-          <%- include('../partials/process-steps', { steps: supplySteps, captionLines: 3, fullWidth: true }) %>
-        </div>
-      </section>
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">Етапи постачання нового обладнання</h3>
+        <%- include('../partials/process-steps', { steps: supplySteps, captionLines: 3, fullWidth: true, connectors: false }) %>
+      </div>
     </section>
+
+    <section id="engineering" class="service-section scroll-mt-24">
+      <%- include('../partials/service-intro', { section: svc.engineering }) %>
+
+      <div class="site-container svc-subblock">
+        <h3 class="heading-2 svc-subblock-title">Напрями консультування:</h3>
+
+        <div data-stagger class="svc-plain-grid svc-plain-grid-three">
+          <% consultingAreas.forEach(function (item) { %>
+            <article class="card card-elevated svc-plain-card"><%= item %></article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="service-section scroll-mt-24">
+      <div class="site-container svc-pricing">
+        <div class="svc-pricing-body">
+          <h2 class="heading-1">Вартість і терміни</h2>
+
+          <p class="body-copy svc-intro-text">Вартість, строки та склад робіт за всіма послугами компанії RENOVA визначаються індивідуально й узгоджуються з Замовником до початку виконання. За результатами оцінки Замовник отримує комерційну пропозицію з деталізованим переліком робіт, вартістю та термінами виконання. Прозорість розрахунку дає змогу планувати бюджет на утримання обладнання заздалегідь і уникати непередбачених витрат.</p>
+        </div>
+
+        <article class="card card-elevated svc-note-card">
+          <h3 class="heading-3">Основою для розрахунку є:</h3>
+
+          <ul class="svc-note-list">
+            <% pricingBasis.forEach(function (item) { %>
+              <li><%= item %></li>
+            <% }); %>
+          </ul>
+        </article>
+      </div>
+    </section>
+    <div class="svc-modal" data-repair-modal hidden>
+      <div class="svc-modal-backdrop" data-repair-close></div>
+
+      <div class="svc-modal-panel card" role="dialog" aria-modal="true" data-repair-dialog>
+        <button type="button" class="svc-modal-close" data-repair-close aria-label="Закрити">
+          <img src="/images/icons/icon-modal-close.svg" alt="" aria-hidden="true">
+        </button>
+
+        <% repairTypes.forEach(function (card, i) { %>
+          <article class="svc-modal-content" data-repair-panel="<%= i %>" hidden>
+            <h2 class="heading-2 svc-modal-title" id="svc-modal-title-<%= i %>"><%= card.title %></h2>
+
+            <div class="svc-modal-intro">
+              <% card.intro.forEach(function (paragraph) { %>
+                <p class="body-copy"><%= paragraph %></p>
+              <% }); %>
+            </div>
+
+            <% if (card.list) { %>
+              <div class="svc-modal-block">
+                <h3 class="heading-3"><%= card.listTitle %></h3>
+
+                <ul class="svc-note-list">
+                  <% card.list.forEach(function (item) { %>
+                    <li><%= item %></li>
+                  <% }); %>
+                </ul>
+              </div>
+            <% } %>
+
+            <div class="svc-modal-block">
+              <h3 class="heading-3"><%= card.stepsTitle %></h3>
+
+              <% card.stepGroups.forEach(function (group) { %>
+                <div class="svc-modal-steps">
+                  <% if (group.label) { %>
+                    <p class="svc-modal-steps-label"><%= group.label %></p>
+                  <% } %>
+
+                  <%- include('../partials/process-steps', { steps: group.steps, connectors: false, fullWidth: true, captionLines: 3, stagger: false }) %>
+                </div>
+              <% }); %>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    </div>
   </main>
 </div>
 

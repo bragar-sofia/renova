@@ -135,6 +135,7 @@ function visInit(project) {
                 data-sort-value="<%= p.sortTimestamp %>"
                 <%= visInit(p) ? '' : 'hidden' %>
               >
+                <span class="card-border" aria-hidden="true"></span>
 
                 <!-- Number -->
                 <div class="project-row-cell project-row-cell--number">
@@ -239,6 +240,7 @@ function visInit(project) {
           data-sort-value="<%= p.sortTimestamp %>"
           <%= visInit(p) ? '' : 'hidden' %>
         >
+          <span class="card-border" aria-hidden="true"></span>
 
           <!-- Photo -->
           <div class="card-photo relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-sky to-white">

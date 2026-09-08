@@ -161,3 +161,92 @@
     initServices();
   }
 })();
+
+(function () {
+  function initRepairModal() {
+    var modal = document.querySelector('[data-repair-modal]');
+
+    if (!modal) {
+      return;
+    }
+
+    var panels = modal.querySelectorAll('[data-repair-panel]');
+    var dialog = modal.querySelector('[data-repair-dialog]');
+    var closeButton = modal.querySelector('.svc-modal-close');
+    var previousFocus = null;
+    var hideTimer = null;
+
+    function lockScroll() {
+      var gap = window.innerWidth - document.documentElement.clientWidth;
+      document.documentElement.style.setProperty('--scrollbar-gap', gap + 'px');
+      document.body.classList.add('svc-modal-open');
+    }
+
+    function unlockScroll() {
+      document.body.classList.remove('svc-modal-open');
+      document.documentElement.style.removeProperty('--scrollbar-gap');
+    }
+
+    function open(trigger) {
+      var index = trigger.getAttribute('data-repair-open');
+
+      window.clearTimeout(hideTimer);
+      previousFocus = trigger;
+
+      Array.prototype.forEach.call(panels, function (panel) {
+        panel.hidden = panel.getAttribute('data-repair-panel') !== index;
+      });
+
+      dialog.setAttribute('aria-labelledby', 'svc-modal-title-' + index);
+      dialog.scrollTop = 0;
+      modal.hidden = false;
+      lockScroll();
+
+      window.requestAnimationFrame(function () {
+        modal.classList.add('is-visible');
+        closeButton.focus();
+      });
+    }
+
+    function close() {
+      modal.classList.remove('is-visible');
+      unlockScroll();
+
+      hideTimer = window.setTimeout(function () {
+        modal.hidden = true;
+
+        if (previousFocus && typeof previousFocus.focus === 'function') {
+          previousFocus.focus();
+        }
+      }, 300);
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll('[data-repair-card]'), function (card) {
+      var trigger = card.querySelector('[data-repair-open]');
+
+      if (!trigger) {
+        return;
+      }
+
+      card.addEventListener('click', function () {
+        open(trigger);
+      });
+    });
+
+    Array.prototype.forEach.call(modal.querySelectorAll('[data-repair-close]'), function (node) {
+      node.addEventListener('click', close);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !modal.hidden) {
+        close();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRepairModal, { once: true });
+  } else {
+    initRepairModal();
+  }
+})();

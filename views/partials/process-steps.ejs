@@ -2,11 +2,14 @@
 var fullWidth = (typeof fullWidth !== 'undefined') && fullWidth;
 var captionLines = (typeof captionLines !== 'undefined') ? captionLines : 0;
 var manySteps = steps.length > 5;
+var connectors = (typeof connectors === 'undefined') ? true : connectors;
+var stagger = (typeof stagger === 'undefined') ? true : stagger;
 
 var rootClasses = [
   'process-steps',
   manySteps ? 'process-steps--many' : 'process-steps--compact',
-  fullWidth ? 'process-steps--full' : ''
+  fullWidth ? 'process-steps--full' : '',
+  connectors ? '' : 'process-steps--no-connectors'
 ].filter(Boolean).join(' ');
 
 function isLargeIcon(step) {
@@ -18,14 +21,14 @@ function hasCompactCaption(step) {
 }
 %>
 
-<ol data-stagger class="<%= rootClasses %>"
+<ol<% if (stagger) { %> data-stagger<% } %> class="<%= rootClasses %>"
 <% if (captionLines) { %>
   style="--process-caption-min-height: <%= captionLines * 1.5 %>rem;"
   <% } %>
 >
   <% steps.forEach(function (step, i) { %>
 
-    <% if (i) { %>
+    <% if (connectors && i) { %>
       <li class="process-step-connector" aria-hidden="true">
         <span class="process-step-connector-line"></span>
         <span class="process-step-connector-arrow"></span>
@@ -39,7 +42,8 @@ function hasCompactCaption(step) {
         </span>
 
         <span class="process-step-icon<%= isLargeIcon(step) ? ' process-step-icon--lg' : '' %>">
-          <img src="/images/icons/<%= step.icon %>" alt="" aria-hidden="true">
+          <img src="/images/icons/<%= step.icon %>" alt="" aria-hidden="true"
+            <% if (step.scale) { %>style="--icon-scale: <%= step.scale %>"<% } %>>
         </span>
       </span>
 
