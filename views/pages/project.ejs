@@ -21,7 +21,11 @@ var hasHero = mainPhoto && completed;
         Усі заявки
       </a>
 
-      <div class="project-meta">
+      <div class="project-meta flex flex-col items-start gap-2 md:flex-row md:items-center">
+        <span class="inline-flex w-fit max-w-full items-center rounded-full border border-navy/20 bg-white px-3 py-1.5 text-xs font-bold leading-none text-navy shadow-sm">
+          <%= workTypeLabel %>
+        </span>
+
         <span class="project-meta-status">
           <%- statusSvg(completed) %>
           <%= statusLabel %>
@@ -39,8 +43,8 @@ var hasHero = mainPhoto && completed;
           <div class="project-hero">
             <% if (heroSwap) { %>
               <div class="project-hero-frame card-photo" data-cp-auto>
-                <img src="<%= heroBase %>" alt="<%= project.title %> — до ремонту">
-                <img class="cp-after" src="<%= heroSwap %>" alt="<%= project.title %> — після ремонту">
+                <img src="<%= heroBase %>" alt="<%= project.title %> — до виконання робіт">
+                <img class="cp-after" src="<%= heroSwap %>" alt="<%= project.title %> — після виконання робіт">
                 <span class="cp-beam" aria-hidden="true"></span>
               </div>
             <% } else { %>
@@ -63,8 +67,18 @@ var hasHero = mainPhoto && completed;
             <%= project.equipment %>
           </p>
 
+          <% if (branchLabel) { %>
+            <h3 class="heading-3 project-fact-title">
+              Місце виконання:
+            </h3>
+
+            <p class="project-fact-value">
+              <%= branchLabel %>
+            </p>
+          <% } %>
+
           <h3 class="heading-3 project-fact-title">
-            Тип робіт:
+            Вид робіт:
           </h3>
 
           <p class="project-fact-value">
@@ -85,13 +99,13 @@ var hasHero = mainPhoto && completed;
 
             <div class="project-gallery">
               <% before.forEach(function (photo, index) { %>
-                <img class="project-gallery-image" src="<%= photo.path %>" alt="<%= photo.alt || 'Фото до ремонту' %>" loading="lazy"
+                <img class="project-gallery-image" src="<%= photo.path %>" alt="<%= photo.alt || 'Фото до виконання робіт' %>" loading="lazy"
                   data-zoom
                   data-pair="<%= index %>"
                   data-side="before"
                   role="button"
                   tabindex="0"
-                  aria-label="Відкрити: <%= photo.alt || 'Фото до ремонту' %>"
+                  aria-label="Відкрити: <%= photo.alt || 'Фото до виконання робіт' %>"
                 >
               <% }); %>
             </div>
@@ -105,13 +119,13 @@ var hasHero = mainPhoto && completed;
 
             <div class="project-gallery">
               <% after.forEach(function (photo, index) { %>
-                <img class="project-gallery-image" src="<%= photo.path %>" alt="<%= photo.alt || 'Фото після ремонту' %>" loading="lazy"
+                <img class="project-gallery-image" src="<%= photo.path %>" alt="<%= photo.alt || 'Фото після виконання робіт' %>" loading="lazy"
                   data-zoom
                   data-pair="<%= index %>"
                   data-side="after"
                   role="button"
                   tabindex="0"
-                  aria-label="Відкрити: <%= photo.alt || 'Фото після ремонту' %>"
+                  aria-label="Відкрити: <%= photo.alt || 'Фото після виконання робіт' %>"
                 >
               <% }); %>
             </div>
@@ -171,6 +185,14 @@ var hasHero = mainPhoto && completed;
                   </li>
                 <% }); %>
               </ol>
+
+              <% if (requiresBranchSelection) { %>
+                <div class="mt-5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3">
+                  <p class="text-sm leading-6 text-navy">
+                    Подальший план виконання робіт уточнюється.
+                  </p>
+                </div>
+              <% } %>
             </div>
           </div>
         </details>

@@ -128,10 +128,19 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
             <% activeProjects.forEach(function (p) { %>
               <li>
                 <a href="/projects/<%= p.requestNumber %>" class="card card-elevated interactive-card group relative flex items-center justify-between gap-4 p-4 transition">
-                  <span class="min-w-0">
-                    <h3 class="heading-3 block truncate"><%= p.title %></h3>
-                    <p class="text-muted mt-1 block text-base" data-status-line><span data-num>№<%= p.requestNumber %></span><span data-sep> · </span><span data-stat>Статус:&nbsp;<%= p.statusText %></span></p>
-                  </span>
+                  <div class="min-w-0">
+                    <span class="inline-flex w-fit max-w-full items-center rounded-full border border-navy/20 bg-sky px-3 py-1.5 text-xs font-bold leading-none text-navy shadow-sm">
+                      <%= p.workTypeLabel %>
+                    </span>
+                    <h3 class="heading-3 mt-2 block truncate">
+                      <%= p.title %>
+                    </h3>
+                    <p class="text-muted mt-1 block text-base" data-status-line>
+                      <span data-num>№<%= p.requestNumber %></span>
+                      <span data-sep> · </span>
+                      <span data-stat>Статус:&nbsp;<%= p.statusText %></span>
+                    </p>
+                  </div>
                   <img class="h-3 w-auto shrink-0 -rotate-90 object-contain transition group-hover:translate-x-1" src="/images/icons/icon-chevron-inactive.svg" alt="">
                 </a>
               </li>
@@ -163,12 +172,19 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                         </svg>
                       </div>
                     <% } %>
+
+                      <!-- Work type badge -->
+                      <div class="pointer-events-none absolute left-3 top-3 z-20">
+                        <span class="inline-flex w-fit max-w-[calc(100%-1.5rem)] items-center rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-xs font-bold leading-none text-navy shadow-md backdrop-blur-sm">
+                          <%= p.workTypeLabel %>
+                        </span>
+                      </div>
                   </div>
 
                   <!-- Content -->
                   <div class="pointer-events-none relative z-20 grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 p-3">
                     <% if (p.imageMain && p.imageHover) { %>
-                      <button type="button" class="cp-toggle pointer-events-auto col-start-2 row-start-1 mb-2 shrink-0 justify-self-end md:mb-0" data-cp-toggle aria-pressed="false" aria-label="Показати фото після ремонту">
+                      <button type="button" class="cp-toggle pointer-events-auto col-start-2 row-start-1 mb-2 shrink-0 justify-self-end" data-cp-toggle aria-pressed="false" aria-label="Показати фото після виконання робіт">
                         <span class="cp-toggle-thumb">
                           <span data-cp-toggle-label>До</span>
                         </span>
