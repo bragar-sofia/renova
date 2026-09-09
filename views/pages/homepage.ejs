@@ -63,12 +63,12 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     <% /* Services */ %>
     <%
     var serviceBlocks = [
-      { number: 2, icon: 'audit', title: 'Технічний аудит і діагностика', items: ['Оцінка технічного стану', 'Діагностика вузлів', 'Перевірка точності', 'Аналіз несправностей', 'Ступінь зносу'] },
-      { number: 3, icon: 'commissioning', title: 'Налагодження і запуск', items: ['Перевірка монтажу', 'Налаштування ЧПК', 'Геометрична точність', 'Тестові випробування', 'Введення в експлуатацію'] },
-      { number: 4, icon: 'calibration', title: 'Калібрування і налагодження', items: ['Геометрична діагностика', 'Компенсація похибок', 'Калібрування щупів', 'Контрольна деталь', 'Протокол точності'] },
-      { number: 5, icon: 'presale', title: 'Передпродажна підготовка', items: ['Комплексна діагностика', 'Усунення дефектів', 'Обкатка й регулювання', 'Товарний вигляд'] },
-      { number: 6, icon: 'engineering', title: 'Інжиніринг і консалтинг', items: ['Підбір обладнання', 'Раціональна експлуатація', 'Стратегія ремонтів', 'Зниження витрат', 'Подовження ресурсу'] },
-      { number: 7, icon: 'supply', title: 'Постачання обладнання', items: ['Аналіз завдання', 'Підбір рішення', 'Постачання «під ключ»', 'Монтаж і запуск', 'Гарантійний супровід'] }
+      { number: 2, id: 'audit', icon: 'audit', title: 'Технічний аудит і діагностика', items: ['Оцінка технічного стану', 'Діагностика вузлів', 'Перевірка точності', 'Аналіз несправностей', 'Ступінь зносу'] },
+      { number: 3, id: 'commissioning', icon: 'commissioning', title: 'Налагодження і запуск', items: ['Перевірка монтажу', 'Налаштування ЧПК', 'Геометрична точність', 'Тестові випробування', 'Введення в експлуатацію'] },
+      { number: 4, id: 'calibration', icon: 'calibration', title: 'Калібрування і налагодження', items: ['Геометрична діагностика', 'Компенсація похибок', 'Калібрування щупів', 'Контрольна деталь', 'Протокол точності'] },
+      { number: 5, id: 'presale', icon: 'presale', title: 'Передпродажна підготовка', items: ['Комплексна діагностика', 'Усунення дефектів', 'Обкатка й регулювання', 'Товарний вигляд'] },
+      { number: 6, id: 'engineering', icon: 'engineering', title: 'Інжиніринг і консалтинг', items: ['Підбір обладнання', 'Раціональна експлуатація', 'Стратегія ремонтів', 'Зниження витрат', 'Подовження ресурсу'] },
+      { number: 7, id: 'supply', icon: 'supply', title: 'Постачання обладнання', items: ['Аналіз завдання', 'Підбір рішення', 'Постачання «під ключ»', 'Монтаж і запуск', 'Гарантійний супровід'] }
     ];
 
     var restorationTags = ['Діагностика', 'Капітальний ремонт', 'Аварійний ремонт', 'Модернізація', 'Заміна вузлів'];
@@ -78,12 +78,19 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       <h2 class="heading-1 mb-8">Наші послуги</h2>
 
       <div class="service-blocks" data-stagger>
-        <article class="service-block service-block-wide card card-elevated">
-          <span class="number-badge number-badge-lg">1</span>
+        <a class="service-block service-block-wide card card-elevated interactive-card" href="/services#restoration">
+          <span class="card-border" aria-hidden="true"></span>
+
+          <div class="service-block-head">
+            <span class="number-badge number-badge-lg">1</span>
+            <h3 class="heading-2">Відновлення обладнання</h3>
+          </div>
+
+          <span class="service-block-decor" aria-hidden="true">
+            <img src="/images/icons/icon-service-restoration.svg" alt="">
+          </span>
 
           <div class="service-block-main">
-            <h3 class="heading-2">Відновлення обладнання</h3>
-
             <p class="heading-3 service-block-lead">Технічне обслуговування, ремонт і комплексне відновлення металообробного та пресового обладнання будь-якого типу й року випуску — від усунення локальних несправностей до капітального ремонту й модернізації.</p>
 
             <div class="service-block-tags">
@@ -92,19 +99,21 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
               <% }); %>
             </div>
           </div>
-
-          <img class="service-block-decor" src="/images/icons/icon-service-restoration.svg" alt="" aria-hidden="true">
-        </article>
+        </a>
 
         <% serviceBlocks.forEach(function (block) { %>
-          <article class="service-block card card-elevated">
+          <a class="service-block card card-elevated interactive-card" href="/services#<%= block.id %>">
+            <span class="card-border" aria-hidden="true"></span>
+
             <div class="service-block-head">
               <span class="number-badge number-badge-lg"><%= block.number %></span>
               <h3 class="heading-2"><%= block.title %></h3>
             </div>
 
             <div class="service-block-body">
-              <img class="service-block-icon" src="/images/icons/icon-service-<%= block.icon %>.svg" alt="" aria-hidden="true">
+              <span class="service-block-icon" aria-hidden="true">
+                <img src="/images/icons/icon-service-<%= block.icon %>.svg" alt="">
+              </span>
 
               <ul class="service-block-list">
                 <% block.items.forEach(function (item) { %>
@@ -112,7 +121,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
                 <% }); %>
               </ul>
             </div>
-          </article>
+          </a>
         <% }); %>
       </div>
     </section>
