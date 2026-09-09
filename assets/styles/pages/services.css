@@ -3,6 +3,10 @@
 .service-section {
   position: relative;
   padding-block: 2.5rem;
+
+  background-image: var(--ui-page-gradient);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .service-section > * + * {
@@ -241,7 +245,7 @@
 
 @media (min-width: 1024px) {
   .svc-intro {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 2.8fr) minmax(0, 1fr);
     gap: clamp(2.5rem, 6vw, 9.6875rem);
   }
 
@@ -258,7 +262,7 @@
   }
 
   .svc-intro-flip {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.8fr);
   }
 
   .svc-intro-flip .svc-illustration {
@@ -425,11 +429,34 @@
   line-height: 1.6;
 }
 
+.svc-plain-grid-five {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 768px) {
+  .svc-plain-grid-five {
+    grid-template-columns: 30fr minmax(13.5rem, 27fr) 32fr;
+  }
+
+  .svc-plain-grid-five .svc-plain-card:first-child {
+    grid-column: span 2;
+  }
+}
+
 @media (min-width: 1280px) {
   .svc-plain-grid-three .svc-plain-card {
     flex: 1 1 0;
   }
 
+  .svc-plain-grid-five {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .svc-plain-grid-five .svc-plain-card {
+    flex-basis: var(--card-basis, 18rem);
+  }
 }
 
 /* ===== Services: supply catalog ===== */

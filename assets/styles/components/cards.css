@@ -3,10 +3,6 @@
   background: #fff;
 }
 
-.card-elevated {
-  box-shadow: var(--ui-card-shadow);
-}
-
 .interactive-card {
   position: relative;
 }
