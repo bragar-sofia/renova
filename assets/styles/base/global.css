@@ -19,11 +19,19 @@ html {
   --ui-menu-shadow: 0 16px 42px rgba(7, 49, 78, 0.12);
 }
 
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
 .home-page,
+.about-page,
+.contacts-page,
 .services-page,
 .projects-page,
 .project-page {
-  min-height: 100vh;
+  flex: 1;
   background: var(--ui-sky);
   color: var(--ui-navy);
   font-family: 'Open Sans', Arial, sans-serif;
@@ -32,10 +40,11 @@ html {
 }
 
 .site-container {
+  --site-gutter: 1.5rem;
   width: 100%;
   max-width: 122rem;
   margin-inline: auto;
-  padding-inline: 1.5rem;
+  padding-inline: var(--site-gutter);
 }
 
 .section-space {
@@ -44,7 +53,7 @@ html {
 
 @media (min-width: 1024px) {
   .site-container {
-    padding-inline: 2rem;
+    --site-gutter: 2rem;
   }
 
   .section-space {
@@ -54,13 +63,13 @@ html {
 
 @media (min-width: 1280px) {
   .site-container {
-    padding-inline: 4rem;
+    --site-gutter: 4rem;
   }
 }
 
 @media (min-width: 1536px) {
   .site-container {
-    padding-inline: 6rem;
+    --site-gutter: 6rem;
   }
 }
 

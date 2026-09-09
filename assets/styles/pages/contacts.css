@@ -1,0 +1,55 @@
+.contacts-page {
+  display: flex;
+  align-items: center;
+}
+
+.contacts-page > main {
+  flex: 1;
+}
+
+.site-container-contact {
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 1024px) {
+  .site-container-contact {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .site-container-contact {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-container-contact {
+    padding: 3.5rem 2rem;
+  }
+}
+
+/* ===== Contact panel ===== */
+.contact-title,
+.contact-subtitle,
+.contact-links {
+  font-family: 'Geologica', Arial, sans-serif;
+  font-weight: 400;
+}
+
+.contact-title {
+  font-size: clamp(2rem, 0.5rem + 3.125vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.contact-subtitle,
+.contact-links {
+  font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}

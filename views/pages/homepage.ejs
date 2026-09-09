@@ -17,7 +17,7 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
     <% /* Hero */ %>
     <section class="relative w-full overflow-hidden">
       <div class="hero-inner site-container relative z-10 flex items-center pb-10 pt-8 md:min-h-[560px] md:flex-row md:items-center lg:pb-14 2xl:min-h-[700px]">
-        <div class="hero-text-col w-full max-w-none md:max-w-[56%] 2xl:max-w-[52%]">
+        <div class="hero-text-col">
           <h1 class="hero-slogan heading-1">
             <% heroSlogans.forEach(function (slogan, index) { %>
               <span class="hero-slogan-text<%= index === 0 ? ' is-active' : '' %>" data-hero-slogan aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
@@ -29,8 +29,8 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
           <p class="body-copy mt-5 max-w-[32rem] md:text-[1.05rem]">Відновлюємо, обслуговуємо, модернізуємо та запускаємо металообробне і пресове обладнання по всій Україні</p>
 
           <div class="hero-cta-grid mt-7 flex flex-col items-start gap-3 min-[1201px]:grid min-[1201px]:w-full min-[1201px]:max-w-[480px] min-[1201px]:grid-cols-2">
-            <a class="btn btn-primary w-auto min-[1201px]:w-full" href="#contacts">
-              Замовити діагностику
+            <a class="btn btn-primary w-auto min-[1201px]:w-full" href="/contacts">
+              Отримати консультацію
             </a>
 
             <a class="btn btn-outline w-auto min-[1201px]:w-full" href="/services">
@@ -45,8 +45,6 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
 
       <div class="hero-photo-fade pointer-events-none absolute inset-y-0 right-0 z-0 w-[92%] overflow-hidden" role="img" aria-label="Пошкоджений верстат відновлюється до справного стану">
-        <span class="hero-blueprint-grid" aria-hidden="true"></span>
-
         <img class="machine-broken absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-cover md:object-[50%_100%] 2xl:object-[50%_85%]" src="/images/lathe-broken.png" alt="" aria-hidden="true">
         <img class="machine-restored absolute inset-0 h-full w-full object-cover object-[60%_center] md:object-cover md:object-[50%_100%] 2xl:object-[50%_85%]" src="/images/lathe-restored.png" alt="" aria-hidden="true">
 
@@ -230,101 +228,16 @@ var completedProjects = (typeof completedProjects !== 'undefined' && completedPr
       </div>
     </section>
 
-    <% /* About */ %>
-    <section id="about">
-      <div class="site-container section-space">
-        <div class="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
-          <div>
-            <h2 class="heading-1">Про нас</h2>
-            <div class="about-card card card-elevated mt-8">
-            <nav class="about-tabs" aria-label="Інформація про компанію">
-              <a class="about-tab is-active" href="#about">Хто ми?</a>
-              <a class="about-tab" href="#about">Наш досвід</a>
-              <a class="about-tab" href="#about">Спеціалісти</a>
-              <a class="about-tab" href="#about">Інструменти</a>
-            </nav>
-
-            <div class="p-5 md:p-7 lg:p-8">
-              <div class="body-copy max-w-[34rem] space-y-3 text-left xl:max-w-[44rem] 2xl:max-w-[52rem]">
-                <p>
-                  RENOVA — це команда професіоналів, фахівців у сфері
-                  постачання, ремонту й обслуговування складного обладнання.
-                </p>
-
-                <p>
-                  Ми працюємо безпосередньо з виробничими підприємствами,
-                  занурюючись у специфіку кожного проєкту: від технічного
-                  завдання до фінального результату. Такий підхід дозволяє
-                  пропонувати рішення, що відповідають реальним потребам
-                  виробництва, а не шаблонним схемам.
-                </p>
-
-                <p>
-                  Наша мета — бути надійним партнером для замовників на всіх
-                  етапах: від вибору обладнання до його подальшої експлуатації.
-                </p>
-              </div>
-            </div>
-          </div>
-          </div>
-          <div class="relative hidden -mr-6 overflow-hidden rounded-l-card rounded-r-none md:block md:h-[30rem] lg:h-[34rem] lg:-mr-8 xl:h-[38rem] xl:-mr-16 2xl:h-[42rem] 2xl:-mr-24">
-            <img class="absolute inset-0 h-full w-full object-cover object-left" src="/images/machining-center-trimmed.png" alt="Сучасний оброблювальний центр" loading="lazy" decoding="async">
-          </div>
-        </div>
+    <% /* Consultation CTA */ %>
+    <section class="site-container section-space home-cta">
+      <div class="home-cta-text">
+        <h2 class="heading-1">Хочете проконсультуватись із нашим спеціалістом?</h2>
+        <p class="heading-2">Зв’яжіться з нами і ми знайдемо відповіді на всі ваші питання</p>
       </div>
-    </section>
 
-    <% /* Contacts & form */ %>
-    <section id="contacts" class="site-container site-container-contact">
-      <div class="relative overflow-hidden rounded-hero bg-steel p-5 text-white sm:p-7 lg:grid lg:grid-cols-2 lg:gap-12 lg:p-14">
-        <img class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100" src="/images/tools.png" alt="" loading="lazy" decoding="async">
-
-        <div class="relative">
-          <h2 class="contact-title">
-            Потрібна допомога?
-          </h2>
-
-          <p class="contact-subtitle mt-4">
-            Зв'яжіться з нами за номером, поштою або&nbsp;заповніть&nbsp;форму
-          </p>
-
-          <div class="contact-links mt-7 space-y-3">
-            <a class="copy-link flex items-center gap-3 transition hover:text-navy" data-copy-link href="tel:+380756787784" title="Натисніть, щоб скопіювати">
-              <img class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">
-              <span class="copy-text" data-copy-text>
-                +38 (075) 678 77 84
-              </span>
-            </a>
-
-            <a class="copy-link flex items-center gap-3 transition hover:text-navy" data-copy-link href="mailto:commerce.renova@gmail.com" title="Натисніть, щоб скопіювати">
-              <img class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt="">
-              <span class="copy-text" data-copy-text>
-                commerce.renova@gmail.com
-              </span>
-            </a>
-          </div>
-        </div>
-
-        <form id="contact-form" class="relative mt-7 space-y-3 lg:mt-0" data-contact-form action="/contact" method="post">
-          <% if (typeof _csrf !== 'undefined' && _csrf) { %>
-            <input type="hidden" name="_csrf" value="<%= _csrf %>">
-          <% } %>
-
-          <div class="grid gap-3 sm:grid-cols-2">
-            <input id="contact-name" class="form-control" type="text" name="name" autocomplete="name" placeholder="Ваше ім'я" maxlength="80" required>
-            <input id="contact-phone" class="form-control" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="Номер телефону" maxlength="30" required>
-          </div>
-
-          <input id="contact-email" class="form-control" type="email" name="email" autocomplete="email" placeholder="Електронна пошта" maxlength="254" required>
-          <textarea id="contact-message" class="form-control" name="message" placeholder="Опишіть ваш запит" maxlength="3000" required></textarea>
-
-          <button class="btn btn-primary btn-block" type="submit" data-contact-submit>
-            Надіслати форму
-          </button>
-
-            <div class="form-status" data-contact-status role="status" aria-live="polite" hidden></div>
-        </form>
-      </div>
+      <a class="btn btn-primary" href="/contacts">
+        Отримати консультацію
+      </a>
     </section>
 
     <% /* FAQ */ %>

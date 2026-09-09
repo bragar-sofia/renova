@@ -13,9 +13,9 @@ var navItems = [
       ]
   },
   { label: 'Наші проекти', href: '/projects', page: 'projects' },
-  { label: 'Про нас', href: base + '#about', spy: 'about', sep: true },
-  { label: 'Часті запитання', href: base + '#faq', spy: 'faq' },
-  {label: 'Контакти', href: base + '#contacts', spy: 'contacts' }
+  { label: 'Про нас', href: '/about', page: 'about', sep: true },
+  { label: 'Контакти', href: '/contacts', page: 'contacts' },
+  { label: 'Часті запитання', href: base + '#faq', spy: 'faq' }
 ];
 %>
 
@@ -65,8 +65,8 @@ var navItems = [
 
     <!-- Actions -->
     <div class="site-header-actions">
-      <a href="<%= base %>#contacts" class="btn btn-primary header-cta">
-        Замовити діагностику
+      <a href="/contacts" class="btn btn-primary header-cta">
+        Отримати консультацію
       </a>
 
       <button type="button" class="burger-button" data-burger aria-label="Меню" aria-controls="mobile-menu" aria-expanded="false">
@@ -102,8 +102,8 @@ var navItems = [
         <% } %>
       <% }); %>
 
-      <a href="<%= base %>#contacts" class="btn btn-primary mobile-nav-cta">
-        Замовити діагностику
+      <a href="/contacts" class="btn btn-primary mobile-nav-cta">
+        Отримати консультацію
       </a>
     </nav>
   </div>

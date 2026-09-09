@@ -2,6 +2,8 @@ module.exports.routes = {
 
   'GET /': 'HomeController.index',
   'GET /services': { view: 'pages/services', locals: { activePage: 'services' } },
+  'GET /about': { view: 'pages/about', locals: { activePage: 'about' } },
+  'GET /contacts': { view: 'pages/contacts', locals: { activePage: 'contacts' } },
 
   'GET /projects': 'ProjectController.index',
   'GET /projects/:requestNumber': 'ProjectController.show',

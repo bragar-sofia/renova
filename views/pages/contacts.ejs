@@ -1,0 +1,57 @@
+<div class="contacts-page">
+  <main id="contacts">
+    <section class="site-container site-container-contact">
+      <div class="relative overflow-hidden rounded-hero bg-steel p-5 text-white sm:p-7 lg:grid lg:grid-cols-2 lg:gap-12 lg:p-14">
+        <img class="pointer-events-none absolute right-0 top-0 w-[85%] translate-x-20 -scale-y-100 opacity-40 mix-blend-multiply lg:bottom-0 lg:left-0 lg:right-auto lg:top-auto lg:w-[48%] lg:translate-x-0 lg:scale-y-100 lg:-scale-x-100" src="/images/tools.png" alt="" loading="lazy" decoding="async">
+
+        <div class="relative">
+          <h2 class="contact-title">
+            Потрібна допомога?
+          </h2>
+
+          <p class="contact-subtitle mt-4">
+            Зв'яжіться з нами за номером, поштою або&nbsp;заповніть&nbsp;форму
+          </p>
+
+          <div class="contact-links mt-7 space-y-3">
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" data-copy-link href="tel:+380756787784" title="Натисніть, щоб скопіювати">
+              <img class="h-8 w-8 object-contain" src="/images/icons/icon-phone-contact.svg" alt="">
+              <span class="copy-text" data-copy-text>
+                +38 (075) 678 77 84
+              </span>
+            </a>
+
+            <a class="copy-link flex items-center gap-3 transition hover:text-navy" data-copy-link href="mailto:commerce.renova@gmail.com" title="Натисніть, щоб скопіювати">
+              <img class="h-8 w-8 object-contain" src="/images/icons/icon-email-contact.svg" alt="">
+              <span class="copy-text" data-copy-text>
+                commerce.renova@gmail.com
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <form id="contact-form" class="relative mt-7 space-y-3 lg:mt-0" data-contact-form action="/contact" method="post">
+          <% if (typeof _csrf !== 'undefined' && _csrf) { %>
+            <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <% } %>
+
+          <div class="grid gap-3 sm:grid-cols-2">
+            <input id="contact-name" class="form-control" type="text" name="name" autocomplete="name" placeholder="Ваше ім'я" maxlength="80" required>
+            <input id="contact-phone" class="form-control" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="Номер телефону" maxlength="30" required>
+          </div>
+
+          <input id="contact-email" class="form-control" type="email" name="email" autocomplete="email" placeholder="Електронна пошта" maxlength="254" required>
+          <textarea id="contact-message" class="form-control" name="message" placeholder="Опишіть ваш запит" maxlength="3000" required></textarea>
+
+          <button class="btn btn-primary btn-block" type="submit" data-contact-submit>
+            Надіслати форму
+          </button>
+
+            <div class="form-status" data-contact-status role="status" aria-live="polite" hidden></div>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/js/pages/contacts.js" defer></script>
