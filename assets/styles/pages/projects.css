@@ -199,6 +199,10 @@
   padding-right: 2.75rem !important;
 }
 
+.project-search-input::placeholder {
+  color: var(--ui-steel);
+}
+
 @media (min-width: 640px) {
   .project-search-input {
     width: 18rem;
@@ -267,7 +271,6 @@
   .project-sort-menu {
     right: 0;
     left: auto;
-    width: 14rem;
   }
 }
 
@@ -318,26 +321,34 @@
 }
 
 .project-progress {
+  display: flex;
   width: 100%;
   max-width: 11.25rem;
+  flex-direction: column;
+  gap: .5rem;
   margin-top: .5rem;
+}
+
+.project-progress-row {
+  display: flex;
+  align-items: flex-end;
+  align-items: last baseline;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.project-progress-meta,
+.project-progress-note {
+  color: var(--ui-steel);
+}
+
+.project-progress-meta {
+  white-space: nowrap;
 }
 
 @media (max-width: 1023px) {
   .project-row-cell--progress .project-progress {
     max-width: none;
-  }
-
-  .project-row-cell--dates {
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-content: start;
-    align-items: baseline;
-    column-gap: .35rem;
-  }
-
-  .project-row-cell--dates p:last-child {
-    grid-column: 1 / -1;
   }
 }
 
@@ -352,40 +363,35 @@
   .project-row-cell--details {
     grid-column: 1 / -1;
   }
-
-  .project-row-cell--dates {
-    justify-content: end;
-    text-align: right;
-  }
-
-  .project-row-cell--dates p:last-child {
-    justify-self: end;
-  }
 }
 
 .project-progress-track {
+  position: relative;
   width: 100%;
-  height: .625rem;
-  margin-top: .25rem;
+  height: 1.75rem;
   overflow: hidden;
   border-radius: 9999px;
-  background: rgba(82, 123, 141, .2);
+  background: var(--ui-sky);
 }
 
 .project-progress-bar {
-  height: 100%;
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  display: block;
   border-radius: inherit;
   background: var(--ui-navy);
+  transition: width .2s ease;
 }
 
 @media (min-width: 1024px) {
   .project-table-head {
     display: grid;
-    grid-template-columns: 170px 1fr 230px 210px;
+    grid-template-columns: 170px 1fr 470px;
   }
 
   .project-active-row {
-    grid-template-columns: 170px 1fr 230px 210px;
+    grid-template-columns: 170px 1fr 470px;
     align-items: stretch;
     gap: 0;
     padding: 0;
@@ -410,8 +416,28 @@
     border-left: 2px solid var(--ui-steel);
   }
 
+  .project-row-cell--progress {
+    align-items: stretch;
+  }
+
+  .project-row-cell--progress .project-progress {
+    max-width: none;
+  }
+
+  .project-head-left {
+    padding-left: 1.5rem;
+    text-align: left;
+  }
+
   .project-progress {
     margin-top: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .project-table-head,
+  .project-active-row {
+    grid-template-columns: 170px 1fr 530px;
   }
 }
 

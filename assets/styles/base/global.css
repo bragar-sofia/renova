@@ -84,7 +84,8 @@ body {
 
 .heading-1,
 .heading-2,
-.heading-3 {
+.heading-3,
+.heading-4 {
   margin: 0;
   color: var(--ui-navy);
   font-family: 'Geologica', Arial, sans-serif;
@@ -107,6 +108,11 @@ body {
   font-size: clamp(1.125rem, 0.1875rem + 1.171875vw, 1.5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
+}
+
+.heading-4 {
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 

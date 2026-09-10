@@ -101,21 +101,17 @@ function visInit(project) {
       <div data-view="active" <%= (status === 'active' && matchTotal > 0) ? '' : 'hidden' %>>
         <div class="reveal-item">
           <!-- Table head -->
-          <div class="project-table-head heading-2">
-            <div class="text-center">
+          <div class="project-table-head heading-3">
+            <div class="project-head-left">
               Номер
             </div>
 
-            <div class="text-center">
+            <div class="project-head-left">
               Проєкт
             </div>
 
-            <div class="text-center">
-              Стан
-            </div>
-
-            <div class="whitespace-nowrap text-center">
-              Оновлено
+            <div class="project-head-left">
+              Статус
             </div>
           </div>
 
@@ -144,29 +140,22 @@ function visInit(project) {
 
                 <!-- Details -->
                 <div class="project-row-cell project-row-cell--details">
-                  <p class="heading-3">
+                  <h3 class="heading-3">
                     <%= p.title %>
-                  </p>
+                  </h3>
 
-                  <p class="mt-2 text-base text-navy">
+                  <p class="mt-2">
                     <span class="font-display font-normal">
                       Послуга:
                     </span>
                     <%= p.workTypeLabel %>
                   </p>
 
-                  <p class="mt-1 text-base text-navy">
+                  <p class="mt-1">
                     <span class="font-display font-normal">
                       Обладнання:
                     </span>
                     <%= p.equipment %>
-                  </p>
-
-                  <p class="mt-1 text-base text-navy">
-                    <span class="font-display font-normal">
-                      Вид робіт:
-                    </span>
-                    <%= p.repairType %>
                   </p>
 
                   <% if (p.branchLabel) { %>
@@ -176,47 +165,47 @@ function visInit(project) {
                   <% } %>
                 </div>
 
-                <!-- Progress -->
+                <!-- Status -->
                 <div class="project-row-cell project-row-cell--center project-row-cell--progress">
                   <span class="font-bold lg:hidden">
-                    Стан:
+                    Статус:
                   </span>
 
                   <div class="project-progress">
-                    <h4 class="mb-2 text-sm text-center font-semibold leading-5 text-navy">
-                      <%= p.statusText %>
-                    </h4>
+                    <div class="project-progress-row">
+                      <h4 class="heading-4">
+                        <%= p.statusText %>
+                      </h4>
+
+                      <p class="project-progress-meta">
+                        <%= p.updatedDate %>
+                      </p>
+                    </div>
 
                     <% if (p.progress !== null) { %>
-                      <div class="relative h-7 overflow-hidden rounded-full bg-steel/15" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= p.progress %>" aria-label="<%= p.statusText %>">
-                        <div class="absolute inset-y-0 left-0 rounded-full bg-navy transition-all" style="width: <%= p.progress %>%"></div>
-
-                        <p class="absolute left-1/2 top-1/2 z-20 inline-flex min-w-[44px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white px-2 py-0.5 text-xs font-bold text-navy">
-                          <%= p.progress %>%
-                        </p>
+                      <div class="project-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<%= p.progress %>" aria-label="<%= p.statusText %>">
+                        <span class="project-progress-bar" style="width: <%= p.progress %>%"></span>
                       </div>
                     <% } else { %>
-                      <div class="rounded-full border border-dashed border-steel/40 bg-sky/40 px-3 py-1.5 text-center text-xs font-medium text-steel">
+                      <p class="project-progress-note">
                         План виконання робіт уточнюється
-                      </div>
+                      </p>
                     <% } %>
+
+                    <div class="project-progress-row">
+                      <p class="project-progress-meta">
+                        Створено: <%= p.createdDate %>
+                      </p>
+
+                      <% if (p.progress !== null) { %>
+                        <p>
+                          <%= p.progress %>%
+                        </p>
+                      <% } %>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Dates -->
-                <div class="project-row-cell project-row-cell--center project-row-cell--dates">
-                  <span class="font-bold lg:hidden">
-                    Оновлено:
-                  </span>
-
-                  <p class="whitespace-nowrap text-base text-navy">
-                    <%= p.updatedDate %>
-                  </p>
-
-                  <p class="mt-1 whitespace-nowrap text-base text-steel">
-                    Створено: <%= p.createdDate %>
-                  </p>
-                </div>
               </a>
             <% }); %>
           </div>
